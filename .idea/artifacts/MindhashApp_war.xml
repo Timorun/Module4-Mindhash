@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="MindhashApp:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>MindhashApp</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="MindhashApp-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="MindhashApp:war exploded" />
+    </root>
+  </artifact>
+</component>

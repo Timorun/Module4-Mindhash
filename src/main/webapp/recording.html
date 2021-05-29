@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<title></title>
+		<link type="text/css" rel="stylesheet" href="common-style.css">
+	</head>
+	<body class="dark-mode">
+		<header class="header box-layout center-v">
+			<div class="logo"></div>
+			<a href="#" class="home-link"></a>
+			<div class="box-col">
+				<ul>
+					<li>GENERAL</li>
+					<li>VISUALIZATION</li>
+					<li>LOCATION</li>
+					<li>OBJECT SEARCH</li>
+				</ul>
+			</div>
+			<a href="" class="avatar"></a>
+		</header>
+		<script src="js/switch-mode.js"></script>
+			
+		<section class="info-wrapper">
+			<!-- video -->
+			<div class="section-title">GENERAL</div>
+			<div class="info-section">
+				<video controls>
+				  <source src="img/1620757951110054.mp4" type="video/mp4">
+				</video>
+				<div class="video-info">
+					<div class="box-layout">
+						<div class="box-col">11:48<span>TIME</span></div>
+						<div class="box-col">12/04/20<span>DATA</span></div>
+						<div class="box-col">480<span>RESOLUTION</span></div>
+						<div class="box-col">60<span>FPS</span></div>
+					</div>
+					<div class="box-layout">
+						<div class="box-col">25<span>PEDESTRIANS</span></div>
+						<div class="box-col">25<span>TWO WHEELERS</span></div>
+						<div class="box-col">25<span>VEHICLES</span></div>
+						<div class="box-col"></div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- heatmap -->
+			<div class="section-title">VISUALIZATION</div>
+			<div class="slider info-section">
+			  <div class="slide-container">
+				  <div class="slide-item current"></div>
+				  <div class="slide-item"></div>
+				  <div class="slide-item"></div>
+				  <div class="slide-item"></div>
+				  <div class="slide-item"></div>
+			  </div>
+			  
+			  <div class="slider-pagination">
+				  <div class="pagination active"></div>
+				  <div class="pagination"></div>
+				  <div class="pagination"></div>
+				  <div class="pagination"></div>
+				  <div class="pagination"></div>
+			  </div>
+			  <div id="prev" class="btn btn-pre"><i class="iconfont icon-btn_left"></i></div>
+			  <div id="next" class="btn btn-next"><i class="iconfont icon-btn_right"></i></div>
+			</div>
+			
+			<!-- Google map-->
+			<div class="section-title">LOCATION</div>
+			<div id="googleMap" class="info-section"></div>
+		</section>
+	</body>
+	<script>
+		let map;
+		function initMap() {
+		  map = new google.maps.Map(document.getElementById("googleMap"), {
+		    center: { lat: -34.397, lng: 150.644 },
+		    zoom: 8,
+		  });
+		}
+		
+		let recording = {
+			showHeatmap: function() {
+				const slides = document.querySelectorAll(".slide-item");
+				const paginations = document.querySelectorAll(".pagination");
+				const next = document.querySelector("#next");
+				const prev = document.querySelector("#prev");
+				const auto = true;
+				const intervalTime = 3000;
+				let slideInterval;
+				
+				const nextSlide = function() {
+				  const current = document.querySelector(".slide-item.current");
+				  const active = document.querySelector(".pagination.active");
+				  current.classList.remove("current");
+				  active.classList.remove("active");
+				  if (current.nextElementSibling) {
+				    current.nextElementSibling.classList.add("current");
+					active.nextElementSibling.classList.add("active");
+				  } else {
+				    slides[0].classList.add("current");
+					paginations[0].classList.add("active");
+				  }
+				  setTimeout(() => {
+					  current.classList.remove("current");
+					  active.classList.remove("active");
+				  });
+				};
+				
+				const prevSlide = function() {
+				  const current = document.querySelector(".slide-item.current");
+				  const active = document.querySelector(".pagination.active");
+				  current.classList.remove("current");
+				  active.classList.remove("active");
+				  if (current.previousElementSibling) {
+				    current.previousElementSibling.classList.add("current");
+					active.previousElementSibling.classList.add("active");
+				  } else {
+				    slides[slides.length - 1].classList.add("current");
+					paginations[paginations.length - 1].classList.add("active");
+				  }
+				  setTimeout(function() {
+				  	  current.classList.remove("current");
+				  	  active.classList.remove("active");
+				  });
+				};
+				
+				next.addEventListener("click", function() {
+				  nextSlide();
+				  if (auto) {
+				    slideInterval = setInterval(nextSlide, intervalTime);
+				    clearInterval(slideInterval);
+				  }
+				});
+				
+				prev.addEventListener("click", function() {
+				  prevSlide();
+				  if (auto) {
+				    slideInterval = setInterval(nextSlide, intervalTime);
+				    clearInterval(slideInterval);
+				  }
+				});
+				
+				if (auto) {
+				  slideInterval = setInterval(nextSlide, intervalTime);
+				}
+			},
+			init: function() {
+				recording.showHeatmap();
+			}
+		}
+		recording.init();
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&callback=initMap" async defer></script>
+</html>
