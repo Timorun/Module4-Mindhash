@@ -6,7 +6,8 @@ import java.util.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 
-
+/* Class adds JSON data to the database
+ **/
 public class MindhashDao {
     private static final String userHome = System.getProperty("user.home");
     public static Connection conn;
