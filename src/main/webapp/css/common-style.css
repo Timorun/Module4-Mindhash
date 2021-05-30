@@ -78,7 +78,7 @@ body.light-mode {
 	width: 36px;
 	min-width: 36px;
 	height: 36px;
-	background: url("img/mindhash-logo-animated.svg");
+	background: url("../img/mindhash-logo-animated.svg");
 	background-size: 136px 36px;
 	background-position: left top;
 	display: block;
@@ -91,7 +91,7 @@ body.light-mode {
 	width: 100px;
 	min-width: 100px;
 	height: 36px;
-	background: url("img/mindhash-logo-animated.svg");
+	background: url("../img/mindhash-logo-animated.svg");
 	background-size: 136px 36px;
 	background-position: -36px top;
 	display: block;
@@ -111,7 +111,7 @@ body.light-mode {
 .header .avatar {
 	width: 28px;
 	height: 28px;
-	background: url("img/avatar.png") no-repeat;
+	background: url("../img/avatar.png") no-repeat;
 	background-size: 100% 100%;
 	display: block;
 	/*margin: 24px auto;*/
