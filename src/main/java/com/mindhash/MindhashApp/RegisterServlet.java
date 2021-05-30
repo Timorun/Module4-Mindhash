@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 
-
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
 
@@ -23,7 +23,7 @@ public class RegisterServlet extends HttpServlet {
         boolean isRegistered = userDao.registerUser(user);
 
         if(isRegistered) {
-            request.getRequestDispatcher("/login.html").forward(request, response);
+            request.getRequestDispatcher("/registration-successfull.html").forward(request, response);
         } else {
             request.getRequestDispatcher("/index.html").forward(request, response);
         }
