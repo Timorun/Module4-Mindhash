@@ -22,6 +22,12 @@ public class RegisterServlet extends HttpServlet {
         UserDao userDao = new UserDao();
         boolean isRegistered = userDao.registerUser(user);
 
+        if(isRegistered) {
+            request.getRequestDispatcher("/login.html").forward(request, response);
+        } else {
+            request.getRequestDispatcher("/index.html").forward(request, response);
+        }
+
     }
 
 
