@@ -1,12 +1,12 @@
-package com.mindhash.MindhashApp.dao;
+package com.mindhash.MindhashApp.model;
 
-public class TagDao {
+public class Tag {
     private int object_id;
     private String object_type;
 
-    public TagDao() {}
+    public Tag() {}
 
-    public TagDao(int object_id, String object_type) {
+    public Tag(int object_id, String object_type) {
         this.object_id = object_id;
         this.object_type = object_type;
     }

@@ -1,7 +1,7 @@
 @charset "utf-8";
 :root {
   --main-bg-color: #121212;
-  --header-bg-color: rgba(0, 0, 0, .5);
+  --header-bg-color: #020202;
   --border-color: #30363d;
   --text-color: #c9d1d9;
 }
@@ -72,9 +72,7 @@ body.light-mode {
 	background-color: #121212;
 }
 .header .logo {
-	/*position: absolute;
-	top: 50%;
-	margin-top: -26px;*/
+	position: relative;
 	width: 36px;
 	min-width: 36px;
 	height: 36px;
@@ -83,11 +81,14 @@ body.light-mode {
 	background-position: left top;
 	display: block;
 	cursor: pointer;
+	-webkit-transition: -webkit-transform .2s ease;
+	transition: transform .2s ease;
+}
+.header .logo:hover {
+	transform: scale(1.1);
+	-webkit-transform: scale(1.1); /* Safari 和 Chrome */
 }
 .header .home-link {
-	/*position: absolute;
-	top: 50%;
-	margin-top: -26px;*/
 	width: 100px;
 	min-width: 100px;
 	height: 36px;
@@ -114,7 +115,12 @@ body.light-mode {
 	background: url("../img/avatar.png") no-repeat;
 	background-size: 100% 100%;
 	display: block;
-	/*margin: 24px auto;*/
+	-webkit-transition: -webkit-transform .2s ease;
+	transition: transform .2s ease;
+}
+.header .avatar:hover {
+	transform: scale(1.05);
+	-webkit-transform: scale(1.05); /* Safari 和 Chrome */
 }
 .header .box-col .avatar {
 	float: right;
@@ -123,7 +129,7 @@ body.light-mode {
 .wrapper {
 	padding: 32px 0;
 	margin: 0 auto;
-	width: 980px;
+	width: 90%;
 }
 
 .wrapper .recordings-list li {
@@ -131,17 +137,27 @@ body.light-mode {
 	height: 48px;
 	line-height: 48px;
 	text-align: center;
-	/*color: #333;*/
 }
 .wrapper .recordings-list li:nth-child(even) {
-	background-color: #bbb;
+	background-color: #b2b2b2;
 }
 .wrapper .recordings-list li:nth-child(odd) {
-	background-color: #ccc;
+	background-color: #b6b6b6;
 }
 .wrapper .recordings-list li:first-child {
+	font-size: 24px;
+	font-weight: 700;
+	height: 64px;
+	line-height: 64px;
+}
+.wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
+	background-color: #bbb;
+	cursor: pointer;
+}
+.wrapper .recordings-list li:first-child,
+.wrapper .recordings-list li:nth-child(2) {
 	background-color: #fed136;
-	font-size: 18px;
+	color: #333;
 }
 
 .form-wrapper {
@@ -162,15 +178,21 @@ body.light-mode {
 	margin-top: 24px;
 }
 .form-wrapper .form-submit-btn {
-	height: 36px;
+	height: 44px;
+	line-height: 44px;
 	text-align: center;
 	color: #fff;
 	background-color: #FED136;
+	-webkit-transition: background-color .3s ease;
+	transition: background-color .3s ease;
 	width: 100%;
 	border-radius: 32px;
 	margin-top: 56px;
 	font-size: 13px;
 	cursor: pointer;
+}
+.form-wrapper .form-submit-btn:hover {
+	background-color: #fec92f;
 }
 
 .form-wrapper .guide {
@@ -334,29 +356,41 @@ body.dark-mode {
 	background-color: var(--header-bg-color);
 }
 .dark-mode .wrapper .recordings-list {
-	border: 1px solid var(--border-color);
-	border-radius: 6px;
 	overflow: hidden;
 	box-sizing: border-box;
 }
 .dark-mode .wrapper .recordings-list li {
 	background-color: transparent;
-	border-bottom: 1px solid var(--border-color);
+	background-color: #181818;
+	-webkit-transition: background-color .3s ease;
+	transition: background-color .3s ease;
+}
+.dark-mode .wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
+	background-color: #282828;
 }
 .dark-mode .wrapper .recordings-list li:last-child {
 	border-bottom: none;
 }
-.dark-mode .wrapper .recordings-list li:first-child {
-	background-color: transparent;
+.dark-mode .wrapper .recordings-list li:first-child,
+.dark-mode .wrapper .recordings-list li:nth-child(2) {
+	color: var(--text-color);
+	background-color: #161616;
+}
+.dark-mode .wrapper .recordings-list li:nth-child(2) {
+	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
 }
 
 .dark-mode .form-wrapper .form-input-field {
 	border-bottom: 1px solid var(--border-color);
 }
 .dark-mode .form-wrapper .form-submit-btn {
-	border: 1px solid var(--border-color);
-	background-color: transparent;
 	color: var(--text-color);
+	background-color: #282828;
+	-webkit-transition: background-color .3s ease;
+	transition: background-color .3s ease;
+}
+.dark-mode .form-wrapper .form-submit-btn:hover {
+	background-color: #383838;
 }
 .dark-mode .form-wrapper .reset-password-tip {
 	color: var(--text-color);
@@ -371,9 +405,9 @@ body.dark-mode {
 	.form-wrapper {
 		width: 80%;
 	}
-	.wrapper {
+	/*.wrapper {
 		width: 90%;
-	}
+	}*/
 	.wrapper .recordings-list .box-layout .box-col:nth-child(3),
 	.wrapper .recordings-list .box-layout .box-col:nth-child(4) {
 		display: none;
@@ -388,6 +422,6 @@ body.dark-mode {
 	}
 	.info-wrapper .info-section {
 		width: 100%;
-		min-height: 160px;
+		min-height: 220px;
 	}
 }

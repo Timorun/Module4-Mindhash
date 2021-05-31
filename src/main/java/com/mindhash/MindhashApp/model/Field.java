@@ -1,6 +1,6 @@
-package com.mindhash.MindhashApp.dao;
+package com.mindhash.MindhashApp.model;
 
-public class FieldDao {
+public class Field {
     private int points;
     private double length;
     private double width;
@@ -9,9 +9,9 @@ public class FieldDao {
     private double velocity;
     private double ma_velocity;
 
-   public FieldDao() {}
+   public Field() {}
 
-    public FieldDao(int points, double length, double width, double x, double y, double velocity, double ma_velocity) {
+    public Field(int points, double length, double width, double x, double y, double velocity, double ma_velocity) {
        this.points = points;
        this.length = length;
        this.width = width;

@@ -1,14 +1,14 @@
-package com.mindhash.MindhashApp.dao;
+package com.mindhash.MindhashApp.model;
 
-public class MeasurementDao {
+public class Measurement {
     private String measurement;
-    private FieldDao fields;
-    private TagDao tags;
+    private Field fields;
+    private Tag tags;
     private String time;
 
-    public MeasurementDao(){}
+    public Measurement(){}
 
-    public MeasurementDao(String measurement, FieldDao fields, TagDao tags, String time) {
+    public Measurement(String measurement, Field fields, Tag tags, String time) {
         this.measurement = measurement;
         this.fields = fields;
         this.tags = tags;
@@ -22,19 +22,19 @@ public class MeasurementDao {
     public void setMeasurement(String measurement) {
         this.measurement = measurement;
     }
-    public FieldDao getField() {
+    public Field getField() {
         return fields;
     }
 
-    public void setField(FieldDao fields) {
+    public void setField(Field fields) {
         this.fields = fields;
     }
 
-    public TagDao getTag() {
+    public Tag getTag() {
         return tags;
     }
 
-    public void setTag(TagDao tags) {
+    public void setTag(Tag tags) {
         this.tags = tags;
     }
 

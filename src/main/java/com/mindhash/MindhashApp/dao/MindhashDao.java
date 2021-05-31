@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.mindhash.MindhashApp.model.Measurement;
 
 /* Class adds JSON data to the database
  **/
@@ -33,12 +34,12 @@ public class MindhashDao {
             PreparedStatement preparedStatement = conn.prepareStatement("insert into  mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             ObjectMapper objectMapper = new ObjectMapper();
-            List<MeasurementDao> list = objectMapper.readValue(new File(userHome + "/data2.json.txt"), new TypeReference<List<MeasurementDao>>() {
+            List<Measurement> list = objectMapper.readValue(new File(userHome + "/data2.json.txt"), new TypeReference<List<Measurement>>() {
             });
 
-            Iterator<MeasurementDao> it = list.iterator();
+            Iterator<Measurement> it = list.iterator();
             while (it.hasNext()) {
-                MeasurementDao m = it.next();
+                Measurement m = it.next();
                 preparedStatement.setInt(1, m.getTag().getObject_id());
                 preparedStatement.setString(2, m.getTag().getObject_type());
                 preparedStatement.setInt(3, m.getField().getPoints());
