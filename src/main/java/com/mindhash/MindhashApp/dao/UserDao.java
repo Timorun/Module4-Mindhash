@@ -8,6 +8,38 @@ import java.sql.*;
 
 public class UserDao {
 
+    public boolean newMail(String email) {
+        Connection conn = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            try {
+                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + MindhashDao.username + "?currentSchema=dab_di20212b_11", MindhashDao.username, MindhashDao.password);
+            } catch (SQLException e) {
+                System.err.println("Oops: " + e.getMessage());
+                System.err.println("SQLState: " + e.getSQLState());
+            }
+        } catch (ClassNotFoundException e) {
+            System.err.println("JDBC driver not loaded");
+        }
+
+        try {
+            String query = "SELECT users.email FROM dab_di20212b_11.users";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                String dbmail = rs.getString("email");
+                if (email.equals(dbmail)) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
 
     public boolean registerUser(User user) {
         String email = user.getEmail();
