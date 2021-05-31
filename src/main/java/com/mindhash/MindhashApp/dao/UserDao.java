@@ -63,6 +63,7 @@ public class UserDao {
 
     private String generateHash(String password) {
         StringBuilder hash = new StringBuilder();
+
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             byte[] hashedBytes = sha.digest(password.getBytes());
