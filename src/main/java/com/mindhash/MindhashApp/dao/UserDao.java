@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 public class UserDao {
+    public static final String SALT = "AEgdqp2w3hZJZTuFvfMc";
 
 
     public boolean registerUser(User user) {
@@ -31,7 +32,8 @@ public class UserDao {
             String query = "insert into users(email, password) values (?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, email);
-            String hashedPassword = generateHash(password);
+            String saltPass = SALT + password;
+            String hashedPassword = generateHash(saltPass);
             preparedStatement.setString(2, hashedPassword);
             int i = preparedStatement.executeUpdate();
 
@@ -68,4 +70,38 @@ public class UserDao {
 
     }
 
+    public User checkLogin(String email, String password) throws SQLException {
+        String saltPass = SALT + password;
+        String hashedPass = generateHash(saltPass);
+
+        Connection conn = null;
+
+        try {
+            Class.forName("org.postgresql.Driver");
+            try {
+                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + MindhashDao.username + "?currentSchema=dab_di20212b_11", MindhashDao.username, MindhashDao.password);
+            } catch (SQLException e) {
+                System.err.println("Oops: " + e.getMessage());
+                System.err.println("SQLState: " + e.getSQLState());
+            }
+        } catch (ClassNotFoundException e) {
+            System.err.println("JDBC driver not loaded");
+        }
+
+        String sql = "SELECT * FROM users WHERE email = ? and password = ?";
+
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, hashedPass);
+        ResultSet result = preparedStatement.executeQuery();
+
+        User user = null;
+        if(result.next()) {
+            user = new User();
+            user.setEmail(email);
+        }
+        conn.close();
+        return user;
+
+    }
 }
