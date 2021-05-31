@@ -23,33 +23,27 @@
 			</form>
 			<div class="guide mt"> Already have an account? <a href="login.html">Log in!</a></div>
 		</section>
+		
+		<script>
+			function validate() {
+				var email = document.form.email.value;
+				var password = document.form.password.value;
+				var confirmpassword= document.form.confirmpassword.value;
+		
+				var regPass = /^(?=.*[0-9])(?=.*[A-Z]).{8,}$/;
+				var regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+		
+				if (!regEmail.test(email)) {
+					alert("Incorrect email format");
+					return false;
+				} else if (!regPass.test(password)) {
+					alert("Password must be at least 8 characters long and contain at least one uppercase letter and one digit");
+					return false;
+				} else if (password!==confirmpassword) {
+					alert("Confirm Password should match with Password");
+					return false;
+				}
+			}
+		</script>
 	</body>
 </html>
-
-<script>
-	function validate()
-	{
-
-		var email = document.form.email.value;
-		var password = document.form.password.value;
-		var confirmpassword= document.form.confirmpassword.value;
-
-		var regPass = /^(?=.*[0-9])(?=.*[A-Z]).{8,}$/;
-		var regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-		if (!regEmail.test(email)) {
-			alert("Incorrect email format");
-			return false;
-		}
-
-		else if (!regPass.test(password)) {
-			alert("Password must be at least 8 characters long and contain at least one uppercase letter and one digit");
-			return false;
-		}
-
-		else if (password!==confirmpassword) {
-			alert("Confirm Password should match with Password");
-			return false;
-		}
-	}
-</script>

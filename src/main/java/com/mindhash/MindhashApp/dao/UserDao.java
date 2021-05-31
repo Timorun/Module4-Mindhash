@@ -2,7 +2,6 @@ package com.mindhash.MindhashApp.dao;
 
 import com.mindhash.MindhashApp.model.User;
 
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
