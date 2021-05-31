@@ -17,49 +17,40 @@
 		<section class="wrapper">
 			<ul class="recordings-list">
 				<li>Recordings</li>
-				<li class="box-layout">
-					<div class="box-col">Sensor</div>
-					<div class="box-col">Date</div>
-					<div class="box-col">Date</div>
-					<div class="box-col">Date</div>
+				<li id="title" class="box-layout">
+					<div class="box-col">#</div>
+					<div class="box-col">Two wheelers</div>
+					<div class="box-col">Pedestrians</div>
+					<div class="box-col">Vehicles</div>
 				</li>
-				<li class="box-layout">
+				<!-- <li class="box-layout">
 					<div class="box-col">recording_03-02-2021_001</div>
 					<div class="box-col">03-02-2021</div>
 					<div class="box-col">resolution</div>
 					<div class="box-col">framerate</div>
-				</li>
-				<li class="box-layout">
-					<div class="box-col">recording_03-02-2021_001</div>
-					<div class="box-col">03-02-2021</div>
-					<div class="box-col">resolution</div>
-					<div class="box-col">framerate</div>
-				</li>
-				<li class="box-layout">
-					<div class="box-col">recording_03-02-2021_001</div>
-					<div class="box-col">03-02-2021</div>
-					<div class="box-col">resolution</div>
-					<div class="box-col">framerate</div>
-				</li>
-				<li class="box-layout">
-					<div class="box-col">recording_03-02-2021_001</div>
-					<div class="box-col">03-02-2021</div>
-					<div class="box-col">resolution</div>
-					<div class="box-col">framerate</div>
-				</li>
-				<li class="box-layout">
-					<div class="box-col">recording_03-02-2021_001</div>
-					<div class="box-col">03-02-2021</div>
-					<div class="box-col">resolution</div>
-					<div class="box-col">framerate</div>
-				</li>
-				<li class="box-layout">
-					<div class="box-col">recording_03-02-2021_001</div>
-					<div class="box-col">03-02-2021</div>
-					<div class="box-col">resolution</div>
-					<div class="box-col">framerate</div>
-				</li>
+				</li> -->
 			</ul>
 		</section>
+		<script>
+			let xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var response = this.responseText,
+						recordings = JSON.parse(response),
+						htmlStr = "";
+					for(var recording of recordings) {
+						htmlStr += '<li class="box-layout">' 
+										+ '<div class="box-col">Recording' + (recording.recordingID + "_" + recording.date) + '</div>'
+										+ '<div class="box-col">' + recording.totalTwoWheelers + '</div>'
+										+ '<div class="box-col">' + recording.totalPedestrians + '</div>'
+										+ '<div class="box-col">' + recording.totalVehicles + '</div>'
+									+ '</li>'
+					}
+					document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);
+				}
+			}
+			xmlhttp.open("GET", "/MindhashApp/rest/recordings", true);
+			xmlhttp.send();
+		</script>
 	</body>
 </html>

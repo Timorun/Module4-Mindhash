@@ -31,7 +31,7 @@ public enum RecordingDao {
             	recording.setLongitude(resultSet.getDouble(3));
             	recording.setTotalObjects(resultSet.getInt(4));
             	recording.setTotalTwoWheelers(resultSet.getInt(5));
-            	recording.setTotalPedestriants(resultSet.getInt(6));
+            	recording.setTotalPedestrians(resultSet.getInt(6));
             	recording.setTotalVehicles(resultSet.getInt(7));
             	recording.setDate(resultSet.getString(8));
             	contentProvider.put(resultSet.getInt(1), recording);

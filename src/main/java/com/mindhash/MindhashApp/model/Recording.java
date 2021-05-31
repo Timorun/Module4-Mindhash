@@ -6,20 +6,20 @@ public class Recording {
 	private double longitude;
 	private int totalObjects;
 	private int totalTwoWheelers;
-	private int totalPedestriants;
+	private int totalPedestrians;
 	private int totalVehicles;
 	private String date;
 	
 	public Recording() {}
 	
 	public Recording(int recordindID, double latitude, double longitude, int totalObjects, int totalTwoWheelers,
-			int totalPedestriants, int totalVehicles, String date) {
+			int totalPedestrians, int totalVehicles, String date) {
 		this.recordindID = recordindID;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.totalObjects = totalObjects;
 		this.totalTwoWheelers = totalTwoWheelers;
-		this.totalPedestriants = totalPedestriants;
+		this.totalPedestrians = totalPedestrians;
 		this.totalVehicles = totalVehicles;
 		this.date = date;
 	}
@@ -44,8 +44,8 @@ public class Recording {
 		return totalTwoWheelers;
 	}
 	
-	public int getTotalPedestriants() {
-		return totalPedestriants;
+	public int getTotalPedestrians() {
+		return totalPedestrians;
 	}
 	
 	public int getTotalVehicles() {
@@ -77,8 +77,8 @@ public class Recording {
 		this.totalTwoWheelers = totalTwoWheelers;
 	}
 	
-	public void setTotalPedestriants(int totalPedestriants) {
-		this.totalPedestriants = totalPedestriants;
+	public void setTotalPedestrians(int totalPedestrians) {
+		this.totalPedestrians = totalPedestrians;
 	}
 	
 	public void setTotalVehicles(int totalVehicles) {
