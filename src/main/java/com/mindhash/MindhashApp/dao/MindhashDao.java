@@ -17,18 +17,8 @@ public class MindhashDao {
 
     public static void main (String[] args) {
 
-        try {
-            Class.forName("org.postgresql.Driver");
-            try {
-                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + username + "?currentSchema=dab_di20212b_11", username, password);
-                conn.setAutoCommit(false);
-            } catch (SQLException e) {
-                System.err.println("Oops: " + e.getMessage());
-                System.err.println("SQLState: " + e.getSQLState());
-            }
-        } catch (ClassNotFoundException e) {
-            System.err.println("JDBC driver not loaded");
-        }
+        Connection conn = null;
+        conn = DBConnectivity.createConnection();
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement("insert into  mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");

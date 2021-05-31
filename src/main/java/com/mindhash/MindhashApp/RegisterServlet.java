@@ -2,6 +2,7 @@ package com.mindhash.MindhashApp;
 import com.mindhash.MindhashApp.dao.UserDao;
 import com.mindhash.MindhashApp.model.*;
 import java.io.*;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -26,7 +27,12 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        boolean isRegistered = userDao.registerUser(user);
+        boolean isRegistered = false;
+        try {
+            isRegistered = userDao.registerUser(user);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         if(isRegistered) {
             request.getRequestDispatcher("/registration-successful.html").forward(request, response);
         } else {

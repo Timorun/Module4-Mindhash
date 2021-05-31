@@ -11,18 +11,7 @@ public class UserDao {
 
     public boolean newMail(String email) {
         Connection conn = null;
-
-        try {
-            Class.forName("org.postgresql.Driver");
-            try {
-                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + MindhashDao.username + "?currentSchema=dab_di20212b_11", MindhashDao.username, MindhashDao.password);
-            } catch (SQLException e) {
-                System.err.println("Oops: " + e.getMessage());
-                System.err.println("SQLState: " + e.getSQLState());
-            }
-        } catch (ClassNotFoundException e) {
-            System.err.println("JDBC driver not loaded");
-        }
+        conn = DBConnectivity.createConnection();
 
         try {
             String query = "SELECT users.email FROM dab_di20212b_11.users";
@@ -30,6 +19,7 @@ public class UserDao {
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 String dbmail = rs.getString("email");
+                conn.close();
                 if (email.equals(dbmail)) {
                     return false;
                 }
@@ -42,23 +32,12 @@ public class UserDao {
 
     }
 
-    public boolean registerUser(User user) {
+    public boolean registerUser(User user) throws SQLException {
         String email = user.getEmail();
         String password = user.getPassword();
 
         Connection conn = null;
-
-        try {
-            Class.forName("org.postgresql.Driver");
-            try {
-                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + MindhashDao.username + "?currentSchema=dab_di20212b_11", MindhashDao.username, MindhashDao.password);
-            } catch (SQLException e) {
-                System.err.println("Oops: " + e.getMessage());
-                System.err.println("SQLState: " + e.getSQLState());
-            }
-        } catch (ClassNotFoundException e) {
-            System.err.println("JDBC driver not loaded");
-        }
+        conn = DBConnectivity.createConnection();
 
         try {
             String query = "insert into users(email, password) values (?, ?)";
@@ -97,7 +76,6 @@ public class UserDao {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
         return hash.toString();
 
     }
@@ -107,18 +85,7 @@ public class UserDao {
         String hashedPass = generateHash(saltPass);
 
         Connection conn = null;
-
-        try {
-            Class.forName("org.postgresql.Driver");
-            try {
-                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + MindhashDao.username + "?currentSchema=dab_di20212b_11", MindhashDao.username, MindhashDao.password);
-            } catch (SQLException e) {
-                System.err.println("Oops: " + e.getMessage());
-                System.err.println("SQLState: " + e.getSQLState());
-            }
-        } catch (ClassNotFoundException e) {
-            System.err.println("JDBC driver not loaded");
-        }
+        conn = DBConnectivity.createConnection();
 
         String sql = "SELECT * FROM users WHERE email = ? and password = ?";
 
