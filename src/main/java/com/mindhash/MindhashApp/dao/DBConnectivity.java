@@ -10,6 +10,7 @@ public class DBConnectivity {
         String username= "dab_di20212b_11";
         String password = "FGqxQ1cJXYxvmPsW";
         Connection conn = null;
+
         try {
             Class.forName("org.postgresql.Driver");
             try {

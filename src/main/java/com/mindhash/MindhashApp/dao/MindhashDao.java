@@ -19,7 +19,6 @@ public class MindhashDao {
 
         Connection conn = null;
         conn = DBConnectivity.createConnection();
-
         try {
             PreparedStatement preparedStatement = conn.prepareStatement("insert into  mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 

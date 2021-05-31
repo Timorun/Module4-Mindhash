@@ -18,8 +18,7 @@ public enum RecordingDao {
     private RecordingDao() {
     	Connection conn = null;
     	conn = DBConnectivity.createConnection();
-
-        try {
+    	try {
             String query = "select * from recording";
             PreparedStatement st = conn.prepareStatement(query);
             ResultSet resultSet = st.executeQuery();
