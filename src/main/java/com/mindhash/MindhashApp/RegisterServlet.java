@@ -23,7 +23,7 @@ public class RegisterServlet extends HttpServlet {
         UserDao userDao = new UserDao();
         boolean newMail = userDao.newMail(email);
         if (!newMail) {
-            request.getRequestDispatcher("/login.html").forward(request, response);
+            request.getRequestDispatcher("/mailused.html").forward(request, response);
             return;
         }
 
