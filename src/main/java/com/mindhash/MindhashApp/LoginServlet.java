@@ -28,7 +28,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("user", user);
                 request.getRequestDispatcher("/homepage.html").forward(request, response);
             } else {
-                request.getRequestDispatcher("/login.html").forward(request, response);
+                request.getRequestDispatcher("/incorrectlogin.html").forward(request, response);
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
