@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.model.Recording;
 
 public enum RecordingDao {

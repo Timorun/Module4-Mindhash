@@ -14,8 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
-import com.mindhash.MindhashApp.dao.DBConnectivity;
-import com.mindhash.MindhashApp.model.CheckEmailRes;
+import com.mindhash.MindhashApp.DBConnectivity;
 
 @Path("checkemail/{email}")
 public class CheckEmailTaken {
@@ -26,7 +25,7 @@ public class CheckEmailTaken {
 	String email;
 	
 	@GET
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
 	public CheckEmailRes check(@PathParam("email") String email) {
 		this.email = email;
 		CheckEmailRes res = new CheckEmailRes();
@@ -34,21 +33,48 @@ public class CheckEmailTaken {
 
         try {
             String query = "SELECT COUNT(*) AS count FROM users WHERE email = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1, email);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                int count = rs.getInt("count");
-                conn.close();
-                if (count > 0) {
-                	res.setIsTaken(true);
-                }
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, email);
+            ResultSet rs = st.executeQuery();
+            conn.close();
+            rs.next();
+            int count = rs.getInt("count");
+            if (count > 0) {
+            	res.setIsTaken(true);
+            } else {
+            	res.setIsTaken(false);
             }
-            res.setIsTaken(false);
         } catch (SQLException e) {
             e.printStackTrace();
+            res.setErrMsg(e.getMessage());
         }
         return res;
 	}
-
+	
+	private class CheckEmailRes {
+		private boolean isTaken;
+		private String errMsg;
+		
+		public CheckEmailRes() {
+			
+		}
+		
+		@SuppressWarnings("unused")
+		public boolean getIsTaken() {
+			return isTaken;
+		}
+		
+		@SuppressWarnings("unused")
+		public String getErrMsg() {
+			return errMsg;
+		}
+		
+		public void setIsTaken(boolean isTaken) {
+			this.isTaken = isTaken;
+		}
+		
+		public void setErrMsg(String errMsg) {
+			this.errMsg = errMsg;
+		}
+	}
 }
