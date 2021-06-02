@@ -21,7 +21,7 @@ public class MindhashDao {
         conn = DBConnectivity.createConnection();
 
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement("insert into  mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            PreparedStatement preparedStatement = conn.prepareStatement("insert into mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             ObjectMapper objectMapper = new ObjectMapper();
             List<Measurement> list = objectMapper.readValue(new File(userHome + "/data2.json.txt"), new TypeReference<List<Measurement>>() {

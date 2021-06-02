@@ -29,7 +29,6 @@ public class UserDao {
             e.printStackTrace();
         }
         return false;
-
     }
 
     public boolean registerUser(User user) throws SQLException {
@@ -58,7 +57,6 @@ public class UserDao {
             e.printStackTrace();
         }
         return false;
-
     }
 
     private String generateHash(String password) {
@@ -77,7 +75,6 @@ public class UserDao {
             e.printStackTrace();
         }
         return hash.toString();
-
     }
 
     public User checkLogin(String email, String password) throws SQLException {
@@ -101,6 +98,5 @@ public class UserDao {
         }
         conn.close();
         return user;
-
     }
 }

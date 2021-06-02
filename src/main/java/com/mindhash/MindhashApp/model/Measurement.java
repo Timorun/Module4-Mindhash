@@ -44,5 +44,4 @@ public class Measurement {
     public void setTime(String time) {
         this.time = time;
     }
-
 }

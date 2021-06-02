@@ -1,7 +1,6 @@
 package com.mindhash.MindhashApp.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,8 +15,7 @@ public enum RecordingDao {
     private Map<Integer, Recording> contentProvider = new HashMap<>();
 
     private RecordingDao() {
-    	Connection conn = null;
-    	conn = DBConnectivity.createConnection();
+    	Connection conn = DBConnectivity.createConnection();
 
     	try {
             String query = "select * from recording";

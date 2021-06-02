@@ -25,5 +25,4 @@ public class Tag {
     public void setObject_type(String object_type) {
         this.object_type= object_type;
     }
-
 }

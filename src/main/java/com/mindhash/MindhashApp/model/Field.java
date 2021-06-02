@@ -75,6 +75,4 @@ public class Field {
     public void setMa_velocity(double ma_velocity) {
         this.ma_velocity = ma_velocity;
     }
-
-
 }
