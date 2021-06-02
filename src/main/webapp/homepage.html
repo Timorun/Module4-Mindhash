@@ -22,13 +22,8 @@
 					<div class="box-col">Two wheelers</div>
 					<div class="box-col">Pedestrians</div>
 					<div class="box-col">Vehicles</div>
+					<div class="box-col">total</div>
 				</li>
-				<!-- <li class="box-layout">
-					<div class="box-col">recording_03-02-2021_001</div>
-					<div class="box-col">03-02-2021</div>
-					<div class="box-col">resolution</div>
-					<div class="box-col">framerate</div>
-				</li> -->
 			</ul>
 		</section>
 		<script>
@@ -45,6 +40,7 @@
 										+ '<div class="box-col">' + recording.totalTwoWheelers + '</div>'
 										+ '<div class="box-col">' + recording.totalPedestrians + '</div>'
 										+ '<div class="box-col">' + recording.totalVehicles + '</div>'
+										+ '<div class="box-col">' + recording.totalObjects + '</div>'
 									+ '</li>'
 					}
 					document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);

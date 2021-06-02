@@ -2,7 +2,7 @@
 :root {
   --main-bg-color: #121212;
   --header-bg-color: #020202;
-  --border-color: #30363d;
+  --border-color: #8e8e8e;
   --text-color: #c9d1d9;
 }
 
@@ -60,6 +60,7 @@ li {
 
 body.light-mode {
 	visibility: visible;
+	background-color: #efefef;
 }
 .header {
 	position: fixed;
@@ -137,57 +138,68 @@ body.light-mode {
 	height: 48px;
 	line-height: 48px;
 	text-align: center;
+	color: #333;
 }
 .wrapper .recordings-list li:nth-child(even) {
-	background-color: #b2b2b2;
+	background-color: #c6c6c6;
 }
 .wrapper .recordings-list li:nth-child(odd) {
-	background-color: #b6b6b6;
+	background-color: #cacaca;
 }
 .wrapper .recordings-list li:first-child {
 	font-size: 20px;
-	font-weight: 700;
+	font-weight: 800;
 	height: 64px;
 	line-height: 64px;
 }
 .wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
-	background-color: #bbb;
+	background-color: #cfcfcf;
 	cursor: pointer;
 }
 .wrapper .recordings-list li:first-child,
 .wrapper .recordings-list li:nth-child(2) {
 	background-color: #fed136;
-	color: #333;
+	font-weight: 600;
 }
 
 .form-wrapper {
-	width: 480px;
-	padding: 72px 0 32px;
-	margin: 0 auto;
+	width: 320px;
+	padding: 32px 36px;
+	margin: 48px auto 32px;
+	background-color: #fff;
+	border-radius: 4px;
 }
 .form-wrapper .form-input-field {
 	border: 0;
 	outline: none;
-	background-color: rgba(0, 0, 0, 0);
-	border-bottom: 1px solid #bbb;
-	height: 48px;
+	background-color: #efefef;
+	height: 36px;
 	width: 100%;
-	padding: 12px 6px;
+	padding: 12px;
 	box-sizing: border-box;
 	display: block;
-	margin-top: 24px;
+	margin-bottom: 24px;
+	border-radius: 4px;
+	overflow: hidden;
+}
+.form-wrapper .form-input-field::placeholder {
+	font-size: 13px;
+}
+.form-wrapper .form-input-field:focus {
+	border: 1px solid #FED136;
+}
+.form-wrapper .form-input-field:-webkit-autofill {
+	box-shadow: inset 0 0 0 32px #efefef!important
 }
 .form-wrapper .form-submit-btn {
-	height: 44px;
-	line-height: 44px;
+	height: 36px;
+	line-height: 36px;
 	text-align: center;
 	color: #fff;
 	background-color: #FED136;
-	-webkit-transition: background-color .3s ease;
-	transition: background-color .3s ease;
 	width: 100%;
-	border-radius: 32px;
-	margin-top: 56px;
+	border-radius: 4px;
+	margin-top: 12px;
 	font-size: 13px;
 	cursor: pointer;
 }
@@ -202,7 +214,7 @@ body.light-mode {
 	line-height: 24px;
 }
 .form-wrapper .guide.mt {
-	margin-top: 48px;
+	margin-top: 32px;
 }
 .form-wrapper .guide a {
 	color: #FED136;
@@ -210,6 +222,7 @@ body.light-mode {
 }
 .form-wrapper .reset-password-tip {
 	color: #666;
+	margin-bottom: 24px;
 }
 
 /*recording page*/
@@ -355,39 +368,41 @@ body.dark-mode {
 .dark-mode .header {
 	background-color: var(--header-bg-color);
 }
-.dark-mode .wrapper .recordings-list {
-	overflow: hidden;
-	box-sizing: border-box;
-}
+
 .dark-mode .wrapper .recordings-list li {
+	color: var(--text-color);
 	background-color: transparent;
 	background-color: #181818;
 	-webkit-transition: background-color .3s ease;
 	transition: background-color .3s ease;
 }
-.dark-mode .wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
-	background-color: #282828;
-}
-.dark-mode .wrapper .recordings-list li:last-child {
-	border-bottom: none;
-}
 .dark-mode .wrapper .recordings-list li:first-child,
 .dark-mode .wrapper .recordings-list li:nth-child(2) {
-	color: var(--text-color);
 	background-color: #161616;
 }
 .dark-mode .wrapper .recordings-list li:nth-child(2) {
 	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
 }
+.dark-mode .wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
+	background-color: #282828;
+}
 
+.dark-mode .form-wrapper {
+	background-color: #181818;
+}
 .dark-mode .form-wrapper .form-input-field {
-	border-bottom: 1px solid var(--border-color);
+	background-color: #282828;
+}
+.dark-mode .form-wrapper .form-input-field::placeholder {
+	color: #bbb;
+}
+.dark-mode .form-wrapper .form-input-field:-webkit-autofill {
+	-webkit-text-fill-color: var(--text-color);
+	box-shadow: inset 0 0 0 32px #282828!important
 }
 .dark-mode .form-wrapper .form-submit-btn {
 	color: var(--text-color);
 	background-color: #282828;
-	-webkit-transition: background-color .3s ease;
-	transition: background-color .3s ease;
 }
 .dark-mode .form-wrapper .form-submit-btn:hover {
 	background-color: #383838;
