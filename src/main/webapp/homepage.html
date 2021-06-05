@@ -14,7 +14,7 @@
 		</header>
 		<script src="js/switch-mode.js"></script>
 		
-		<section class="wrapper">
+		<section class="wrapper mt-64">
 			<ul class="recordings-list">
 				<li>Recordings</li>
 				<li id="title" class="box-layout">
@@ -35,12 +35,14 @@
 						htmlStr = "";
 					for(var recording of recordings) {
 						var id = recording.recordingID;
-						htmlStr += '<li class="box-layout">' 
+						htmlStr += '<li>'
+										+ '<a href="recording.html?id=' + id + '" class="box-layout">'
 										+ '<div class="box-col">Recording' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
 										+ '<div class="box-col">' + recording.totalTwoWheelers + '</div>'
 										+ '<div class="box-col">' + recording.totalPedestrians + '</div>'
 										+ '<div class="box-col">' + recording.totalVehicles + '</div>'
 										+ '<div class="box-col">' + recording.totalObjects + '</div>'
+										+ '</a>'
 									+ '</li>'
 					}
 					document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);

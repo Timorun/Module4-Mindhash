@@ -61,7 +61,7 @@ li {
 	justify-content: center;
 }
 .mt-64 {
-	margin-top: 64px;
+	margin-top: 64px!important;
 }
 
 body.light-mode {
@@ -144,6 +144,11 @@ body.light-mode {
 	height: 48px;
 	line-height: 48px;
 	text-align: center;
+}
+.wrapper .recordings-list li a {
+	color: #333;
+	height: 48px;
+	text-decoration: none;
 }
 .wrapper .recordings-list li:nth-child(even) {
 	background-color: #c6c6c6;
@@ -416,10 +421,10 @@ body.dark-mode {
 
 .dark-mode .wrapper .recordings-list li {
 	color: var(--text-color);
-	background-color: transparent;
 	background-color: #181818;
-	-webkit-transition: background-color .3s ease;
-	transition: background-color .3s ease;
+}
+.dark-mode .wrapper .recordings-list li a {
+	color: var(--text-color);
 }
 .dark-mode .wrapper .recordings-list li:first-child,
 .dark-mode .wrapper .recordings-list li:nth-child(2) {
