@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<title></title>
 		<link type="text/css" rel="stylesheet" href="css/common-style.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"></script>
 	</head>
 	<body class="dark-mode">
 		<header class="header box-layout center-v">
@@ -26,6 +27,7 @@
 			<!-- video -->
 			<div class="section-title">GENERAL</div>
 			<div class="info-section">
+				<canvas id = "pieChart" height = "400" width = "400"></canvas>
 				<video controls>
 				  <source src="img/1620757951110054.mp4" type="video/mp4">
 				</video>
@@ -73,6 +75,40 @@
 		</section>
 	</body>
 	<script>
+		var queryString = window.location.search;
+		var urlParams = new URLSearchParams(queryString)
+		var id = urlParams.get('id');
+		//console.log(id);
+		let xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var response = this.responseText;
+				var recording = JSON.parse(response);
+				var ctx = document.getElementById('pieChart').getContext('2d');
+				let pChart = new Chart(ctx, {
+					type: 'pie',
+					data: {
+						labels: ['Vehicles', 'Pedestrians', 'Two wheelers'],
+						datasets: [
+							{
+								backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
+								data: [recording.totalVehicles, recording.totalPedestrians, recording.totalTwoWheelers]
+							},
+
+						]
+					},
+
+					options: {
+						responsive: false
+					}
+				});
+
+
+			}
+		}
+		xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
+		xmlhttp.setRequestHeader("Accept", "application/json");
+		xmlhttp.send();
 		let map;
 		function initMap() {
 		  map = new google.maps.Map(document.getElementById("googleMap"), {
