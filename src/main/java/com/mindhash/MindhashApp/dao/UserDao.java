@@ -1,5 +1,6 @@
 package com.mindhash.MindhashApp.dao;
 
+import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.model.User;
 
 import java.security.MessageDigest;
@@ -10,8 +11,7 @@ public class UserDao {
     public static final String SALT = "AEgdqp2w3hZJZTuFvfMc";
 
     public boolean newMail(String email) {
-        Connection conn = null;
-        conn = DBConnectivity.createConnection();
+        Connection conn = DBConnectivity.createConnection();
 
         try {
             String query = "SELECT users.email FROM dab_di20212b_11.users";
@@ -35,8 +35,7 @@ public class UserDao {
         String email = user.getEmail();
         String password = user.getPassword();
 
-        Connection conn = null;
-        conn = DBConnectivity.createConnection();
+        Connection conn = DBConnectivity.createConnection();
 
         try {
             String query = "insert into users(email, password) values (?, ?)";
@@ -81,8 +80,7 @@ public class UserDao {
         String saltPass = SALT + password;
         String hashedPass = generateHash(saltPass);
 
-        Connection conn = null;
-        conn = DBConnectivity.createConnection();
+        Connection conn = DBConnectivity.createConnection();
 
         String sql = "SELECT * FROM users WHERE email = ? and password = ?";
 

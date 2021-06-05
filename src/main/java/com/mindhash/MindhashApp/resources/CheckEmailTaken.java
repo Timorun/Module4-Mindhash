@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
-import com.mindhash.MindhashApp.dao.DBConnectivity;
-import com.mindhash.MindhashApp.model.CheckEmailRes;
+import com.mindhash.MindhashApp.DBConnectivity;
+import com.mindhash.MindhashApp.model.ResponseMsg;
 
 @Path("checkemail/{email}")
 public class CheckEmailTaken {
@@ -23,32 +23,32 @@ public class CheckEmailTaken {
 	UriInfo uriInfo;
 	@Context
 	Request request;
+	
 	String email;
 	
 	@GET
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public CheckEmailRes check(@PathParam("email") String email) {
+	@Produces(MediaType.APPLICATION_JSON)
+	public ResponseMsg check(@PathParam("email") String email) {
 		this.email = email;
-		CheckEmailRes res = new CheckEmailRes();
+		ResponseMsg res = new ResponseMsg();
 		Connection conn = DBConnectivity.createConnection();
 
         try {
-            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1, email);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                int count = rs.getInt("count");
-                conn.close();
-                if (count > 0) {
-                	res.setIsTaken(true);
-                }
+            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ? LIMITE 1";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setString(1, email);
+            ResultSet rs = st.executeQuery();
+            conn.close();
+            rs.next();
+            int count = rs.getInt("count");
+            if (count > 0) {
+            	res.setRes(true);
+            } else {
+            	res.setRes(false);
             }
-            res.setIsTaken(false);
         } catch (SQLException e) {
-            e.printStackTrace();
+            res.setErrMsg(e.getMessage());
         }
         return res;
 	}
-
 }

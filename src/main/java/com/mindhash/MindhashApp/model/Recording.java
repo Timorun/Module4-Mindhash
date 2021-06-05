@@ -1,5 +1,8 @@
 package com.mindhash.MindhashApp.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Recording {
 	private int recordindID;
 	private double latitude;

@@ -1,4 +1,4 @@
-package com.mindhash.MindhashApp.dao;
+package com.mindhash.MindhashApp;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +13,7 @@ public class DBConnectivity {
         try {
             Class.forName("org.postgresql.Driver");
             try {
-                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + MindhashDao.username + "?currentSchema=dab_di20212b_11", MindhashDao.username, MindhashDao.password);
+                conn = DriverManager.getConnection("jdbc:postgresql://bronto.ewi.utwente.nl/" + username + "?currentSchema=dab_di20212b_11", username, password);
             } catch (SQLException e) {
                 System.err.println("Oops: " + e.getMessage());
                 System.err.println("SQLState: " + e.getSQLState());
@@ -23,4 +23,5 @@ public class DBConnectivity {
         }
         return conn;
     }
+    
 }

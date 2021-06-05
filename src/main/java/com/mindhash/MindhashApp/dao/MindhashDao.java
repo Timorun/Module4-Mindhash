@@ -5,20 +5,20 @@ import java.sql.*;
 import java.util.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
+import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.model.Measurement;
 
 /* Class adds JSON data to the database
  **/
 public class MindhashDao {
     private static final String userHome = System.getProperty("user.home");
-    public static Connection conn;
+    /*public static Connection conn;
     protected static final String username= "dab_di20212b_11";
-    protected static final String password = "FGqxQ1cJXYxvmPsW";
+    protected static final String password = "FGqxQ1cJXYxvmPsW";*/
 
     public static void main (String[] args) {
 
-        Connection conn = null;
-        conn = DBConnectivity.createConnection();
+        Connection conn = DBConnectivity.createConnection();
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement("insert into mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
