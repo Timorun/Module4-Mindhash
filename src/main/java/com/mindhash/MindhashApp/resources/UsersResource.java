@@ -2,10 +2,13 @@ package com.mindhash.MindhashApp.resources;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
+import java.util.Random;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -27,8 +30,6 @@ public class UsersResource {
 	@Context
 	Request request;
 	
-	public static final String SALT = "AEgdqp2w3hZJZTuFvfMc";
-	
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -48,12 +49,17 @@ public class UsersResource {
             	res.setRes(false);
             	res.setErrMsg(user.getEmail() + " has already been taken.");
             } else {
-            	String register = "insert into users(email, password) values (?, ?)";
+            	String register = "insert into users(email, password, salt) values (?, ?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(register);
                 preparedStatement.setString(1, user.getEmail());
-                String saltPass = SALT + user.getPassword();
+                Random r = new SecureRandom();
+                byte[] salt = new byte[20];
+                r.nextBytes(salt);
+                String saltStr = Base64.getEncoder().encodeToString(salt);
+                String saltPass = saltStr + user.getPassword();
                 String hashedPassword = generateHash(saltPass);
                 preparedStatement.setString(2, hashedPassword);
+                preparedStatement.setString(3, saltStr);
                 int i = preparedStatement.executeUpdate();
                 if (i > 0) {
                 	res.setRes(true);
@@ -96,9 +102,9 @@ public class UsersResource {
 	
 	private String generateHash(String password) {
         StringBuilder hash = new StringBuilder();
-
+        
         try {
-            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            MessageDigest sha = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = sha.digest(password.getBytes());
             char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
             for (int idx = 0; idx < hashedBytes.length; ++idx) {
