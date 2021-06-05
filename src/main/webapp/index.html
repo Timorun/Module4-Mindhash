@@ -7,43 +7,23 @@
 		<link type="text/css" rel="stylesheet" href="css/common-style.css">
 	</head>
 	<body class="dark-mode">
-		<header class="header box-layout center-v">
-			<div class="logo"></div>
-			<a href="#" class="home-link"></a>
-			<div class="box-col"><a href="" class="avatar"></a></div>
-		</header>
+		<div class="header-sign-in"><i class="logo"></i></div>
 		<script src="js/switch-mode.js"></script>
 
 		<section class="form-wrapper">
-			<form name="form" action="login" method="post" onsubmit= "return validate()">
-				<input type="text" name="email" placeholder="Email Address" class="form-input-field" />
-				<input type="password" name="password" placeholder="Password" class="form-input-field" />
-				<input type="password" name="confirmpassword" placeholder="Confirm Password" class="form-input-field" />
-				<input type="submit" value="Register" class="form-submit-btn" />
-			</form>
-			<div class="guide mt"> Already have an account? <a href="login.html">Log in!</a></div>
+			<h1>Create your <a href="#">Mindhash</a> account</h1>
+			<div id="err-msg" class="err-msg hide"></div>
+			<div class="form-body">
+				<form id="register-form">
+					<input id="email" type="text" placeholder="Email Address" class="form-input-field" />
+					<input id="password" type="password" placeholder="Password" class="form-input-field" />
+					<input id="confirm-password" type="password" placeholder="Confirm Password" class="form-input-field" />
+					<input id="submit" type="submit" value="Register" class="form-submit-btn" />
+				</form>
+				<div class="guide mt"> Already have an account? <a href="login.html">Log in!</a></div>
+			</div>
 		</section>
 		
-		<script>
-			function validate() {
-				var email = document.form.email.value;
-				var password = document.form.password.value;
-				var confirmpassword= document.form.confirmpassword.value;
-		
-				var regPass = /^(?=.*[0-9])(?=.*[A-Z]).{8,}$/;
-				var regEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-		
-				if (!regEmail.test(email)) {
-					alert("Incorrect email format");
-					return false;
-				} else if (!regPass.test(password)) {
-					alert("Password must be at least 8 characters long and contain at least one uppercase letter and one digit");
-					return false;
-				} else if (password!==confirmpassword) {
-					alert("Confirm Password should match with Password");
-					return false;
-				}
-			}
-		</script>
+		<script src="js/register.js"></script>
 	</body>
 </html>

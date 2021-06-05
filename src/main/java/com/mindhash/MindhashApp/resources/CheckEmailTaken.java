@@ -15,6 +15,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
 import com.mindhash.MindhashApp.DBConnectivity;
+import com.mindhash.MindhashApp.model.ResponseMsg;
 
 @Path("checkemail/{email}")
 public class CheckEmailTaken {
@@ -22,17 +23,18 @@ public class CheckEmailTaken {
 	UriInfo uriInfo;
 	@Context
 	Request request;
+	
 	String email;
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public CheckEmailRes check(@PathParam("email") String email) {
+	public ResponseMsg check(@PathParam("email") String email) {
 		this.email = email;
-		CheckEmailRes res = new CheckEmailRes();
+		ResponseMsg res = new ResponseMsg();
 		Connection conn = DBConnectivity.createConnection();
 
         try {
-            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ?";
+            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ? LIMITE 1";
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
@@ -40,41 +42,13 @@ public class CheckEmailTaken {
             rs.next();
             int count = rs.getInt("count");
             if (count > 0) {
-            	res.setIsTaken(true);
+            	res.setRes(true);
             } else {
-            	res.setIsTaken(false);
+            	res.setRes(false);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             res.setErrMsg(e.getMessage());
         }
         return res;
-	}
-	
-	private class CheckEmailRes {
-		private boolean isTaken;
-		private String errMsg;
-		
-		public CheckEmailRes() {
-			
-		}
-		
-		@SuppressWarnings("unused")
-		public boolean getIsTaken() {
-			return isTaken;
-		}
-		
-		@SuppressWarnings("unused")
-		public String getErrMsg() {
-			return errMsg;
-		}
-		
-		public void setIsTaken(boolean isTaken) {
-			this.isTaken = isTaken;
-		}
-		
-		public void setErrMsg(String errMsg) {
-			this.errMsg = errMsg;
-		}
 	}
 }
