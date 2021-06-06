@@ -48,11 +48,15 @@ xmlhttp.onreadystatechange = function() {
 			ctx2 = document.querySelector('#bar-chart').getContext('2d');
 		
 		var htmlStr = "<div>Date: " + recording.date + "</div>" + 
-					"<div>Total: " + recording.totalVehicles + "</div>" +
+					"<div>Total: " + recording.totalObjects + "</div>" +
 					"<div>Pedestrians: " + recording.totalPedestrians + "</div>" + 
 					"<div>Vehicles: " + recording.totalVehicles + "</div>" + 
 					"<div>Two wheelers: " + recording.totalTwoWheelers+ "</div>";
-		document.querySelector("#general-tit").insertAdjacentHTML("afterend", htmlStr);			
+		document.querySelector("#general-tit").insertAdjacentHTML("afterend", htmlStr);	
+				
+		var percentOfVehicles = ((recording.totalVehicles / recording.totalObjects) * 100).toFixed(2),
+			percentOfPedestrians = ((recording.totalPedestrians / recording.totalObjects) * 100).toFixed(2),
+			percentOfTwoWheelers = (100 - percentOfVehicles - percentOfPedestrians).toFixed(2);
 		
 		pChart = new Chart(ctx, {
 			type: 'pie',
@@ -61,13 +65,26 @@ xmlhttp.onreadystatechange = function() {
 				datasets: [
 					{
 						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
-						data: [recording.totalVehicles, recording.totalPedestrians, recording.totalTwoWheelers],
-						borderWidth: 1
+						data: [percentOfVehicles, percentOfPedestrians, percentOfTwoWheelers],
+						borderWidth: 0
 					},
-
 				]
 			},
 			options: {
+				plugins: {
+					tooltip: {
+						callbacks: {
+							label: function(TooltipItem, object) {
+								return TooltipItem.label + " " +TooltipItem.formattedValue + "%";
+							}
+						}
+					},
+					legend: {
+						onClick: function() {
+							return false;
+						}
+					} 
+				},
 				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 				borderColor: currentTheme == "dark" ? "#c9d1d9" : "#fff",
 				responsive: true,

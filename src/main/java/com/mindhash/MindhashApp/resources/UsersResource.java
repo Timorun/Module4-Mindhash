@@ -75,34 +75,45 @@ public class UsersResource {
 		return res;
 	}
 	
-	/*public ResponseMsg checkEmail(String email) {
+	@POST
+	@Path("/login")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public ResponseMsg login(User user) {
 		ResponseMsg res = new ResponseMsg();
-		Connection conn = DBConnectivity.createConnection();
+		
+        Connection conn = DBConnectivity.createConnection();
+        String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
 
-        try {
-            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ? LIMITE 1";
-            PreparedStatement st = conn.prepareStatement(query);
-            st.setString(1, email);
-            ResultSet rs = st.executeQuery();
-            conn.close();
-            rs.next();
-            int count = rs.getInt("count");
-            if (count > 0) {
-            	res.setRes(true);
-            } else {
-            	res.setRes(false);
-            	res.setErrMsg(email + " has already been taken.");
-            }
-        } catch (SQLException e) {
-        	res.setRes(false);
-            res.setErrMsg(e.getMessage());
-        }
-        return res;
-	}*/
+		try {
+			PreparedStatement preparedStatement = conn.prepareStatement(sql);
+			preparedStatement.setString(1, user.getEmail());
+	        ResultSet result = preparedStatement.executeQuery();
+	        
+	        result.next();
+	        if (result.getString("email").equals(user.getEmail())) {
+	        	String saltPass = result.getString("salt") + user.getPassword();
+                String hashedPassword = generateHash(saltPass);
+                if (hashedPassword.equals(result.getString("password"))) {
+                	res.setRes(true);
+                } else {
+                	res.setRes(false);
+                	res.setErrMsg("Incorrect email address or password.");
+                }
+	        } else {
+	        	res.setRes(false);
+	        	res.setErrMsg("Incorrect email address or password.");
+	        }
+	        conn.close();
+		} catch (SQLException e) {
+			res.setRes(false);
+        	res.setErrMsg(e.getMessage());
+		}
+		return res;
+	}
 	
 	private String generateHash(String password) {
         StringBuilder hash = new StringBuilder();
-        
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = sha.digest(password.getBytes());
