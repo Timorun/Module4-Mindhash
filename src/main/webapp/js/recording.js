@@ -95,19 +95,25 @@ xmlhttp.onreadystatechange = function() {
 		bChart = new Chart(ctx2, {
 			type: 'bar',
 			data: {
-				labels: ['Vehicles', 'Pedestrians', 'Two wheelers'],
+				labels: ['Pedestrians', 'Two Wheelers', 'Vehicles'],
 				datasets: [
 					{
+						label: "Maximum velocity",
 						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
-						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
-						data: [recording.totalVehicles, recording.totalPedestrians, recording.totalTwoWheelers]
-					},
+						backgroundColor: ["#4b77a9"],
+						data: [recording.pedestrians_max_velocity, recording.wheelers_max_velocity, recording.vehicles_max_velocity]
+					}, {
+						label: "Minimum velocity",
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						backgroundColor: ["#5f255f"],
+						data: [recording.pedestrians_min_velocity, recording.wheelers_min_velocity, recording.vehicles_min_velocity]
+					}
 				]
 			},
 			options: {
 				plugins: {
 					legend: {
-						display: false,
+						display: true,
 					} 
 				},
 				scales: {
