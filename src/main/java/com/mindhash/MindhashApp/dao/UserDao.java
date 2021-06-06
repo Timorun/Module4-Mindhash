@@ -62,7 +62,7 @@ public class UserDao {
         StringBuilder hash = new StringBuilder();
 
         try {
-            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            MessageDigest sha = MessageDigest.getInstance("SHA-256");
             byte[] hashedBytes = sha.digest(password.getBytes());
             char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
             for (int idx = 0; idx < hashedBytes.length; ++idx) {
@@ -76,8 +76,26 @@ public class UserDao {
         return hash.toString();
     }
 
+    public String getSalt(String email) {
+        String salt = "";
+        Connection conn = DBConnectivity.createConnection();
+        String saltquery = "SELECT users.salt AS count FROM users WHERE email = ? LIMIT 1";
+        PreparedStatement st = null;
+        try {
+            st = conn.prepareStatement(saltquery);
+            st.setString(1, email);
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            salt = rs.getString(1);
+        } catch (SQLException throwables) {
+        }
+
+        return salt;
+    }
+
     public User checkLogin(String email, String password) throws SQLException {
-        String saltPass = SALT + password;
+        String salt = getSalt(email);
+        String saltPass = salt + password;
         String hashedPass = generateHash(saltPass);
 
         Connection conn = DBConnectivity.createConnection();
