@@ -33,6 +33,5 @@ public class RecordingResource {
             throw new RuntimeException("Recording with id " + id + "not found");
         }
         return recording;
-
     }
 }

@@ -15,8 +15,8 @@ public class Recording {
 	
 	public Recording() {}
 	
-	public Recording(int recordindID, double latitude, double longitude, int totalObjects, int totalTwoWheelers,
-			int totalPedestrians, int totalVehicles, String date) {
+	public Recording(int recordindID, double latitude, double longitude, int totalObjects, 
+			int totalTwoWheelers, int totalPedestrians, int totalVehicles, String date) {
 		this.recordindID = recordindID;
 		this.latitude = latitude;
 		this.longitude = longitude;

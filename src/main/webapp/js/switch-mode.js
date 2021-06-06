@@ -1,7 +1,7 @@
 const btn = document.querySelector(".logo");
 
 let currentTheme = localStorage.getItem("theme");
-//console.log(currentTheme);
+
 if (currentTheme == "dark") {
 	document.body.classList.remove("light-mode");
 	document.body.classList.add("dark-mode");
@@ -20,6 +20,5 @@ btn.addEventListener("click", function () {
 		document.body.classList.add("dark-mode");
 		currentTheme = "dark";
 	}
-	//console.log(currentTheme);
 	localStorage.setItem("theme", currentTheme);
 });

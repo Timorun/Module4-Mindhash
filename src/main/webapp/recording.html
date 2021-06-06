@@ -5,7 +5,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<title></title>
 		<link type="text/css" rel="stylesheet" href="css/common-style.css">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js"></script>
 	</head>
 	<body class="dark-mode">
 		<header class="header box-layout center-v">
@@ -21,173 +20,31 @@
 			</div>
 			<a href="" class="avatar"></a>
 		</header>
-		<script src="js/switch-mode.js"></script>
+		<script>
+			let currentTheme = localStorage.getItem("theme");
+			if (currentTheme == "dark") {
+				document.body.classList.remove("light-mode");
+				document.body.classList.add("dark-mode");
+			} else if (currentTheme == "light") {
+				document.body.classList.remove("dark-mode");
+				document.body.classList.add("light-mode");
+			}
+		</script>
 			
-		<section class="info-wrapper">
-			<!-- video -->
-			<div class="section-title">GENERAL</div>
-			<div class="info-section">
-				<canvas id = "pieChart" height = "400" width = "400"></canvas>
-				<video controls>
-				  <source src="img/1620757951110054.mp4" type="video/mp4">
-				</video>
-				<div class="video-info">
-					<div class="box-layout">
-						<div class="box-col">11:48<span>TIME</span></div>
-						<div class="box-col">12/04/20<span>DATA</span></div>
-						<div class="box-col">480<span>RESOLUTION</span></div>
-						<div class="box-col">60<span>FPS</span></div>
-					</div>
-					<div class="box-layout">
-						<div class="box-col">25<span>PEDESTRIANS</span></div>
-						<div class="box-col">25<span>TWO WHEELERS</span></div>
-						<div class="box-col">25<span>VEHICLES</span></div>
-						<div class="box-col"></div>
-					</div>
+		<section class="info-wrapper mt-64">
+			<div class="section-container"><canvas id="pie-chart" class="pie-chart"></canvas></div>
+			<div class="section-container"><canvas id="bar-chart" class="bar-chart"></canvas></div>
+			<div class="section-container text-info mr0">
+				<div class="general">
+					<div id="general-tit" class="title">General</div>
+					<div id="total"></div>
+					<div id="pedestrians"></div>
+					<div id="vehicles"></div>
+					<div id="twoWheelers"></div>
 				</div>
 			</div>
-			
-			<!-- heatmap -->
-			<div class="section-title">VISUALIZATION</div>
-			<div class="slider info-section">
-			  <div class="slide-container">
-				  <div class="slide-item current"></div>
-				  <div class="slide-item"></div>
-				  <div class="slide-item"></div>
-				  <div class="slide-item"></div>
-				  <div class="slide-item"></div>
-			  </div>
-			  
-			  <div class="slider-pagination">
-				  <div class="pagination active"></div>
-				  <div class="pagination"></div>
-				  <div class="pagination"></div>
-				  <div class="pagination"></div>
-				  <div class="pagination"></div>
-			  </div>
-			  <div id="prev" class="btn btn-pre"><i class="iconfont icon-btn_left"></i></div>
-			  <div id="next" class="btn btn-next"><i class="iconfont icon-btn_right"></i></div>
-			</div>
-			
-			<!-- Google map-->
-			<div class="section-title">LOCATION</div>
-			<div id="googleMap" class="info-section"></div>
 		</section>
 	</body>
-	<script>
-		var queryString = window.location.search;
-		var urlParams = new URLSearchParams(queryString)
-		var id = urlParams.get('id');
-		//console.log(id);
-		let xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				var response = this.responseText;
-				var recording = JSON.parse(response);
-				var ctx = document.getElementById('pieChart').getContext('2d');
-				let pChart = new Chart(ctx, {
-					type: 'pie',
-					data: {
-						labels: ['Vehicles', 'Pedestrians', 'Two wheelers'],
-						datasets: [
-							{
-								backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
-								data: [recording.totalVehicles, recording.totalPedestrians, recording.totalTwoWheelers]
-							},
-
-						]
-					},
-
-					options: {
-						responsive: false
-					}
-				});
-
-
-			}
-		}
-		xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
-		xmlhttp.setRequestHeader("Accept", "application/json");
-		xmlhttp.send();
-		let map;
-		function initMap() {
-		  map = new google.maps.Map(document.getElementById("googleMap"), {
-		    center: { lat: -34.397, lng: 150.644 },
-		    zoom: 8,
-		  });
-		}
-		
-		let recording = {
-			showHeatmap: function() {
-				const slides = document.querySelectorAll(".slide-item");
-				const paginations = document.querySelectorAll(".pagination");
-				const next = document.querySelector("#next");
-				const prev = document.querySelector("#prev");
-				const auto = true;
-				const intervalTime = 3000;
-				let slideInterval;
-				
-				const nextSlide = function() {
-				  const current = document.querySelector(".slide-item.current");
-				  const active = document.querySelector(".pagination.active");
-				  current.classList.remove("current");
-				  active.classList.remove("active");
-				  if (current.nextElementSibling) {
-				    current.nextElementSibling.classList.add("current");
-					active.nextElementSibling.classList.add("active");
-				  } else {
-				    slides[0].classList.add("current");
-					paginations[0].classList.add("active");
-				  }
-				  setTimeout(() => {
-					  current.classList.remove("current");
-					  active.classList.remove("active");
-				  });
-				};
-				
-				const prevSlide = function() {
-				  const current = document.querySelector(".slide-item.current");
-				  const active = document.querySelector(".pagination.active");
-				  current.classList.remove("current");
-				  active.classList.remove("active");
-				  if (current.previousElementSibling) {
-				    current.previousElementSibling.classList.add("current");
-					active.previousElementSibling.classList.add("active");
-				  } else {
-				    slides[slides.length - 1].classList.add("current");
-					paginations[paginations.length - 1].classList.add("active");
-				  }
-				  setTimeout(function() {
-				  	  current.classList.remove("current");
-				  	  active.classList.remove("active");
-				  });
-				};
-				
-				next.addEventListener("click", function() {
-				  nextSlide();
-				  if (auto) {
-				    slideInterval = setInterval(nextSlide, intervalTime);
-				    clearInterval(slideInterval);
-				  }
-				});
-				
-				prev.addEventListener("click", function() {
-				  prevSlide();
-				  if (auto) {
-				    slideInterval = setInterval(nextSlide, intervalTime);
-				    clearInterval(slideInterval);
-				  }
-				});
-				
-				if (auto) {
-				  slideInterval = setInterval(nextSlide, intervalTime);
-				}
-			},
-			init: function() {
-				recording.showHeatmap();
-			}
-		}
-		recording.init();
-	</script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJW4jsPlNKgv6jFm3B5Edp5ywgdqLWdmc&callback=initMap" defer></script>
+	<script src="js/chart.min.js"></script>
+	<script src="js/recording.js"></script>
 </html>
