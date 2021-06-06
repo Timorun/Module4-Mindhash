@@ -82,16 +82,14 @@ public class UsersResource {
 	public ResponseMsg login(User user) {
 		ResponseMsg res = new ResponseMsg();
 		
-        Connection conn = DBConnectivity.createConnection();
-        String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
-
 		try {
-			PreparedStatement preparedStatement = conn.prepareStatement(sql);
-			preparedStatement.setString(1, user.getEmail());
-	        ResultSet result = preparedStatement.executeQuery();
+			Connection conn = DBConnectivity.createConnection();
+	        String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, user.getEmail());
+	        ResultSet result = st.executeQuery();
 	        
-	        result.next();
-	        if (result.getString("email").equals(user.getEmail())) {
+	        if (result.next()) {
 	        	String saltPass = result.getString("salt") + user.getPassword();
                 String hashedPassword = generateHash(saltPass);
                 if (hashedPassword.equals(result.getString("password"))) {
