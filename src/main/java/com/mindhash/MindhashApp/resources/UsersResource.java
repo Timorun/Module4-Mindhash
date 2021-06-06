@@ -39,13 +39,11 @@ public class UsersResource {
 		
 		Connection conn = DBConnectivity.createConnection();
 		try {
-			String checkTaken = "SELECT COUNT(*) AS count FROM users WHERE email = ? LIMIT 1";
+			String checkTaken = "SELECT * FROM users WHERE email = ? LIMIT 1";
             PreparedStatement st = conn.prepareStatement(checkTaken);
             st.setString(1, user.getEmail());
             ResultSet rs = st.executeQuery();
-            rs.next();
-            int count = rs.getInt("count");
-            if (count > 0) {
+            if (rs.next()) {
             	res.setRes(false);
             	res.setErrMsg(user.getEmail() + " has already been taken.");
             } else {

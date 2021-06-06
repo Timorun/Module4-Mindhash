@@ -12,15 +12,17 @@
 		
 		<section class="form-wrapper">
 			<h1>Log in to <a href="#">Mindhash</a></h1>
+			<div id="err-msg" class="err-msg hide"></div>
 			<div class="form-body">
-				<form action = "homepage" method = "post">
-					<input type="text" name="email" placeholder="Email Address" class="form-input-field" />
-					<input type="password" name="password" placeholder="Password" class="form-input-field" />
-					<input type="submit" name="" value="Log in" class="form-submit-btn" />
+				<form id="login-form">
+					<input id="email" type="text" placeholder="Email Address" class="form-input-field" />
+					<input id="password" type="password" placeholder="Password" class="form-input-field" />
+					<input id="submit" type="submit" value="Log in" class="form-submit-btn" />
 				</form>
 				<div class="guide mt">Forgot password? <a href="reset-password.html">Click here</a></div>
 				<div class="guide">Don’t have an account? <a href="register.html">Register now!</a></div>
 			</div>
 		</section>
+		<script src="js/login.js"></script>
 	</body>
 </html>
