@@ -34,7 +34,7 @@ public class CheckEmailTaken {
 		Connection conn = DBConnectivity.createConnection();
 
         try {
-            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ? LIMITE 1";
+            String query = "SELECT COUNT(*) AS count FROM users WHERE email = ? LIMIT 1";
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, email);
             ResultSet rs = st.executeQuery();

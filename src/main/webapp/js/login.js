@@ -116,7 +116,7 @@ function register() {
 			errMsg.innerText = "";
 		}
 	}
-	xmlhttp.open("POST", "/MindhashApp/rest/user/login", true);
+	xmlhttp.open("POST", "/mindhash/rest/user/login", true);
 	xmlhttp.setRequestHeader("Content-type", "application/json");
 	xmlhttp.setRequestHeader("Accept", "application/json");
 	let json = {email, password}

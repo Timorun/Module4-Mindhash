@@ -210,6 +210,6 @@ xmlhttp.onreadystatechange = function() {
 		;
 	}
 }
-xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
+xmlhttp.open("GET", "/mindhash/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
