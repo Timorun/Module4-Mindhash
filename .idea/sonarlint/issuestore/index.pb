@@ -5,7 +5,15 @@ g
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
 O
 src/main/webapp/WEB-INF/web.xml,2\e\2e22b6edd746fa3dc40ad7276c87c8d87d72a392
-l
-<src/main/java/com/mindhash/MindhashApp/dao/RecordingDao.java,6\c\6c347fc44de06fb43add53fa5880c1dd49dbb3f8
 k
 ;src/main/java/com/mindhash/MindhashApp/dao/MindhashDao.java,c\1\c17e6c4dd9d7ab3c06b2967cfdbe1a89cb972430
+u
+Esrc/main/java/com/mindhash/MindhashApp/resources/CheckEmailTaken.java,2\e\2e74d6954365c2a0fc016927622d972e754ed46c
+S
+#src/main/webapp/reset-password.html,1\b\1bf267708e412ca044f289a21e8241e74e365ed5
+?
+MindhashApp.iml,3\a\3a3c11cf46bc684ffa9a6e69011f4d31c0f6c47c
+S
+#.idea/artifacts/MindhashApp_war.xml,a\4\a43223fadfc0b768339f0d46d4326da9ad69f1ef
+\
+,.idea/artifacts/MindhashApp_war_exploded.xml,6\5\65b8e6da5c0b8969346929173632bacae2ba1feb
