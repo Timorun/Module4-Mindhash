@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
 	<head>
+	    <script src="https://code.highcharts.com/highcharts.js"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	    <script src="js/chart.min.js"></script>
+	    <script src="js/recording.js"></script>
+	    <script src="js/wheelchart.js"></script>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<title></title>
 		<link type="text/css" rel="stylesheet" href="css/common-style.css">
+		<link type="text/css" rel="stylesheet" href="css/wheelchart.css">
 	</head>
 	<body class="dark-mode">
 		<header class="header box-layout center-v">
@@ -33,6 +39,7 @@
 		<section class="info-wrapper mt-64">
 			<div class="section-container"><canvas id="pie-chart" class="pie-chart"></canvas></div>
 			<div class="section-container"><canvas id="bar-chart" class="bar-chart"></canvas></div>
+			<div class="section-container"><canvas id="wheel-chart" class="wheel-chart"></canvas></div>
 			<div class="section-container text-info mr0">
 				<div class="general">
 					<div id="general-tit" class="title">General</div>
@@ -44,6 +51,5 @@
 			</div>
 		</section>
 	</body>
-	<script src="js/chart.min.js"></script>
-	<script src="js/recording.js"></script>
+	
 </html>

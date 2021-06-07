@@ -140,6 +140,7 @@ xmlhttp.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		});
+		
 	}
 }
 xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
