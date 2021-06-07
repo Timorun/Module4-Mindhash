@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-		<title></title>
-		<link type="text/css" rel="stylesheet" href="css/common-style.css">
-	</head>
-	<body class="dark-mode">
-		<header class="header box-layout center-v">
-			<div class="logo"></div>
-			<a href="#" class="home-link"></a>
-			<div class="box-col">
-				<ul>
-					<li>GENERAL</li>
-					<li>VISUALIZATION</li>
-					<li>LOCATION</li>
-				</ul>
-			</div>
-			<a href="" class="avatar"></a>
-		</header>
-		<script>
-			let currentTheme = localStorage.getItem("theme");
-			if (currentTheme == "dark") {
-				document.body.classList.remove("light-mode");
-				document.body.classList.add("dark-mode");
-			} else if (currentTheme == "light") {
-				document.body.classList.remove("dark-mode");
-				document.body.classList.add("light-mode");
-			}
-		</script>
-			
-		<section class="info-wrapper mt-64">
-			<div class="section-container"><canvas id="pie-chart" class="pie-chart"></canvas></div>
-			<div class="section-container"><canvas id="bar-chart" class="bar-chart"></canvas></div>
-			<div class="section-container text-info mr0">
-				<div class="general">
-					<div id="general-tit" class="title">General</div>
-					<div id="total"></div>
-					<div id="pedestrians"></div>
-					<div id="vehicles"></div>
-					<div id="twoWheelers"></div>
-				</div>
-			</div>
-		</section>
-	    <script src="js/chart.min.js"></script>
-	    <script src="js/recording.js"></script>
-	</body>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+	<title></title>
+	<link type="text/css" rel="stylesheet" href="css/common-style.css">
+</head>
+<body class="dark-mode">
+<header class="header box-layout center-v">
+	<div class="logo"></div>
+	<a href="#" class="home-link"></a>
+	<div class="box-col">
+		<ul>
+			<li>GENERAL</li>
+			<li>VISUALIZATION</li>
+			<li>LOCATION</li>
+		</ul>
+	</div>
+	<a href="" class="avatar"></a>
+</header>
+<script>
+	let currentTheme = localStorage.getItem("theme");
+	if (currentTheme == "dark") {
+		document.body.classList.remove("light-mode");
+		document.body.classList.add("dark-mode");
+	} else if (currentTheme == "light") {
+		document.body.classList.remove("dark-mode");
+		document.body.classList.add("light-mode");
+	}
+</script>
+
+<section class="info-wrapper mt-64">
+	<div class="section-container"><canvas id="pie-chart" class="pie-chart"></canvas></div>
+	<div class="section-container"><canvas id="bar-chart" class="bar-chart"></canvas></div>
+	<div class="section-container text-info mr0">
+		<div class="general">
+			<div id="general-tit" class="title">General</div>
+			<div id="total"></div>
+			<div id="pedestrians"></div>
+			<div id="vehicles"></div>
+			<div id="twoWheelers"></div>
+		</div>
+	</div>
+</section>
+<script src="js/chart.min.js"></script>
+<script src="js/recording.js"></script>
+</body>
 </html>
