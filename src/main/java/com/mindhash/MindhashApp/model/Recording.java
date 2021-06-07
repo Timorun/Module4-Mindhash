@@ -18,11 +18,18 @@ public class Recording {
 	private double wheelers_max_velocity;
 	private double vehicles_min_velocity;
 	private double vehicles_max_velocity;
+	private String startTime;
+	private String endTime;
+	private String resolution;
+	private int frameRate;
+	private double vehiclesAvgVelocity;
+	private double pedestriansAvgVelocity;
+	private double wheelersAvgVelocity;
 	
 	public Recording() {}
 	
 	public Recording(int recordindID, double latitude, double longitude, int totalObjects, 
-			int totalTwoWheelers, int totalPedestrians, int totalVehicles, String date, double pedestrians_min_velocity, double pedestrians_max_velocity, double wheelers_min_velocity, double wheelers_max_velocity, double vehicles_min_velocity, double vehicles_max_velocity) {
+			int totalTwoWheelers, int totalPedestrians, int totalVehicles, String date, double pedestrians_min_velocity, double pedestrians_max_velocity, double wheelers_min_velocity, double wheelers_max_velocity, double vehicles_min_velocity, double vehicles_max_velocity, String startTime, String endTime, String resolution, int frameRate, double vehiclesAvgVelocity, double pedestriansAvgVelocity, double wheelersAvgVelocity ) {
 		this.recordindID = recordindID;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -37,6 +44,13 @@ public class Recording {
 		this.wheelers_max_velocity = wheelers_max_velocity;
 		this.vehicles_min_velocity = vehicles_min_velocity;
 		this.vehicles_max_velocity = vehicles_max_velocity;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.resolution = resolution;
+		this.frameRate = frameRate;
+		this.vehiclesAvgVelocity = vehiclesAvgVelocity;
+		this.pedestriansAvgVelocity = pedestriansAvgVelocity;
+		this.wheelersAvgVelocity = wheelersAvgVelocity;
 	}
 	
 	public int getRecordingID() {
@@ -95,6 +109,34 @@ public class Recording {
 		return wheelers_min_velocity;
 	}
 
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public String getResolution() {
+		return resolution;
+	}
+
+	public int getFrameRate() {
+		return frameRate;
+	}
+
+	public double getVehiclesAvgVelocity() {
+		return vehiclesAvgVelocity;
+	}
+
+	public double getPedestriansAvgVelocity() {
+		return pedestriansAvgVelocity;
+	}
+
+	public double getWheelersAvgVelocity() {
+		return wheelersAvgVelocity;
+	}
+
 	public void setRecordingID(int recordindID) {
 		this.recordindID = recordindID;
 	}
@@ -149,5 +191,33 @@ public class Recording {
 
 	public void setWheelers_min_velocity(double wheelers_min_velocity) {
 		this.wheelers_min_velocity = wheelers_min_velocity;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
+
+	public void setFrameRate(int frameRate) {
+		this.frameRate = frameRate;
+	}
+
+	public void setVehiclesAvgVelocity(double vehiclesAvgVelocity) {
+		this.vehiclesAvgVelocity = vehiclesAvgVelocity;
+	}
+
+	public void setPedestriansAvgVelocity(double pedestriansAvgVelocity) {
+		this.pedestriansAvgVelocity = pedestriansAvgVelocity;
+	}
+
+	public void setWheelersAvgVelocity(double wheelersAvgVelocity) {
+		this.wheelersAvgVelocity = wheelersAvgVelocity;
 	}
 }

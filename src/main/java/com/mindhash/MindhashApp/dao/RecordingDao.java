@@ -33,12 +33,19 @@ public enum RecordingDao {
             	recording.setTotalPedestrians(resultSet.getInt(6));
             	recording.setTotalVehicles(resultSet.getInt(7));
             	recording.setDate(resultSet.getString(8));
+                recording.setStartTime(resultSet.getString(9));
+                recording.setEndTime(resultSet.getString(10));
+                recording.setResolution(resultSet.getString(11));
+                recording.setFrameRate(resultSet.getInt(12));
                 recording.setPedestrians_min_velocity(resultSet.getDouble(13));
                 recording.setWheelers_max_velocity(resultSet.getDouble(14));
                 recording.setWheelers_min_velocity(resultSet.getDouble(15));
                 recording.setVehicles_max_velocity(resultSet.getDouble(16));
                 recording.setVehicles_min_velocity(resultSet.getDouble(17));
                 recording.setPedestrians_max_velocity(resultSet.getDouble(18));
+                recording.setVehiclesAvgVelocity(resultSet.getDouble(19));
+                recording.setPedestriansAvgVelocity(resultSet.getDouble(20));
+                recording.setWheelersAvgVelocity(resultSet.getDouble(21));
             	contentProvider.put(resultSet.getInt(1), recording);
             }
 

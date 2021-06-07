@@ -109,6 +109,11 @@ xmlhttp.onreadystatechange = function() {
 						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#5f255f"],
 						data: [recording.pedestrians_min_velocity, recording.wheelers_min_velocity, recording.vehicles_min_velocity]
+					}, {
+						label: "Average velocity",
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						backgroundColor: ["#d21243"],
+						data: [recording.pedestriansAvgVelocity, recording.wheelersAvgVelocity, recording.vehiclesAvgVelocity]
 					}
 				]
 			},
