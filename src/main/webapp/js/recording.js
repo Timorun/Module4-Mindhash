@@ -1,5 +1,5 @@
 let pChart = null,
-	bChart = null;
+	bChart = null,
 	rainChart = null,
 	maplayer = null;
 const btn = document.querySelector(".logo");
@@ -17,39 +17,39 @@ btn.addEventListener("click", function () {
 		if (currentTheme == "dark") {
 			pChart.options.color = "#c9d1d9";
 			//pChart.options.borderColor = "#c9d1d9";
-			
+
 			bChart.options.color = "#c9d1d9";
 			bChart.options.scales.x.grid.borderColor = "#c9d1d9";
 			bChart.options.scales.y.grid.borderColor = "#c9d1d9";
 			bChart.options.scales.x.ticks.color = "#c9d1d9";
 			bChart.options.scales.y.ticks.color = "#c9d1d9";
-			
+
 			rainChart.options.color = "#c9d1d9";
 			rainChart.options.scales.x.grid.borderColor = "#c9d1d9";
 			rainChart.options.scales.y.grid.borderColor = "#c9d1d9";
 			rainChart.options.scales.x.ticks.color = "#c9d1d9";
 			rainChart.options.scales.y.ticks.color = "#c9d1d9";
-			
+
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
 			pChart.options.color = "#333";
 			//pChart.options.borderColor = "#fff";
-			
+
 			bChart.options.color = "#333";
 			bChart.options.scales.x.grid.borderColor = "#999";
 			bChart.options.scales.y.grid.borderColor = "#999";
 			bChart.options.scales.x.ticks.color = "#333";
 			bChart.options.scales.y.ticks.color = "#333";
-			
+
 			rainChart.options.color = "#333";
 			rainChart.options.scales.x.grid.borderColor = "#999";
 			rainChart.options.scales.y.grid.borderColor = "#999";
 			rainChart.options.scales.x.ticks.color = "#333";
 			rainChart.options.scales.y.ticks.color = "#333";
-			
+
 			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
-		
+
 		pChart.update();
 		bChart.update();
 		rainChart.update();
@@ -169,9 +169,9 @@ xmlhttp.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		})
-		
+
 		var mymap = L.map('map').setView([recording.latitude, recording.longitude], 18);
-		
+
 		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
 		maplayer = L.tileLayer(mapUrl, {
@@ -200,12 +200,6 @@ xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = this.responseText
 						hourlyweather = JSON.parse(response)
-						console.log(hourlyweather.data[17].prcp)
-						var raindata = ""
-						for (i = 0; i < 24; i++) {
-							raindata += hourlyweather.data[i]
-						}
-
 						rainChart = new Chart(ctx3, {
 							type: 'line',
 							data: {
@@ -214,7 +208,8 @@ xmlhttp.onreadystatechange = function() {
 									data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
 									label: "Precipitation per hour (in mm) given by source "+ closeststation,
 									borderColor: "#3e95cd",
-									fill: true
+									fill: true,
+									lineTension: 0.5
 								}
 								]
 							},
@@ -222,6 +217,8 @@ xmlhttp.onreadystatechange = function() {
 								title: {
 									display: true,
 									text: 'Precipitation per hour (in mm) given by source '+ closeststation
+								},
+								spanGaps: true
 								},
 								scales: {
 									x: {
@@ -240,13 +237,13 @@ xmlhttp.onreadystatechange = function() {
 										},
 										ticks: {
 											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
-										}
+										},
+										min: -1,
+										max: 3
 									}
 								},
 								color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 								responsive: true,
-								maintainAspectRatio: false
-							}
 						});
 					}
 				}
@@ -258,8 +255,9 @@ xmlhttp.onreadystatechange = function() {
 		xmlhttp2.open("GET", "https://api.meteostat.net/v2/stations/nearby?lat="+ recording.latitude +"&lon="+ recording.longitude + "&limit=3", true);
 		xmlhttp2.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
 		xmlhttp2.send();
+
 	}
 }
-xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
+xmlhttp.open("GET", "/mindhash/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
