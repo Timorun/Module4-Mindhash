@@ -1,6 +1,7 @@
 let pChart = null,
 	bChart = null;
-	rainChart = null;
+	rainChart = null,
+	maplayer = null;
 const btn = document.querySelector(".logo");
 btn.addEventListener("click", function () {
 	if (currentTheme == "dark") {
@@ -12,26 +13,46 @@ btn.addEventListener("click", function () {
 		document.body.classList.add("dark-mode");
 		currentTheme = "dark";
 	}
-	if (pChart != null && bChart != null) {
+	if (pChart != null && bChart != null && rainChart != null) {
 		if (currentTheme == "dark") {
 			pChart.options.color = "#c9d1d9";
-			pChart.options.borderColor = "#c9d1d9";
-
+			//pChart.options.borderColor = "#c9d1d9";
+			
+			bChart.options.color = "#c9d1d9";
 			bChart.options.scales.x.grid.borderColor = "#c9d1d9";
 			bChart.options.scales.y.grid.borderColor = "#c9d1d9";
 			bChart.options.scales.x.ticks.color = "#c9d1d9";
 			bChart.options.scales.y.ticks.color = "#c9d1d9";
+			
+			rainChart.options.color = "#c9d1d9";
+			rainChart.options.scales.x.grid.borderColor = "#c9d1d9";
+			rainChart.options.scales.y.grid.borderColor = "#c9d1d9";
+			rainChart.options.scales.x.ticks.color = "#c9d1d9";
+			rainChart.options.scales.y.ticks.color = "#c9d1d9";
+			
+			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
 			pChart.options.color = "#333";
-			pChart.options.borderColor = "#fff";
-
+			//pChart.options.borderColor = "#fff";
+			
+			bChart.options.color = "#333";
 			bChart.options.scales.x.grid.borderColor = "#999";
 			bChart.options.scales.y.grid.borderColor = "#999";
 			bChart.options.scales.x.ticks.color = "#333";
 			bChart.options.scales.y.ticks.color = "#333";
+			
+			rainChart.options.color = "#333";
+			rainChart.options.scales.x.grid.borderColor = "#999";
+			rainChart.options.scales.y.grid.borderColor = "#999";
+			rainChart.options.scales.x.ticks.color = "#333";
+			rainChart.options.scales.y.ticks.color = "#333";
+			
+			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
+		
 		pChart.update();
 		bChart.update();
+		rainChart.update();
 	}
 	localStorage.setItem("theme", currentTheme);
 });
@@ -49,11 +70,11 @@ xmlhttp.onreadystatechange = function() {
 			ctx2 = document.querySelector('#bar-chart').getContext('2d');
 		ctx3 = document.querySelector('#rainchart').getContext('2d');
 
-		var htmlStr = "<div>Date: " + recording.date + "</div>" +
-			"<div>Total: " + recording.totalObjects + "</div>" +
+		var htmlStr = "<div>Total Objects: " + recording.totalObjects + "</div>" +
 			"<div>Pedestrians: " + recording.totalPedestrians + "</div>" +
 			"<div>Vehicles: " + recording.totalVehicles + "</div>" +
-			"<div>Two wheelers: " + recording.totalTwoWheelers+ "</div>";
+			"<div>Two Wheelers: " + recording.totalTwoWheelers+ "</div>" +
+			"<div>Recording Date: " + recording.date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", htmlStr);
 
 		var percentOfVehicles = ((recording.totalVehicles / recording.totalObjects) * 100).toFixed(2),
@@ -88,7 +109,6 @@ xmlhttp.onreadystatechange = function() {
 					}
 				},
 				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
-				borderColor: currentTheme == "dark" ? "#c9d1d9" : "#fff",
 				responsive: true,
 				maintainAspectRatio: false
 			}
@@ -101,17 +121,17 @@ xmlhttp.onreadystatechange = function() {
 				datasets: [
 					{
 						label: "Maximum velocity",
-						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						//color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#4b77a9"],
 						data: [recording.pedestrians_max_velocity, recording.wheelers_max_velocity, recording.vehicles_max_velocity]
 					}, {
 						label: "Minimum velocity",
-						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						//color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#5f255f"],
 						data: [recording.pedestrians_min_velocity, recording.wheelers_min_velocity, recording.vehicles_min_velocity]
 					}, {
 						label: "Average velocity",
-						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						//color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#d21243"],
 						data: [recording.pedestriansAvgVelocity, recording.wheelersAvgVelocity, recording.vehiclesAvgVelocity]
 					}
@@ -120,7 +140,8 @@ xmlhttp.onreadystatechange = function() {
 			options: {
 				plugins: {
 					legend: {
-						display: true,
+						display: true/*,
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333"*/
 					}
 				},
 				scales: {
@@ -143,11 +164,21 @@ xmlhttp.onreadystatechange = function() {
 						}
 					}
 				},
+				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 				responsive: true,
 				maintainAspectRatio: false
 			}
 		})
-
+		
+		var mymap = L.map('map').setView([recording.latitude, recording.longitude], 18);
+		
+		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+		maplayer = L.tileLayer(mapUrl, {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+			subdomains: 'abcd',
+			maxZoom: 28
+		}).addTo(mymap);
 
 		// get closest station
 		let xmlhttp2 = new XMLHttpRequest();
@@ -191,25 +222,44 @@ xmlhttp.onreadystatechange = function() {
 								title: {
 									display: true,
 									text: 'Precipitation per hour (in mm) given by source '+ closeststation
-								}
+								},
+								scales: {
+									x: {
+										grid: {
+											borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
+											display: false
+										},
+										ticks: {
+											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
+										}
+									},
+									y: {
+										grid: {
+											borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
+											display: false
+										},
+										ticks: {
+											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
+										}
+									}
+								},
+								color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+								responsive: true,
+								maintainAspectRatio: false
 							}
 						});
-
 					}
 				}
 				xmlhttp3.open("GET", "https://api.meteostat.net/v2/stations/hourly?station="+ closestactivestationid +"&start="+ recording.date +"&end="+ recording.date +"&tz=CEST", true);
 				xmlhttp3.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
 				xmlhttp3.send();
-
-
 			}
 		}
 		xmlhttp2.open("GET", "https://api.meteostat.net/v2/stations/nearby?lat="+ recording.latitude +"&lon="+ recording.longitude + "&limit=3", true);
 		xmlhttp2.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
 		xmlhttp2.send();
-		;
 	}
 }
-xmlhttp.open("GET", "/mindhash/rest/recordings/" + id, true);
+xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();

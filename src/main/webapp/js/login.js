@@ -113,10 +113,10 @@ function register() {
 			if (errMsg.classList.contains("hide")) {
 				errMsg.classList.remove("hide");
 			}
-			errMsg.innerText = "";
+			errMsg.innerText = "Unable to login. Please try again later.";
 		}
 	}
-	xmlhttp.open("POST", "/mindhash/rest/user/login", true);
+	xmlhttp.open("POST", "/MindhashApp/rest/user/login", true);
 	xmlhttp.setRequestHeader("Content-type", "application/json");
 	xmlhttp.setRequestHeader("Accept", "application/json");
 	let json = {email, password}

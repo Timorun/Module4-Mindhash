@@ -288,6 +288,7 @@ body.light-mode {
 	background-color: #fff;
 	float: left;
 	margin-right: 20px;
+	margin-top: 20px;
 }
 .info-wrapper .section-container.mr0 {
 	margin-right: 0;
@@ -380,6 +381,12 @@ body.dark-mode {
 }
 .dark-mode .info-wrapper .section-container .general .title {
 	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
+}
+.dark-mode .leaflet-bar a {
+	background-color: #ddd;
+}
+.dark-mode .leaflet-bar a:hover {
+	background-color: #efefef;
 }
 
 @media only screen and (max-width: 768px) {

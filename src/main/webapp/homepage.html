@@ -37,7 +37,7 @@
 						var id = recording.recordingID;
 						htmlStr += '<li>'
 										+ '<a href="recording.html?id=' + id + '" class="box-layout">'
-										+ '<div class="box-col">Recording' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
+										+ '<div class="box-col">Sensor' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
 										+ '<div class="box-col">' + recording.startTime + '</div>'
 										+ '<div class="box-col">' + recording.endTime + '</div>'
 										+ '<div class="box-col">' + recording.resolution + '</div>'
@@ -48,7 +48,7 @@
 					document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);
 				}
 			}
-			xmlhttp.open("GET", "/mindhash/rest/recordings", true);
+			xmlhttp.open("GET", "/MindhashApp/rest/recordings", true);
 			xmlhttp.setRequestHeader("Accept", "application/json");
 			xmlhttp.send();
 		</script>

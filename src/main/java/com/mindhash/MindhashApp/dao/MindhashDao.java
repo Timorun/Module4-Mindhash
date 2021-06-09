@@ -42,7 +42,6 @@ public class MindhashDao {
                 preparedStatement.setString(10, m.getMeasurement());
                 preparedStatement.setString(11, m.getTime());
                 preparedStatement.addBatch();
-
             }
 
             preparedStatement.executeBatch();
@@ -55,8 +54,5 @@ public class MindhashDao {
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }

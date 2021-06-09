@@ -133,7 +133,7 @@ function register() {
 			if (errMsg.classList.contains("hide")) {
 				errMsg.classList.remove("hide");
 			}
-			errMsg.innerText = "1223";
+			errMsg.innerText = "Unable to register. Please try again later.";
 		}
 	}
 	xmlhttp.open("POST", "/MindhashApp/rest/user/register", true);

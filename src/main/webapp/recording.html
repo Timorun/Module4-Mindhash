@@ -4,6 +4,9 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 	<title></title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+	   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+	   crossorigin=""/>
 	<link type="text/css" rel="stylesheet" href="css/common-style.css">
 </head>
 <body class="dark-mode">
@@ -36,14 +39,14 @@
 	<div class="section-container text-info mr0">
 		<div class="general">
 			<div id="general-tit" class="title">General</div>
-			<div id="total"></div>
-			<div id="pedestrians"></div>
-			<div id="vehicles"></div>
-			<div id="twoWheelers"></div>
 		</div>
 	</div>
 	<div class="section-container"><canvas id="rainchart" class="bar-chart"></canvas></div>
+	<div class="section-container"><div id="map" border="1" align="center" style="width:360px; height:240px"></div></div>
 </section>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+     crossorigin=""></script>
 <script src="js/chart.min.js"></script>
 <script src="js/recording.js"></script>
 </body>
