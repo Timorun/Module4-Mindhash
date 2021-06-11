@@ -34,15 +34,22 @@
 </script>
 
 <section class="info-wrapper mt-64">
-	<div class="section-container"><canvas id="pie-chart" class="pie-chart"></canvas></div>
-	<div class="section-container"><canvas id="bar-chart" class="bar-chart"></canvas></div>
-	<div class="section-container text-info mr0">
+	<div class="section-container general">
+		<div class="general-info">
+			<div id="general-tit" class="title">General</div>
+		</div>
+		<div class="pie-chart">
+			<canvas id="pie-chart"></canvas>
+		</div>
+	</div>
+	<div class="section-container mr0"><canvas id="bar-chart" class="bar-chart"></canvas></div>
+	<!--<div class="section-container text-info mr0">
 		<div class="general">
 			<div id="general-tit" class="title">General</div>
 		</div>
-	</div>
-	<div class="section-container"><canvas id="rainchart" width="500" height="200" ></canvas></div>
-	<div class="section-container"><div id="map" border="1" align="center" style="width:360px; height:240px"></div></div>
+	</div>-->
+	<div class="section-container"><canvas id="rainchart" width="500" height="240" ></canvas></div>
+	<div class="section-container"><div id="map" style="width:360px; height:240px"></div></div>
 </section>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="

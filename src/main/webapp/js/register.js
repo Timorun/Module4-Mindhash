@@ -136,7 +136,7 @@ function register() {
 			errMsg.innerText = "Unable to register. Please try again later.";
 		}
 	}
-	xmlhttp.open("POST", "/mindhash/rest/user/register", true);
+	xmlhttp.open("POST", "/MindhashApp/rest/user/register", true);
 	xmlhttp.setRequestHeader("Content-type", "application/json");
 	xmlhttp.setRequestHeader("Accept", "application/json");
 	let json = {email, password}

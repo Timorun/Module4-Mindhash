@@ -31,6 +31,12 @@ input, button, select, textarea {
 li {
 	list-style-type: none;
 }
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
 .hide {
 	display: none;
 }
@@ -194,17 +200,19 @@ body.light-mode {
 	width: 360px;
 	margin: 24px auto;
 }
-.form-wrapper h1 {
+.form-wrapper h1, .reg-suc-tip {
 	font-size: 20px;
 	font-weight: 600;
 	text-align: center;
 }
-.form-wrapper h1 a {
-	text-decoration: none;
+.form-wrapper h1 a  {
 	color: #333;
 }
-.form-wrapper h1 a:hover {
-	text-decoration: underline;
+.reg-suc-tip span a {
+	color: #fec92f;
+}
+.reg-suc-tip span {
+	font-weight: 300;
 }
 .form-wrapper .err-msg {
 	font-size: 13px;
@@ -274,6 +282,9 @@ body.light-mode {
 	color: #666;
 	margin-bottom: 24px;
 }
+.reg-suc-tip {
+	
+}
 
 /*recording page*/
 .info-wrapper {
@@ -289,17 +300,41 @@ body.light-mode {
 	float: left;
 	margin-right: 20px;
 	margin-top: 20px;
+	box-sizing: border-box;
 }
 .info-wrapper .section-container.mr0 {
 	margin-right: 0;
 }
-.info-wrapper .section-container .pie-chart,
-.info-wrapper .section-container .bar-chart {
+.info-wrapper .section-container.general {
+	width: 630px;
+}
+.info-wrapper .section-container .pie-chart {
 	width: 360px!important;
 	height: 240px!important;
 }
+.info-wrapper .section-container.general .general-info {
+	line-height: 22px;
+	font-size: 14px;
+	width: 230px;
+	height: 240px;
+	overflow: auto;
+	float: left;
+	padding-left: 10px;
+}
+.info-wrapper .section-container.general .title {
+	padding-bottom: 8px;
+	font-size: 16px;
+	font-weight: 500;
+}
+.info-wrapper .section-container.general .pie-chart {
+	float: left;
+}
+.info-wrapper .section-container .bar-chart {
+	width: 400px!important;
+	height: 240px!important;
+}
 
-.info-wrapper .section-container.text-info {
+/*.info-wrapper .section-container.text-info {
 	padding: 12px 18px;
 }
 .info-wrapper .section-container .general {
@@ -314,7 +349,7 @@ body.light-mode {
 	border-bottom: 1px solid #e8e8e8;
 	margin-bottom: 10px;
 	font-weight: 500;
-}
+}*/
 
 /*for dark mode*/
 body.dark-mode {
@@ -379,9 +414,9 @@ body.dark-mode {
 .dark-mode .info-wrapper .section-container {
 	background-color: #181818;
 }
-.dark-mode .info-wrapper .section-container .general .title {
+/*.dark-mode .info-wrapper .section-container .general .title {
 	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
-}
+}*/
 .dark-mode .leaflet-bar a {
 	background-color: #ddd;
 }

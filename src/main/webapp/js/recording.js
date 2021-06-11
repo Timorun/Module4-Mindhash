@@ -16,7 +16,6 @@ btn.addEventListener("click", function () {
 	if (pChart != null && bChart != null && rainChart != null) {
 		if (currentTheme == "dark") {
 			pChart.options.color = "#c9d1d9";
-			//pChart.options.borderColor = "#c9d1d9";
 
 			bChart.options.color = "#c9d1d9";
 			bChart.options.scales.x.grid.borderColor = "#c9d1d9";
@@ -27,13 +26,14 @@ btn.addEventListener("click", function () {
 			rainChart.options.color = "#c9d1d9";
 			rainChart.options.scales.x.grid.borderColor = "#c9d1d9";
 			rainChart.options.scales.y.grid.borderColor = "#c9d1d9";
+			rainChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
+			rainChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
 			rainChart.options.scales.x.ticks.color = "#c9d1d9";
 			rainChart.options.scales.y.ticks.color = "#c9d1d9";
 
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
 			pChart.options.color = "#333";
-			//pChart.options.borderColor = "#fff";
 
 			bChart.options.color = "#333";
 			bChart.options.scales.x.grid.borderColor = "#999";
@@ -44,6 +44,8 @@ btn.addEventListener("click", function () {
 			rainChart.options.color = "#333";
 			rainChart.options.scales.x.grid.borderColor = "#999";
 			rainChart.options.scales.y.grid.borderColor = "#999";
+			rainChart.options.scales.x.grid.color = "#e6e6e6";
+			rainChart.options.scales.y.grid.color = "#e6e6e6";
 			rainChart.options.scales.x.ticks.color = "#333";
 			rainChart.options.scales.y.ticks.color = "#333";
 
@@ -88,7 +90,7 @@ xmlhttp.onreadystatechange = function() {
 				datasets: [
 					{
 						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
-						data: [percentOfVehicles, percentOfPedestrians, percentOfTwoWheelers],
+						data: [recording.totalVehicles, recording.totalPedestrians, recording.totalTwoWheelers],
 						borderWidth: 0
 					},
 				]
@@ -98,7 +100,7 @@ xmlhttp.onreadystatechange = function() {
 					tooltip: {
 						callbacks: {
 							label: function(TooltipItem, object) {
-								return TooltipItem.label + " " +TooltipItem.formattedValue + "%";
+								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / recording.totalObjects) * 100).toFixed(2) + "%)";
 							}
 						}
 					},
@@ -121,17 +123,14 @@ xmlhttp.onreadystatechange = function() {
 				datasets: [
 					{
 						label: "Maximum velocity",
-						//color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#4b77a9"],
 						data: [recording.pedestrians_max_velocity, recording.wheelers_max_velocity, recording.vehicles_max_velocity]
 					}, {
 						label: "Minimum velocity",
-						//color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#5f255f"],
 						data: [recording.pedestrians_min_velocity, recording.wheelers_min_velocity, recording.vehicles_min_velocity]
 					}, {
 						label: "Average velocity",
-						//color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						backgroundColor: ["#d21243"],
 						data: [recording.pedestriansAvgVelocity, recording.wheelersAvgVelocity, recording.vehiclesAvgVelocity]
 					}
@@ -140,8 +139,7 @@ xmlhttp.onreadystatechange = function() {
 			options: {
 				plugins: {
 					legend: {
-						display: true/*,
-						color: currentTheme == "dark" ? "#c9d1d9" : "#333"*/
+						display: true
 					}
 				},
 				scales: {
@@ -210,21 +208,14 @@ xmlhttp.onreadystatechange = function() {
 									borderColor: "#3e95cd",
 									fill: true,
 									lineTension: 0.5
-								}
-								]
+								}]
 							},
 							options: {
-								title: {
-									display: true,
-									text: 'Precipitation per hour (in mm) given by source '+ closeststation
-								},
-								spanGaps: true
-								},
 								scales: {
 									x: {
 										grid: {
 											borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
-											display: false
+											color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
 										},
 										ticks: {
 											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
@@ -233,17 +224,17 @@ xmlhttp.onreadystatechange = function() {
 									y: {
 										grid: {
 											borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
-											display: false
+											color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
 										},
 										ticks: {
 											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
-										},
-										min: -1,
-										max: 3
+										}
 									}
 								},
 								color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 								responsive: true,
+								spanGaps: true
+							}
 						});
 					}
 				}
@@ -255,9 +246,8 @@ xmlhttp.onreadystatechange = function() {
 		xmlhttp2.open("GET", "https://api.meteostat.net/v2/stations/nearby?lat="+ recording.latitude +"&lon="+ recording.longitude + "&limit=3", true);
 		xmlhttp2.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
 		xmlhttp2.send();
-
 	}
 }
-xmlhttp.open("GET", "/mindhash/rest/recordings/" + id, true);
+xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
