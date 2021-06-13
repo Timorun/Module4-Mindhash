@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 	<title></title>
@@ -23,6 +25,7 @@
 	<a href="" class="avatar"></a>
 </header>
 <script>
+
 	let currentTheme = localStorage.getItem("theme");
 	if (currentTheme == "dark") {
 		document.body.classList.remove("light-mode");
@@ -31,6 +34,35 @@
 		document.body.classList.remove("dark-mode");
 		document.body.classList.add("light-mode");
 	}
+
+
+	let xmlAddList = new XMLHttpRequest();
+	xmlAddList.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var response = this.responseText,
+					objects = JSON.parse(response)
+			var options = {
+				valueNames: [ 'object_id', 'object_type' ]
+			};
+			var values = [
+				{
+				},
+			];
+			var userList = new List('objects', options, values);
+			for(var objectt of objects) {
+				userList.add({
+					object_id: "Object id " + objectt.objectId,
+					object_type: objectt.objectType
+				})
+			}
+			document.getElementById("objects").setAttribute("style","overflow:auto;height:190px;width:520px");
+			document.getElementById("object").innerHTML = userList;
+		}
+	}
+	xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
+	xmlAddList.setRequestHeader("Accept", "application/json");
+	xmlAddList.send();
+
 </script>
 
 <section class="info-wrapper mt-64">
@@ -50,6 +82,19 @@
 	</div>-->
 	<div class="section-container"><canvas id="rainchart" width="500" height="240" ></canvas></div>
 	<div class="section-container"><div id="map" style="width:360px; height:240px"></div></div>
+	<div class ="section-container" id = "objects">
+		<h4>Objects list<span></span></h4>
+			<hr>
+			<button class="sort" data-sort="object_id">
+				Sort
+			</button>
+			<ul class="list">
+				<li>
+					<p class="object_id"></p>
+				</li>
+			</ul>
+
+		</div>
 </section>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
