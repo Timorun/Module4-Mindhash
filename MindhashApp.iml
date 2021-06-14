@@ -113,5 +113,6 @@
     <orderEntry type="library" name="Maven: com.sun.activation:jakarta.activation:1.2.2" level="project" />
     <orderEntry type="library" name="list" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="list.js" level="application" />
   </component>
 </module>

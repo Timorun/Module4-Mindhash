@@ -66,6 +66,7 @@ let queryString = window.location.search,
 let xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
+		getObjectsList();
 		var response = this.responseText,
 			recording = JSON.parse(response),
 			ctx = document.querySelector('#pie-chart').getContext('2d'),
@@ -251,3 +252,44 @@ xmlhttp.onreadystatechange = function() {
 xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
+
+function getObjectsList() {
+	let xmlAddList = new XMLHttpRequest();
+	xmlAddList.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var response = this.responseText,
+				objects = JSON.parse(response)
+			var options = {
+				valueNames: [ 'object_id', 'object_type' ]
+			};
+
+			var userList = new List('objects', options);
+			for(var objectt of objects) {
+				userList.add({
+					object_id: "Object id " + objectt.objectId,
+					object_type: objectt.objectType
+				})
+			}
+			document.getElementById("objects").setAttribute("style","overflow:auto;height:190px;width:520px")
+			document.querySelector("#objects").insertAdjacentHTML("afterend", userList)
+
+			$('.filter').on('click',function(){
+				var $q = $(this).attr('data-filter');
+				if($(this).hasClass('active')){
+					userList.filter();
+					$('.filter').removeClass('active');
+				} else {
+					userList.filter(function(item) {
+						return (item.values().object_type == $q);
+					});
+					$('.filter').removeClass('active');
+					$(this).addClass('active');
+				}
+			});
+		}
+	}
+	xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
+	xmlAddList.setRequestHeader("Accept", "application/json");
+	xmlAddList.send();
+}
+
