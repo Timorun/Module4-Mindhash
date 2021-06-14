@@ -253,6 +253,7 @@ xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
+var objectsList;
 function getObjectsList() {
 	let xmlAddList = new XMLHttpRequest();
 	xmlAddList.onreadystatechange = function() {
@@ -263,33 +264,35 @@ function getObjectsList() {
 				valueNames: [ 'object_id', 'object_type' ]
 			};
 
-			var userList = new List('objects', options);
+			objectsList = new List('objects', options);
 			for(var objectt of objects) {
-				userList.add({
+				objectsList.add({
 					object_id: "Object id " + objectt.objectId,
 					object_type: objectt.objectType
 				})
 			}
 			document.getElementById("objects").setAttribute("style","overflow:auto;height:190px;width:520px")
-			document.querySelector("#objects").insertAdjacentHTML("afterend", userList)
+			document.querySelector("#objects").insertAdjacentHTML("afterend", objectsList)
 
-			$('.filter').on('click',function(){
-				var $q = $(this).attr('data-filter');
-				if($(this).hasClass('active')){
-					userList.filter();
-					$('.filter').removeClass('active');
-				} else {
-					userList.filter(function(item) {
-						return (item.values().object_type == $q);
-					});
-					$('.filter').removeClass('active');
-					$(this).addClass('active');
-				}
-			});
 		}
 	}
 	xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
 	xmlAddList.setRequestHeader("Accept", "application/json");
 	xmlAddList.send();
+
 }
+
+$('.filter').on('click',function(){
+	var $q = $(this).attr('data-filter');
+	if($(this).hasClass('active')){
+		objectsList.filter();
+		$('.filter').removeClass('active');
+	} else {
+		objectsList.filter(function(item) {
+			return (item.values().object_type == $q);
+		});
+		$('.filter').removeClass('active');
+		$(this).addClass('active');
+	}
+});
 
