@@ -1,9 +1,7 @@
 package com.mindhash.MindhashApp.resources;
 
 import com.mindhash.MindhashApp.dao.ObjectDao;
-import com.mindhash.MindhashApp.dao.RecordingDao;
-import com.mindhash.MindhashApp.model.Objectt;
-import com.mindhash.MindhashApp.model.Recording;
+import com.mindhash.MindhashApp.model.Obj;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,8 +22,8 @@ public class ObjectsResource {
 
     @GET
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Objectt> getObjects() {
-        List<Objectt> objects = new ArrayList<Objectt>();
+    public List<Obj> getObjects() {
+        List<Obj> objects = new ArrayList<Obj>();
         objects.addAll(ObjectDao.instance.getModel().values());
         return objects;
     }

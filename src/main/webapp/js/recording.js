@@ -1,6 +1,6 @@
 let pChart = null,
 	bChart = null,
-	weatherChart = null,
+	rainChart = null,
 	maplayer = null;
 const btn = document.querySelector(".logo");
 btn.addEventListener("click", function () {
@@ -13,7 +13,7 @@ btn.addEventListener("click", function () {
 		document.body.classList.add("dark-mode");
 		currentTheme = "dark";
 	}
-	if (pChart != null && bChart != null && weatherChart != null) {
+	if (pChart != null && bChart != null && rainChart != null) {
 		if (currentTheme == "dark") {
 			pChart.options.color = "#c9d1d9";
 
@@ -23,13 +23,13 @@ btn.addEventListener("click", function () {
 			bChart.options.scales.x.ticks.color = "#c9d1d9";
 			bChart.options.scales.y.ticks.color = "#c9d1d9";
 
-			weatherChart.options.color = "#c9d1d9";
-			weatherChart.options.scales.x.grid.borderColor = "#c9d1d9";
-			weatherChart.options.scales.y.grid.borderColor = "#c9d1d9";
-			weatherChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
-			weatherChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
-			weatherChart.options.scales.x.ticks.color = "#c9d1d9";
-			weatherChart.options.scales.y.ticks.color = "#c9d1d9";
+			rainChart.options.color = "#c9d1d9";
+			rainChart.options.scales.x.grid.borderColor = "#c9d1d9";
+			rainChart.options.scales.y.grid.borderColor = "#c9d1d9";
+			rainChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
+			rainChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
+			rainChart.options.scales.x.ticks.color = "#c9d1d9";
+			rainChart.options.scales.y.ticks.color = "#c9d1d9";
 
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
@@ -41,20 +41,20 @@ btn.addEventListener("click", function () {
 			bChart.options.scales.x.ticks.color = "#333";
 			bChart.options.scales.y.ticks.color = "#333";
 
-			weatherChart.options.color = "#333";
-			weatherChart.options.scales.x.grid.borderColor = "#999";
-			weatherChart.options.scales.y.grid.borderColor = "#999";
-			weatherChart.options.scales.x.grid.color = "#e6e6e6";
-			weatherChart.options.scales.y.grid.color = "#e6e6e6";
-			weatherChart.options.scales.x.ticks.color = "#333";
-			weatherChart.options.scales.y.ticks.color = "#333";
+			rainChart.options.color = "#333";
+			rainChart.options.scales.x.grid.borderColor = "#999";
+			rainChart.options.scales.y.grid.borderColor = "#999";
+			rainChart.options.scales.x.grid.color = "#e6e6e6";
+			rainChart.options.scales.y.grid.color = "#e6e6e6";
+			rainChart.options.scales.x.ticks.color = "#333";
+			rainChart.options.scales.y.ticks.color = "#333";
 
 			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
 
 		pChart.update();
 		bChart.update();
-		weatherChart.update();
+		rainChart.update();
 	}
 	localStorage.setItem("theme", currentTheme);
 });
@@ -66,7 +66,6 @@ let queryString = window.location.search,
 let xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		getObjectsList();
 		var response = this.responseText,
 			recording = JSON.parse(response),
 			ctx = document.querySelector('#pie-chart').getContext('2d'),
@@ -199,24 +198,16 @@ xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = this.responseText
 						hourlyweather = JSON.parse(response)
-						weatherChart = new Chart(ctx3, {
+						rainChart = new Chart(ctx3, {
+							type: 'line',
 							data: {
 								labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
 								datasets: [{
-									type: 'bar',
 									data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
-									label: "Precipitation per hour(in mm), provided by station: "+ closeststation,
-									borderColor: "#3e95cd",
-									backgroundColor: "rgba(83, 120, 158, 0.8)",
-									order: 1
-								},{
-									type: 'line',
-									data: [hourlyweather.data[0].temp,hourlyweather.data[1].temp,hourlyweather.data[2].temp,hourlyweather.data[3].temp,hourlyweather.data[4].temp,hourlyweather.data[5].temp,hourlyweather.data[6].temp,hourlyweather.data[7].temp,hourlyweather.data[8].temp,hourlyweather.data[9].temp,hourlyweather.data[10].temp,hourlyweather.data[11].temp,hourlyweather.data[12].temp,hourlyweather.data[13].temp,hourlyweather.data[14].temp,hourlyweather.data[15].temp,hourlyweather.data[16].temp,hourlyweather.data[17].temp,hourlyweather.data[18].temp,hourlyweather.data[19].temp,hourlyweather.data[20].temp,hourlyweather.data[21].temp,hourlyweather.data[22].temp,hourlyweather.data[23].temp],
-									label: "Temperature per hour(in C°), provided by station: "+ closeststation,
+									label: "Precipitation per hour (in mm) given by source "+ closeststation,
 									borderColor: "#3e95cd",
 									fill: true,
-									lineTension: 0.5,
-									order: 2
+									lineTension: 0.5
 								}]
 							},
 							options: {
@@ -261,46 +252,131 @@ xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
-let objectsList;
-function getObjectsList() {
-	let xmlAddList = new XMLHttpRequest();
-	xmlAddList.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var response = this.responseText,
-				objects = JSON.parse(response);
-			console.log(objects);
-			var options = {
-				valueNames: [ 'object_id', 'object_type' ]
-			};
+let objects,
+    objectType = new Object();
+const $selectObj = document.querySelector("#selectObj"),
+	$objList = document.querySelector("#objects");
 
-			objectsList = new List('objects', options);
-			for(var objectt of objects) {
-				objectsList.add({
-					object_id: "Object id " + objectt.objectId,
-					object_type: objectt.objectType
-				})
+let xmlAddList = new XMLHttpRequest();
+xmlAddList.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var response = this.responseText;
+		objects = JSON.parse(response);
+		console.log(objects);
+		var htmlStr = "";
+		for (var i = 0; i < objects.length; i++) {
+			if (objectType.hasOwnProperty(objects[i].objectType)) {
+				objectType[objects[i].objectType] = objectType[objects[i].objectType] + 1;
+			} else {
+				objectType[objects[i].objectType] = 1;
 			}
-			document.querySelector("#objects").setAttribute("style", "overflow:auto;height:190px;width:520px")
-			document.querySelector("#objects").insertAdjacentHTML("afterend", objectsList)
+			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
+		}
+		var selectStr = '<option value="0">all objects</option>';
+		var index = 1;
+		for (var o in objectType) {
+			selectStr += '<option value="'+ index +'">' + o + '</option>';
+			index++;
+		}
+		$selectObj.innerHTML = selectStr;
+		select();
+		$objList.innerHTML = htmlStr;
+	}
+}
+xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
+xmlAddList.setRequestHeader("Accept", "application/json");
+xmlAddList.send();
+
+function updateObjLi(val) {
+	var htmlStr = "";
+	console.log(val +","+objects.length);
+	for (var i = 0; i < objects.length; i++) {
+		if (objects[i].objectType === val || val === "all objects") {
+			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 	}
-	xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
-	xmlAddList.setRequestHeader("Accept", "application/json");
-	xmlAddList.send();
+	$objList.innerHTML = htmlStr;
 }
 
-const filters = document.querySelectorAll(".filter");
-for (let i = 0; i < filters.length; i++) {
-	filters[i].addEventListener("click", function() {
-		var $q = filters[i].getAttribute("data-filter");
-		/*if (filters[i].classList.contains("active")) {
-			objectsList.filter();
-		} else {*/
-			objectsList.filter(function(item) {
-				return (item.values().object_type == $q);
+function select() {
+	var x, i, j, l, ll, selElmnt, a, b, c;
+	/*look for any elements with the class "custom-select":*/
+	x = document.querySelectorAll(".custom-select");
+	l = x.length;
+	for (i = 0; i < l; i++) {
+		selElmnt = x[i].getElementsByTagName("select")[0];
+		ll = selElmnt.length;
+		/*for each element, create a new DIV that will act as the selected item:*/
+		a = document.createElement("DIV");
+		a.setAttribute("class", "select-selected");
+		a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+		x[i].appendChild(a);
+		/*for each element, create a new DIV that will contain the option list:*/
+		b = document.createElement("DIV");
+		b.setAttribute("class", "select-items select-hide");
+		for (j = 0; j < ll; j++) {
+			/*for each option in the original select element,
+			create a new DIV that will act as an option item:*/
+			c = document.createElement("DIV");
+			c.innerHTML = selElmnt.options[j].innerHTML;
+			c.addEventListener("click", function(e) {
+				/*when an item is clicked, update the original select box,
+				and the selected item:*/
+				var y, i, k, s, h, sl, yl;
+				s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+				sl = s.length;
+				h = this.parentNode.previousSibling;
+				for (i = 0; i < sl; i++) {
+					if (s.options[i].innerHTML == this.innerHTML) {
+						s.selectedIndex = i;
+						h.innerHTML = this.innerHTML;
+						updateObjLi(this.innerHTML);
+						y = this.parentNode.getElementsByClassName("same-as-selected");
+						yl = y.length;
+						for (k = 0; k < yl; k++) {
+							y[k].removeAttribute("class");
+						}
+						this.setAttribute("class", "same-as-selected");
+						break;
+					}
+				}
+				h.click();
 			});
-			//filters[i].classList.add("active");
-		//}
-	});
-}
+			b.appendChild(c);
+		}
+		x[i].appendChild(b);
+		a.addEventListener("click", function(e) {
+			/*when the select box is clicked, close any other select boxes,
+			and open/close the current select box:*/
+			e.stopPropagation();
+			closeAllSelect(this);
+			this.nextSibling.classList.toggle("select-hide");
+			this.classList.toggle("select-arrow-active");
+		});
+	}
 
+	function closeAllSelect(elmnt) {
+		/*a function that will close all select boxes in the document,
+		except the current select box:*/
+		var x, y, i, xl, yl, arrNo = [];
+		x = document.getElementsByClassName("select-items");
+		y = document.getElementsByClassName("select-selected");
+		xl = x.length;
+		yl = y.length;
+		for (i = 0; i < yl; i++) {
+			if (elmnt == y[i]) {
+				arrNo.push(i)
+			} else {
+				y[i].classList.remove("select-arrow-active");
+			}
+		}
+		for (i = 0; i < xl; i++) {
+			if (arrNo.indexOf(i)) {
+				x[i].classList.add("select-hide");
+			}
+		}
+	}
+	/*if the user clicks anywhere outside the select box,
+	then close all select boxes:*/
+	document.addEventListener("click", closeAllSelect);
+}
