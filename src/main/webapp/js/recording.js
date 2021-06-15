@@ -1,6 +1,6 @@
 let pChart = null,
 	bChart = null,
-	rainChart = null,
+	weatherChart = null,
 	maplayer = null;
 const btn = document.querySelector(".logo");
 btn.addEventListener("click", function () {
@@ -13,7 +13,7 @@ btn.addEventListener("click", function () {
 		document.body.classList.add("dark-mode");
 		currentTheme = "dark";
 	}
-	if (pChart != null && bChart != null && rainChart != null) {
+	if (pChart != null && bChart != null && weatherChart != null) {
 		if (currentTheme == "dark") {
 			pChart.options.color = "#c9d1d9";
 
@@ -23,13 +23,13 @@ btn.addEventListener("click", function () {
 			bChart.options.scales.x.ticks.color = "#c9d1d9";
 			bChart.options.scales.y.ticks.color = "#c9d1d9";
 
-			rainChart.options.color = "#c9d1d9";
-			rainChart.options.scales.x.grid.borderColor = "#c9d1d9";
-			rainChart.options.scales.y.grid.borderColor = "#c9d1d9";
-			rainChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
-			rainChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
-			rainChart.options.scales.x.ticks.color = "#c9d1d9";
-			rainChart.options.scales.y.ticks.color = "#c9d1d9";
+			weatherChart.options.color = "#c9d1d9";
+			weatherChart.options.scales.x.grid.borderColor = "#c9d1d9";
+			weatherChart.options.scales.y.grid.borderColor = "#c9d1d9";
+			weatherChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
+			weatherChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
+			weatherChart.options.scales.x.ticks.color = "#c9d1d9";
+			weatherChart.options.scales.y.ticks.color = "#c9d1d9";
 
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
@@ -41,20 +41,20 @@ btn.addEventListener("click", function () {
 			bChart.options.scales.x.ticks.color = "#333";
 			bChart.options.scales.y.ticks.color = "#333";
 
-			rainChart.options.color = "#333";
-			rainChart.options.scales.x.grid.borderColor = "#999";
-			rainChart.options.scales.y.grid.borderColor = "#999";
-			rainChart.options.scales.x.grid.color = "#e6e6e6";
-			rainChart.options.scales.y.grid.color = "#e6e6e6";
-			rainChart.options.scales.x.ticks.color = "#333";
-			rainChart.options.scales.y.ticks.color = "#333";
+			weatherChart.options.color = "#333";
+			weatherChart.options.scales.x.grid.borderColor = "#999";
+			weatherChart.options.scales.y.grid.borderColor = "#999";
+			weatherChart.options.scales.x.grid.color = "#e6e6e6";
+			weatherChart.options.scales.y.grid.color = "#e6e6e6";
+			weatherChart.options.scales.x.ticks.color = "#333";
+			weatherChart.options.scales.y.ticks.color = "#333";
 
 			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
 
 		pChart.update();
 		bChart.update();
-		rainChart.update();
+		weatherChart.update();
 	}
 	localStorage.setItem("theme", currentTheme);
 });
@@ -199,16 +199,24 @@ xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = this.responseText
 						hourlyweather = JSON.parse(response)
-						rainChart = new Chart(ctx3, {
-							type: 'line',
+						weatherChart = new Chart(ctx3, {
 							data: {
 								labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
 								datasets: [{
+									type: 'bar',
 									data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
-									label: "Precipitation per hour (in mm) given by source "+ closeststation,
+									label: "Precipitation per hour(in mm), provided by station: "+ closeststation,
+									borderColor: "#3e95cd",
+									backgroundColor: "rgba(83, 120, 158, 0.8)",
+									order: 1
+								},{
+									type: 'line',
+									data: [hourlyweather.data[0].temp,hourlyweather.data[1].temp,hourlyweather.data[2].temp,hourlyweather.data[3].temp,hourlyweather.data[4].temp,hourlyweather.data[5].temp,hourlyweather.data[6].temp,hourlyweather.data[7].temp,hourlyweather.data[8].temp,hourlyweather.data[9].temp,hourlyweather.data[10].temp,hourlyweather.data[11].temp,hourlyweather.data[12].temp,hourlyweather.data[13].temp,hourlyweather.data[14].temp,hourlyweather.data[15].temp,hourlyweather.data[16].temp,hourlyweather.data[17].temp,hourlyweather.data[18].temp,hourlyweather.data[19].temp,hourlyweather.data[20].temp,hourlyweather.data[21].temp,hourlyweather.data[22].temp,hourlyweather.data[23].temp],
+									label: "Temperature per hour(in C°), provided by station: "+ closeststation,
 									borderColor: "#3e95cd",
 									fill: true,
-									lineTension: 0.5
+									lineTension: 0.5,
+									order: 2
 								}]
 							},
 							options: {
