@@ -1,11 +1,17 @@
 const btn = document.querySelector(".logo");
+const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 let currentTheme = localStorage.getItem("theme");
+
+if (currentTheme == null && prefersDarkScheme.matches) {
+	localStorage.setItem("theme", "dark");
+	currentTheme = "dark";
+}
 
 if (currentTheme == "dark") {
 	document.body.classList.remove("light-mode");
 	document.body.classList.add("dark-mode");
-} else if (currentTheme == "light") {
+} else {
 	document.body.classList.remove("dark-mode");
 	document.body.classList.add("light-mode");
 }

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js" type="text/javascript"></script>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 	<title></title>
@@ -11,7 +9,7 @@
 	   crossorigin=""/>
 	<link type="text/css" rel="stylesheet" href="css/common-style.css">
 </head>
-<body class="dark-mode">
+<body>
 <header class="header box-layout center-v">
 	<div class="logo"></div>
 	<a href="#" class="home-link"></a>
@@ -25,8 +23,14 @@
 	<a href="" class="avatar"></a>
 </header>
 <script>
-
+	const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
 	let currentTheme = localStorage.getItem("theme");
+	
+	if (currentTheme == null && prefersDarkScheme.matches) {
+		localStorage.setItem("theme", "dark");
+		currentTheme = "dark";
+	}
+	
 	if (currentTheme == "dark") {
 		document.body.classList.remove("light-mode");
 		document.body.classList.add("dark-mode");
@@ -34,7 +38,6 @@
 		document.body.classList.remove("dark-mode");
 		document.body.classList.add("light-mode");
 	}
-
 </script>
 
 <section class="info-wrapper mt-64">
@@ -54,25 +57,6 @@
 	</div>-->
 	<div class="section-container"><canvas id="rainchart" width="500" height="240" ></canvas></div>
 	<div class="section-container"><div id="map" style="width:360px; height:240px"></div></div>
-	<div class ="section-container" id = "objects">
-		<h4>Objects list</h4>
-		<hr>
-		<button class="sort" data-sort="object_id">
-			Sort!
-		</button>
-		<div class="tags">
-			<div>Filter by:</div>
-			<div class="tag filter" data-filter="vehicle">vehicles </div>
-			<div class="tag filter" data-filter="two-wheeler">two-wheelers </div>
-			<div class="tag filter" data-filter="pedestrian">pedestrians</div>
-		</div>
-		<ul class="list">
-			<li>
-				<a href="#" class="object_id"></a>
-			</li>
-		</ul>
-	</div>
-
 </section>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
