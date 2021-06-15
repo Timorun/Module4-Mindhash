@@ -1,7 +1,7 @@
 package com.mindhash.MindhashApp.dao;
 
 import com.mindhash.MindhashApp.DBConnectivity;
-import com.mindhash.MindhashApp.model.Objectt;
+import com.mindhash.MindhashApp.model.Obj;
 
 
 import java.sql.Connection;
@@ -14,7 +14,7 @@ import java.util.Map;
 public enum ObjectDao {
     instance;
 
-    private Map<Integer, Objectt> contentProvider = new HashMap<>();
+    private Map<Integer, Obj> contentProvider = new HashMap<>();
 
     private ObjectDao() {
         Connection conn = DBConnectivity.createConnection();
@@ -24,7 +24,7 @@ public enum ObjectDao {
             PreparedStatement st = conn.prepareStatement(query);
             ResultSet resultSet = st.executeQuery();
             while(resultSet.next()) {
-                Objectt object = new Objectt();
+                Obj object = new Obj();
                 object.setObjectId(resultSet.getInt(1));
                 object.setObjectType(resultSet.getString(3));
                 object.setPoints(resultSet.getInt(4));
@@ -39,7 +39,7 @@ public enum ObjectDao {
         }
     }
 
-    public Map<Integer, Objectt> getModel(){
+    public Map<Integer, Obj> getModel(){
         return contentProvider;
     }
 }

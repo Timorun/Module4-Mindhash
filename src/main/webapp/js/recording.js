@@ -66,7 +66,6 @@ let queryString = window.location.search,
 let xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		getObjectsList();
 		var response = this.responseText,
 			recording = JSON.parse(response),
 			ctx = document.querySelector('#pie-chart').getContext('2d'),
@@ -253,46 +252,131 @@ xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
-var objectsList;
-function getObjectsList() {
-	let xmlAddList = new XMLHttpRequest();
-	xmlAddList.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var response = this.responseText,
-				objects = JSON.parse(response)
-			var options = {
-				valueNames: [ 'object_id', 'object_type' ]
-			};
+let objects,
+    objectType = new Object();
+const $selectObj = document.querySelector("#selectObj"),
+	$objList = document.querySelector("#objects");
 
-			objectsList = new List('objects', options);
-			for(var objectt of objects) {
-				objectsList.add({
-					object_id: "Object id " + objectt.objectId,
-					object_type: objectt.objectType
-				})
+let xmlAddList = new XMLHttpRequest();
+xmlAddList.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var response = this.responseText;
+		objects = JSON.parse(response);
+		console.log(objects);
+		var htmlStr = "";
+		for (var i = 0; i < objects.length; i++) {
+			if (objectType.hasOwnProperty(objects[i].objectType)) {
+				objectType[objects[i].objectType] = objectType[objects[i].objectType] + 1;
+			} else {
+				objectType[objects[i].objectType] = 1;
 			}
-			document.getElementById("objects").setAttribute("style","overflow:auto;height:190px;width:520px")
-			document.querySelector("#objects").insertAdjacentHTML("afterend", objectsList)
+			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
+		}
+		var selectStr = '<option value="0">all objects</option>';
+		var index = 1;
+		for (var o in objectType) {
+			selectStr += '<option value="'+ index +'">' + o + '</option>';
+			index++;
+		}
+		$selectObj.innerHTML = selectStr;
+		select();
+		$objList.innerHTML = htmlStr;
+	}
+}
+xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
+xmlAddList.setRequestHeader("Accept", "application/json");
+xmlAddList.send();
 
+function updateObjLi(val) {
+	var htmlStr = "";
+	console.log(val +","+objects.length);
+	for (var i = 0; i < objects.length; i++) {
+		if (objects[i].objectType === val || val === "all objects") {
+			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 	}
-	xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
-	xmlAddList.setRequestHeader("Accept", "application/json");
-	xmlAddList.send();
-
+	$objList.innerHTML = htmlStr;
 }
 
-$('.filter').on('click',function(){
-	var $q = $(this).attr('data-filter');
-	if($(this).hasClass('active')){
-		objectsList.filter();
-		$('.filter').removeClass('active');
-	} else {
-		objectsList.filter(function(item) {
-			return (item.values().object_type == $q);
+function select() {
+	var x, i, j, l, ll, selElmnt, a, b, c;
+	/*look for any elements with the class "custom-select":*/
+	x = document.querySelectorAll(".custom-select");
+	l = x.length;
+	for (i = 0; i < l; i++) {
+		selElmnt = x[i].getElementsByTagName("select")[0];
+		ll = selElmnt.length;
+		/*for each element, create a new DIV that will act as the selected item:*/
+		a = document.createElement("DIV");
+		a.setAttribute("class", "select-selected");
+		a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+		x[i].appendChild(a);
+		/*for each element, create a new DIV that will contain the option list:*/
+		b = document.createElement("DIV");
+		b.setAttribute("class", "select-items select-hide");
+		for (j = 0; j < ll; j++) {
+			/*for each option in the original select element,
+			create a new DIV that will act as an option item:*/
+			c = document.createElement("DIV");
+			c.innerHTML = selElmnt.options[j].innerHTML;
+			c.addEventListener("click", function(e) {
+				/*when an item is clicked, update the original select box,
+				and the selected item:*/
+				var y, i, k, s, h, sl, yl;
+				s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+				sl = s.length;
+				h = this.parentNode.previousSibling;
+				for (i = 0; i < sl; i++) {
+					if (s.options[i].innerHTML == this.innerHTML) {
+						s.selectedIndex = i;
+						h.innerHTML = this.innerHTML;
+						updateObjLi(this.innerHTML);
+						y = this.parentNode.getElementsByClassName("same-as-selected");
+						yl = y.length;
+						for (k = 0; k < yl; k++) {
+							y[k].removeAttribute("class");
+						}
+						this.setAttribute("class", "same-as-selected");
+						break;
+					}
+				}
+				h.click();
+			});
+			b.appendChild(c);
+		}
+		x[i].appendChild(b);
+		a.addEventListener("click", function(e) {
+			/*when the select box is clicked, close any other select boxes,
+			and open/close the current select box:*/
+			e.stopPropagation();
+			closeAllSelect(this);
+			this.nextSibling.classList.toggle("select-hide");
+			this.classList.toggle("select-arrow-active");
 		});
-		$('.filter').removeClass('active');
-		$(this).addClass('active');
 	}
-});
 
+	function closeAllSelect(elmnt) {
+		/*a function that will close all select boxes in the document,
+		except the current select box:*/
+		var x, y, i, xl, yl, arrNo = [];
+		x = document.getElementsByClassName("select-items");
+		y = document.getElementsByClassName("select-selected");
+		xl = x.length;
+		yl = y.length;
+		for (i = 0; i < yl; i++) {
+			if (elmnt == y[i]) {
+				arrNo.push(i)
+			} else {
+				y[i].classList.remove("select-arrow-active");
+			}
+		}
+		for (i = 0; i < xl; i++) {
+			if (arrNo.indexOf(i)) {
+				x[i].classList.add("select-hide");
+			}
+		}
+	}
+	/*if the user clicks anywhere outside the select box,
+	then close all select boxes:*/
+	document.addEventListener("click", closeAllSelect);
+}

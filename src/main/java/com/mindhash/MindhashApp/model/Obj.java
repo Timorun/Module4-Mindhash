@@ -1,18 +1,15 @@
 package com.mindhash.MindhashApp.model;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
-public class Objectt {
+public class Obj {
     private int objectId;
     private String objectType;
     private int points;
     private double length;
     private double width;
 
-    public Objectt() {}
+    public Obj() {}
 
-    public Objectt(int objectId, String objectType, int points, double length, double width) {
+    public Obj(int objectId, String objectType, int points, double length, double width) {
         this.objectId = objectId;
         this.objectType = objectType;
         this.points = points;
