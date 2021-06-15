@@ -253,13 +253,14 @@ xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
-var objectsList;
+let objectsList;
 function getObjectsList() {
 	let xmlAddList = new XMLHttpRequest();
 	xmlAddList.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = this.responseText,
-				objects = JSON.parse(response)
+				objects = JSON.parse(response);
+			console.log(objects);
 			var options = {
 				valueNames: [ 'object_id', 'object_type' ]
 			};
@@ -271,28 +272,27 @@ function getObjectsList() {
 					object_type: objectt.objectType
 				})
 			}
-			document.getElementById("objects").setAttribute("style","overflow:auto;height:190px;width:520px")
+			document.querySelector("#objects").setAttribute("style", "overflow:auto;height:190px;width:520px")
 			document.querySelector("#objects").insertAdjacentHTML("afterend", objectsList)
-
 		}
 	}
 	xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
 	xmlAddList.setRequestHeader("Accept", "application/json");
 	xmlAddList.send();
-
 }
 
-$('.filter').on('click',function(){
-	var $q = $(this).attr('data-filter');
-	if($(this).hasClass('active')){
-		objectsList.filter();
-		$('.filter').removeClass('active');
-	} else {
-		objectsList.filter(function(item) {
-			return (item.values().object_type == $q);
-		});
-		$('.filter').removeClass('active');
-		$(this).addClass('active');
-	}
-});
+const filters = document.querySelectorAll(".filter");
+for (let i = 0; i < filters.length; i++) {
+	filters[i].addEventListener("click", function() {
+		var $q = filters[i].getAttribute("data-filter");
+		/*if (filters[i].classList.contains("active")) {
+			objectsList.filter();
+		} else {*/
+			objectsList.filter(function(item) {
+				return (item.values().object_type == $q);
+			});
+			//filters[i].classList.add("active");
+		//}
+	});
+}
 
