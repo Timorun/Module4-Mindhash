@@ -178,7 +178,7 @@ xmlhttp.onreadystatechange = function() {
 			maxZoom: 28
 		}).addTo(mymap);
 
-		// get closest station
+		// get closest station based on coordinates
 		let xmlhttp2 = new XMLHttpRequest();
 		xmlhttp2.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
@@ -192,22 +192,33 @@ xmlhttp.onreadystatechange = function() {
 				let closeststation = jsonstations.data[i].name.en
 				let closestactivestationid = jsonstations.data[i].id
 
-				//get weather info from that station
+				//get weather info from that stationid
 				let xmlhttp3 = new XMLHttpRequest();
 				xmlhttp3.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = this.responseText
 						hourlyweather = JSON.parse(response)
-						rainChart = new Chart(ctx3, {
-							type: 'line',
+						//Chart mixing multiple weather charts
+						weatherChart = new Chart(ctx3, {
 							data: {
 								labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
 								datasets: [{
+									//Bar chart of precipitation per hour
+									type: 'bar',
 									data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
-									label: "Precipitation per hour (in mm) given by source "+ closeststation,
+									label: "Precipitation per hour(in mm), provided by station: "+ closeststation,
+									borderColor: "#3e95cd",
+									backgroundColor: "rgba(83, 120, 158, 0.8)",
+									order: 1
+								},{
+									//Line chart of temperature per hour
+									type: 'line',
+									data: [hourlyweather.data[0].temp,hourlyweather.data[1].temp,hourlyweather.data[2].temp,hourlyweather.data[3].temp,hourlyweather.data[4].temp,hourlyweather.data[5].temp,hourlyweather.data[6].temp,hourlyweather.data[7].temp,hourlyweather.data[8].temp,hourlyweather.data[9].temp,hourlyweather.data[10].temp,hourlyweather.data[11].temp,hourlyweather.data[12].temp,hourlyweather.data[13].temp,hourlyweather.data[14].temp,hourlyweather.data[15].temp,hourlyweather.data[16].temp,hourlyweather.data[17].temp,hourlyweather.data[18].temp,hourlyweather.data[19].temp,hourlyweather.data[20].temp,hourlyweather.data[21].temp,hourlyweather.data[22].temp,hourlyweather.data[23].temp],
+									label: "Temperature per hour(in C°)"+ closeststation,
 									borderColor: "#3e95cd",
 									fill: true,
-									lineTension: 0.5
+									lineTension: 0.5,
+									order: 2
 								}]
 							},
 							options: {
