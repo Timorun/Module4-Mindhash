@@ -6,7 +6,7 @@ public class Measurement {
     private Tag tags;
     private String time;
 
-    public Measurement(){}
+    public Measurement() {}
 
     public Measurement(String measurement, Field fields, Tag tags, String time) {
         this.measurement = measurement;

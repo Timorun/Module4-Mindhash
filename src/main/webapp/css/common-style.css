@@ -291,13 +291,15 @@ a:hover {
 	overflow: hidden;
 }
 .info-wrapper .section-container {
-	padding: 12px;
+	height: 270px;
+	padding: 15px;
 	border-radius: 6px;
 	background-color: #fff;
 	float: left;
 	margin-right: 20px;
 	margin-top: 20px;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 .info-wrapper .section-container.mr0 {
 	margin-right: 0;
@@ -330,6 +332,32 @@ a:hover {
 	width: 400px!important;
 	height: 240px!important;
 }
+.info-wrapper .section-container .weatherChart {
+	width: 540px!important;
+	height: 240px!important;
+	margin: 0 auto;
+}
+.info-wrapper .section-container .map {
+	width: 400px;
+	height: 240px;
+}
+.info-wrapper .section-container .objects {
+	margin-top: 12px;
+	width: 240px;
+	height: 210px;
+	overflow: auto;
+}
+.info-wrapper .section-container .objects li {
+	font-size: 14px;
+	height: 32px;
+	line-height: 32px;
+	padding: 0 6px;
+	border-bottom: 1px solid #EFEFEF;
+	cursor: pointer;
+}
+.info-wrapper .section-container .objects li:hover {
+	background-color: #efefef;
+}
 
 /*.info-wrapper .section-container.text-info {
 	padding: 12px 18px;
@@ -356,6 +384,7 @@ a:hover {
 }
 .select-selected {
   background-color: DodgerBlue;
+  border-radius: 4px;
 }
 /* Style the arrow inside the select element: */
 .select-selected:after {
@@ -389,6 +418,7 @@ a:hover {
   left: 0;
   right: 0;
   z-index: 99;
+  border-radius: 4px;
 }
 /* Hide the items when the select box is closed: */
 .select-hide {
@@ -460,6 +490,12 @@ a:hover {
 
 .dark-mode .info-wrapper .section-container {
 	background-color: #181818;
+}
+.dark-mode .info-wrapper .section-container .objects li {
+	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
+}
+.dark-mode .info-wrapper .section-container .objects li:hover {
+	background-color: #282828;
 }
 /*.dark-mode .info-wrapper .section-container .general .title {
 	border-bottom: 1px solid hsla(0, 0%, 100%, .1);

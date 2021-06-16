@@ -31,7 +31,7 @@ public enum RecordingDao {
             String query = "select * from recording";
             st = conn.prepareStatement(query);
             resultSet = st.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Recording recording = new Recording();
                 int recordingId = resultSet.getInt(1);
                 recording.setRecordingID(resultSet.getInt(1));
@@ -43,81 +43,9 @@ public enum RecordingDao {
                 recording.setResolution(resultSet.getString(7));
                 recording.setFrameRate(resultSet.getInt(8));
 
-                contentProvider.put(resultSet.getInt(1), recording);
-                resultSet.close();
-                st.close();
-
-                //count number of objects of different types
-                String countObjects = "select count(*) from object, recording where object_type = ? and object.recording_id = ?";
-                st = conn.prepareStatement(countObjects);
-                st.setInt(2, recordingId);
-                st.setString(1, "vehicle");
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    recording.setTotalVehicles(resultSet.getInt(1));
-                }
-                st.setString(1, "pedestrian");
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    recording.setTotalPedestrians(resultSet.getInt(1));
-                }
-                st.setString(1, "two-wheeler");
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    recording.setTotalTwoWheelers(resultSet.getInt(1));
-                }
-                resultSet.close();
-                st.close();
-
-                //count total number of objects
-                String countTotal = "select count(*) from object";
-                st = conn.prepareStatement(countTotal);
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    recording.setTotalObjects(resultSet.getInt(1));
-                }
-                resultSet.close();
-                st.close();
-
-                //get average max & min velocity per object type
-                String velocity = "select max(measurement.velocity) as max_velocity, min(measurement.velocity) as min_velocity, avg(measurement.velocity) as avg_velocity from measurement, object where measurement.object_id = object.object_id and object.object_type = ? and object.recording_id =?";
-                st = conn.prepareStatement(velocity);
-                st.setInt(2, recordingId);
-                st.setString(1, "vehicle");
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    double vehiclesMax = resultSet.getDouble("max_velocity");
-                    recording.setVehicles_max_velocity(vehiclesMax);
-                    double vehiclesMin = resultSet.getDouble("min_velocity");
-                    recording.setVehicles_min_velocity(vehiclesMin);
-                    double vehiclesAvg = resultSet.getDouble("avg_velocity");
-                    recording.setVehiclesAvgVelocity(vehiclesAvg);
-                }
-
-                st.setString(1, "pedestrian");
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    double pedestriansMax = resultSet.getDouble("max_velocity");
-                    recording.setPedestrians_max_velocity(pedestriansMax);
-                    double pedestriansMin = resultSet.getDouble("min_velocity");
-                    recording.setPedestrians_min_velocity(pedestriansMin);
-                    double pedestriansAvg = resultSet.getDouble("avg_velocity");
-                    recording.setPedestriansAvgVelocity(pedestriansAvg);
-                }
-                st.setString(1, "two-wheeler");
-                resultSet = st.executeQuery();
-                while (resultSet.next()) {
-                    double wheelersMax = resultSet.getDouble("max_velocity");
-                    recording.setWheelers_max_velocity(wheelersMax);
-                    double wheelersMin = resultSet.getDouble("min_velocity");
-                    recording.setWheelers_min_velocity(wheelersMin);
-                    double wheelersAvg = resultSet.getDouble("avg_velocity");
-                    recording.setWheelersAvgVelocity(wheelersAvg);
-                }
-
-                contentProvider.put(resultSet.getInt(1), recording);
+                contentProvider.put(recordingId, recording);
             }
-            conn.commit();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

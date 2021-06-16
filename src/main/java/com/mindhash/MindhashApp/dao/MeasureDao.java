@@ -22,7 +22,7 @@ public enum MeasureDao {
             String query = "select * from measurement";
             PreparedStatement st = conn.prepareStatement(query);
             ResultSet resultSet = st.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Measure measurement = new Measure();
                 measurement.setRecordingId(resultSet.getInt(1));
                 measurement.setObjectId(resultSet.getInt(2));
@@ -34,14 +34,13 @@ public enum MeasureDao {
                 measurement.setTimeWithoutDate(resultSet.getString(8));
                 contentProvider.put(resultSet.getInt(1), measurement);
             }
-
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Map<Integer, Measure> getModel(){
+    public Map<Integer, Measure> getModel() {
         return contentProvider;
     }
 }

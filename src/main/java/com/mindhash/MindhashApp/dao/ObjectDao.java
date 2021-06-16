@@ -23,7 +23,7 @@ public enum ObjectDao {
             String query = "select * from object";
             PreparedStatement st = conn.prepareStatement(query);
             ResultSet resultSet = st.executeQuery();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Obj object = new Obj();
                 object.setObjectId(resultSet.getInt(1));
                 object.setObjectType(resultSet.getString(3));

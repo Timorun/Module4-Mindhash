@@ -10,7 +10,7 @@ import java.sql.*;
 public class UserDao {
     public static final String SALT = "AEgdqp2w3hZJZTuFvfMc";
 
-    public boolean newMail(String email) {
+    /*public boolean newMail(String email) {
         Connection conn = DBConnectivity.createConnection();
 
         try {
@@ -29,7 +29,7 @@ public class UserDao {
             e.printStackTrace();
         }
         return false;
-    }
+    }*/
 
     public boolean registerUser(User user) throws SQLException {
         String email = user.getEmail();
@@ -93,7 +93,7 @@ public class UserDao {
         return salt;
     }
 
-    public User checkLogin(String email, String password) throws SQLException {
+    /*public User checkLogin(String email, String password) throws SQLException {
         String salt = getSalt(email);
         String saltPass = salt + password;
         String hashedPass = generateHash(saltPass);
@@ -114,5 +114,5 @@ public class UserDao {
         }
         conn.close();
         return user;
-    }
+    }*/
 }

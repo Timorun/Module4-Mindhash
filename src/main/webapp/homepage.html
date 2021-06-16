@@ -36,7 +36,7 @@
 					for(var recording of recordings) {
 						var id = recording.recordingID;
 						htmlStr += '<li>'
-										+ '<a href="recording.html?id=' + id + '" class="box-layout">'
+										+ '<a href="recording.html?id=' + id + '&date='+ recording.date + '&lat=' + recording.latitude + '&lon=' + recording.longitude + '" class="box-layout">'
 										+ '<div class="box-col">Sensor' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
 										+ '<div class="box-col">' + recording.startTime + '</div>'
 										+ '<div class="box-col">' + recording.endTime + '</div>'

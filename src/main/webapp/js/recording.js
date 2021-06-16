@@ -19,14 +19,14 @@ document.querySelector(".logo").addEventListener("click", function () {
 			pChart.options.color = "#c9d1d9";
 
 			bChart.options.color = "#c9d1d9";
-			bChart.options.scales.x.grid.borderColor = "#c9d1d9";
-			bChart.options.scales.y.grid.borderColor = "#c9d1d9";
-			bChart.options.scales.x.ticks.color = "#c9d1d9";
-			bChart.options.scales.y.ticks.color = "#c9d1d9";
+			bChart.options.scales.x.grid.borderColor = "#aaa";
+			bChart.options.scales.y.grid.borderColor = "#aaa";
+			bChart.options.scales.x.ticks.color = "#aaa";
+			bChart.options.scales.y.ticks.color = "#aaa";
 
 			weatherChart.options.color = "#c9d1d9";
-			weatherChart.options.scales.x.grid.borderColor = "#c9d1d9";
-			weatherChart.options.scales.y.grid.borderColor = "#c9d1d9";
+			weatherChart.options.scales.x.grid.borderColor = "#aaa";
+			weatherChart.options.scales.y.grid.borderColor = "#aaa";
 			weatherChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
 			weatherChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
 			weatherChart.options.scales.x.ticks.color = "#c9d1d9";
@@ -62,27 +62,34 @@ document.querySelector(".logo").addEventListener("click", function () {
 
 let queryString = window.location.search,
 	urlParams = new URLSearchParams(queryString),
-	id = urlParams.get('id');
+	id = urlParams.get('id'),
+	date = urlParams.get('date'),
+	lat = urlParams.get('lat'),
+	lon = urlParams.get('lon');
+
+var mymap = L.map('map').setView([lat, lon], 18),
+			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+maplayer = L.tileLayer(mapUrl, {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 28
+}).addTo(mymap);
 
 let xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText,
-			recording = JSON.parse(response),
-			ctx = document.querySelector('#pie-chart').getContext('2d'),
-			ctx2 = document.querySelector('#bar-chart').getContext('2d'),
-		    ctx3 = document.querySelector('#weatherChart').getContext('2d');
+			velocity = JSON.parse(response),
+			//ctx = document.querySelector('#pie-chart').getContext('2d'),
+			ctx = document.querySelector('#bar-chart').getContext('2d');
 
-		var htmlStr = "<div>Total Objects: " + recording.totalObjects + "</div>" +
-			"<div>Pedestrians: " + recording.totalPedestrians + "</div>" +
-			"<div>Vehicles: " + recording.totalVehicles + "</div>" +
-			"<div>Two Wheelers: " + recording.totalTwoWheelers+ "</div>" +
-			"<div>Recording Date: " + recording.date + "</div>";
+		/*var htmlStr = "<div>Total Objects: " + recording.totalObjects + "</div>" +
+				"<div>Pedestrians: " + recording.totalPedestrians + "</div>" +
+				"<div>Vehicles: " + recording.totalVehicles + "</div>" +
+				"<div>Two Wheelers: " + recording.totalTwoWheelers+ "</div>" +
+				"<div>Recording Date: " + recording.date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", htmlStr);
-
-		/*var percentOfVehicles = ((recording.totalVehicles / recording.totalObjects) * 100).toFixed(2),
-			percentOfPedestrians = ((recording.totalPedestrians / recording.totalObjects) * 100).toFixed(2),
-			percentOfTwoWheelers = (100 - percentOfVehicles - percentOfPedestrians).toFixed(2);*/
 
 		pChart = new Chart(ctx, {
 			type: 'pie',
@@ -115,9 +122,9 @@ xmlhttp.onreadystatechange = function() {
 				responsive: true,
 				maintainAspectRatio: false
 			}
-		});
+		});*/
 
-		bChart = new Chart(ctx2, {
+		bChart = new Chart(ctx, {
 			type: 'bar',
 			data: {
 				labels: ['Pedestrians', 'Two Wheelers', 'Vehicles'],
@@ -125,15 +132,15 @@ xmlhttp.onreadystatechange = function() {
 					{
 						label: "Maximum velocity",
 						backgroundColor: ["#4b77a9"],
-						data: [recording.pedestrians_max_velocity, recording.wheelers_max_velocity, recording.vehicles_max_velocity]
+						data: [velocity.pedestrians_max_velocity, velocity.wheelers_max_velocity, velocity.vehicles_max_velocity]
 					}, {
 						label: "Minimum velocity",
 						backgroundColor: ["#5f255f"],
-						data: [recording.pedestrians_min_velocity, recording.wheelers_min_velocity, recording.vehicles_min_velocity]
+						data: [velocity.pedestrians_min_velocity, velocity.wheelers_min_velocity, velocity.vehicles_min_velocity]
 					}, {
 						label: "Average velocity",
 						backgroundColor: ["#d21243"],
-						data: [recording.pedestriansAvgVelocity, recording.wheelersAvgVelocity, recording.vehiclesAvgVelocity]
+						data: [velocity.pedestriansAvgVelocity, velocity.wheelersAvgVelocity, velocity.vehiclesAvgVelocity]
 					}
 				]
 			},
@@ -146,20 +153,20 @@ xmlhttp.onreadystatechange = function() {
 				scales: {
 					x: {
 						grid: {
-							borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
+							borderColor: currentTheme == "dark" ? "#aaa" : "#666",
 							display: false
 						},
 						ticks: {
-							color: currentTheme == "dark" ? "#c9d1d9" : "#666",
+							color: currentTheme == "dark" ? "#aaa" : "#666",
 						}
 					},
 					y: {
 						grid: {
-							borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
+							borderColor: currentTheme == "dark" ? "#aaa" : "#666",
 							display: false
 						},
 						ticks: {
-							color: currentTheme == "dark" ? "#c9d1d9" : "#666",
+							color: currentTheme == "dark" ? "#aaa" : "#666",
 						}
 					}
 				},
@@ -168,98 +175,9 @@ xmlhttp.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		});
-
-		var mymap = L.map('map').setView([recording.latitude, recording.longitude], 18),
-			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
-		maplayer = L.tileLayer(mapUrl, {
-			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-			subdomains: 'abcd',
-			maxZoom: 28
-		}).addTo(mymap);
-
-		// get closest station based on coordinates
-		let xmlhttp2 = new XMLHttpRequest();
-		xmlhttp2.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				var response = this.responseText
-				jsonstations = JSON.parse(response)
-				for (i = 0; i < 2; i++) {
-					if (jsonstations.data[i].active === true) {
-						break;
-					}
-				}
-				let closeststation = jsonstations.data[i].name.en,
-					closestactivestationid = jsonstations.data[i].id;
-
-				//get weather info from that stationid
-				let xmlhttp3 = new XMLHttpRequest();
-				xmlhttp3.onreadystatechange = function() {
-					if (this.readyState == 4 && this.status == 200) {
-						var response = this.responseText;
-						hourlyweather = JSON.parse(response);
-						//Chart mixing multiple weather charts
-						weatherChart = new Chart(ctx3, {
-							data: {
-								labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
-								datasets: [{
-									//Bar chart of precipitation per hour
-									type: 'bar',
-									data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
-									label: "Precipitation per hour(in mm), provided by station "+ closeststation,
-									borderColor: "#3e95cd",
-									backgroundColor: "rgba(83, 120, 158, 0.8)",
-									order: 1
-								},{
-									//Line chart of temperature per hour
-									type: 'line',
-									data: [hourlyweather.data[0].temp,hourlyweather.data[1].temp,hourlyweather.data[2].temp,hourlyweather.data[3].temp,hourlyweather.data[4].temp,hourlyweather.data[5].temp,hourlyweather.data[6].temp,hourlyweather.data[7].temp,hourlyweather.data[8].temp,hourlyweather.data[9].temp,hourlyweather.data[10].temp,hourlyweather.data[11].temp,hourlyweather.data[12].temp,hourlyweather.data[13].temp,hourlyweather.data[14].temp,hourlyweather.data[15].temp,hourlyweather.data[16].temp,hourlyweather.data[17].temp,hourlyweather.data[18].temp,hourlyweather.data[19].temp,hourlyweather.data[20].temp,hourlyweather.data[21].temp,hourlyweather.data[22].temp,hourlyweather.data[23].temp],
-									label: "Temperature per hour(in C°)"+ closeststation,
-									borderColor: "#3e95cd",
-									fill: true,
-									lineTension: 0.5,
-									order: 2
-								}]
-							},
-							options: {
-								scales: {
-									x: {
-										grid: {
-											borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
-											color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
-										},
-										ticks: {
-											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
-										}
-									},
-									y: {
-										grid: {
-											borderColor: currentTheme == "dark" ? "#c9d1d9" : "#666",
-											color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
-										},
-										ticks: {
-											color: currentTheme == "dark" ? "#c9d1d9" : "#666",
-										}
-									}
-								},
-								color: currentTheme == "dark" ? "#c9d1d9" : "#333",
-								responsive: true,
-								spanGaps: true
-							}
-						});
-					}
-				}
-				xmlhttp3.open("GET", "https://api.meteostat.net/v2/stations/hourly?station="+ closestactivestationid +"&start="+ recording.date +"&end="+ recording.date +"&tz=CEST", true);
-				xmlhttp3.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
-				xmlhttp3.send();
-			}
-		}
-		xmlhttp2.open("GET", "https://api.meteostat.net/v2/stations/nearby?lat="+ recording.latitude +"&lon="+ recording.longitude + "&limit=3", true);
-		xmlhttp2.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
-		xmlhttp2.send();
 	}
 }
-xmlhttp.open("GET", "/MindhashApp/rest/recordings/" + id, true);
+xmlhttp.open("GET", "/MindhashApp/rest/velocity/" + id + "/" + date, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
@@ -395,3 +313,84 @@ function select() {
 	then close all select boxes:*/
 	document.addEventListener("click", closeAllSelect);
 }
+
+// get closest station based on coordinates
+let xmlhttp2 = new XMLHttpRequest();
+xmlhttp2.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var response = this.responseText,
+			jsonstations = JSON.parse(response);
+		for (i = 0; i < 2; i++) {
+			if (jsonstations.data[i].active === true) {
+				break;
+			}
+		}
+		let closeststation = jsonstations.data[i].name.en,
+			closestactivestationid = jsonstations.data[i].id;
+
+		//get weather info from that stationid
+		let xmlhttp3 = new XMLHttpRequest();
+		xmlhttp3.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var response = this.responseText,
+				    hourlyweather = JSON.parse(response),
+					ctx3 = document.querySelector('#weatherChart').getContext('2d');
+				//Chart mixing multiple weather charts
+				weatherChart = new Chart(ctx3, {
+					data: {
+						labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+						datasets: [{
+							//Bar chart of precipitation per hour
+							type: 'bar',
+							data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
+							label: "Precipitation per hour(in mm), provided by station "+ closeststation,
+							borderColor: "#3e95cd",
+							backgroundColor: "rgba(83, 120, 158, 0.8)",
+							order: 1
+						},{
+							//Line chart of temperature per hour
+							type: 'line',
+							data: [hourlyweather.data[0].temp,hourlyweather.data[1].temp,hourlyweather.data[2].temp,hourlyweather.data[3].temp,hourlyweather.data[4].temp,hourlyweather.data[5].temp,hourlyweather.data[6].temp,hourlyweather.data[7].temp,hourlyweather.data[8].temp,hourlyweather.data[9].temp,hourlyweather.data[10].temp,hourlyweather.data[11].temp,hourlyweather.data[12].temp,hourlyweather.data[13].temp,hourlyweather.data[14].temp,hourlyweather.data[15].temp,hourlyweather.data[16].temp,hourlyweather.data[17].temp,hourlyweather.data[18].temp,hourlyweather.data[19].temp,hourlyweather.data[20].temp,hourlyweather.data[21].temp,hourlyweather.data[22].temp,hourlyweather.data[23].temp],
+							label: "Temperature per hour(in C°)"+ closeststation,
+							borderColor: "#3e95cd",
+							fill: true,
+							lineTension: 0.5,
+							order: 2
+						}]
+					},
+					options: {
+						scales: {
+							x: {
+								grid: {
+									borderColor: currentTheme == "dark" ? "#aaa" : "#666",
+									color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
+								},
+								ticks: {
+									color: currentTheme == "dark" ? "#aaa" : "#666",
+								}
+							},
+							y: {
+								grid: {
+									borderColor: currentTheme == "dark" ? "#aaa" : "#666",
+									color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
+								},
+								ticks: {
+									color: currentTheme == "dark" ? "#aaa" : "#666",
+								}
+							}
+						},
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						responsive: true,
+						spanGaps: true
+					}
+				});
+			}
+		}
+		xmlhttp3.open("GET", "https://api.meteostat.net/v2/stations/hourly?station="+ closestactivestationid +"&start="+ date +"&end="+ date +"&tz=CEST", true);
+		xmlhttp3.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
+		xmlhttp3.send();
+	}
+}
+xmlhttp2.open("GET", "https://api.meteostat.net/v2/stations/nearby?lat="+ lat +"&lon="+ lon + "&limit=3", true);
+xmlhttp2.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
+xmlhttp2.send();
