@@ -202,11 +202,50 @@ xmlAddList.onreadystatechange = function() {
 			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 		var selectStr = '<option value="0">all objects</option>',
+		    generalStr = "<div>total objects: " + objects.length + "</div>";
 			index = 1;
 		for (var o in objectType) {
 			selectStr += '<option value="'+ index +'">' + o + '</option>';
+			generalStr += "<div>" + o + ": " + objectType[o] + "</div>";
 			index++;
 		}
+		generalStr += "<div>recording Date: " + date + "</div>";
+		document.querySelector("#general-tit").insertAdjacentHTML("afterend", generalStr);
+		
+		var ctx = document.querySelector('#pie-chart').getContext('2d');
+		pChart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: ['Vehicles', 'Pedestrians', 'Two wheelers'],
+				datasets: [
+					{
+						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
+						data: [64, 65, 69],
+						borderWidth: 0
+					},
+				]
+			},
+			options: {
+				plugins: {
+					tooltip: {
+						callbacks: {
+							label: function(TooltipItem, object) {
+								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / recording.totalObjects) * 100).toFixed(2) + "%)";
+							}
+						}
+					},
+					legend: {
+						onClick: function() {
+							return false;
+						}
+					}
+				},
+				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+				responsive: true,
+				maintainAspectRatio: false
+			}
+		});
+		
 		$selectObj.innerHTML = selectStr;
 		select();
 		$selectObj.addEventListener("change", function() {
@@ -334,9 +373,9 @@ xmlhttp2.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				var response = this.responseText,
 				    hourlyweather = JSON.parse(response),
-					ctx3 = document.querySelector('#weatherChart').getContext('2d');
+					ctx = document.querySelector('#weatherChart').getContext('2d');
 				//Chart mixing multiple weather charts
-				weatherChart = new Chart(ctx3, {
+				weatherChart = new Chart(ctx, {
 					data: {
 						labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
 						datasets: [{
