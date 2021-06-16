@@ -1,9 +1,9 @@
 let pChart = null,
 	bChart = null,
-	rainChart = null,
+	weatherChart = null,
 	maplayer = null;
-const btn = document.querySelector(".logo");
-btn.addEventListener("click", function () {
+
+document.querySelector(".logo").addEventListener("click", function () {
 	if (currentTheme == "dark") {
 		document.body.classList.remove("dark-mode");
 		document.body.classList.add("light-mode");
@@ -13,7 +13,8 @@ btn.addEventListener("click", function () {
 		document.body.classList.add("dark-mode");
 		currentTheme = "dark";
 	}
-	if (pChart != null && bChart != null && rainChart != null) {
+
+	if (pChart != null && bChart != null && weatherChart != null) {
 		if (currentTheme == "dark") {
 			pChart.options.color = "#c9d1d9";
 
@@ -23,13 +24,13 @@ btn.addEventListener("click", function () {
 			bChart.options.scales.x.ticks.color = "#c9d1d9";
 			bChart.options.scales.y.ticks.color = "#c9d1d9";
 
-			rainChart.options.color = "#c9d1d9";
-			rainChart.options.scales.x.grid.borderColor = "#c9d1d9";
-			rainChart.options.scales.y.grid.borderColor = "#c9d1d9";
-			rainChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
-			rainChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
-			rainChart.options.scales.x.ticks.color = "#c9d1d9";
-			rainChart.options.scales.y.ticks.color = "#c9d1d9";
+			weatherChart.options.color = "#c9d1d9";
+			weatherChart.options.scales.x.grid.borderColor = "#c9d1d9";
+			weatherChart.options.scales.y.grid.borderColor = "#c9d1d9";
+			weatherChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
+			weatherChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
+			weatherChart.options.scales.x.ticks.color = "#c9d1d9";
+			weatherChart.options.scales.y.ticks.color = "#c9d1d9";
 
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
@@ -41,20 +42,20 @@ btn.addEventListener("click", function () {
 			bChart.options.scales.x.ticks.color = "#333";
 			bChart.options.scales.y.ticks.color = "#333";
 
-			rainChart.options.color = "#333";
-			rainChart.options.scales.x.grid.borderColor = "#999";
-			rainChart.options.scales.y.grid.borderColor = "#999";
-			rainChart.options.scales.x.grid.color = "#e6e6e6";
-			rainChart.options.scales.y.grid.color = "#e6e6e6";
-			rainChart.options.scales.x.ticks.color = "#333";
-			rainChart.options.scales.y.ticks.color = "#333";
+			weatherChart.options.color = "#333";
+			weatherChart.options.scales.x.grid.borderColor = "#999";
+			weatherChart.options.scales.y.grid.borderColor = "#999";
+			weatherChart.options.scales.x.grid.color = "#e6e6e6";
+			weatherChart.options.scales.y.grid.color = "#e6e6e6";
+			weatherChart.options.scales.x.ticks.color = "#333";
+			weatherChart.options.scales.y.ticks.color = "#333";
 
 			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
 
 		pChart.update();
 		bChart.update();
-		rainChart.update();
+		weatherChart.update();
 	}
 	localStorage.setItem("theme", currentTheme);
 });
@@ -69,8 +70,8 @@ xmlhttp.onreadystatechange = function() {
 		var response = this.responseText,
 			recording = JSON.parse(response),
 			ctx = document.querySelector('#pie-chart').getContext('2d'),
-			ctx2 = document.querySelector('#bar-chart').getContext('2d');
-		ctx3 = document.querySelector('#rainchart').getContext('2d');
+			ctx2 = document.querySelector('#bar-chart').getContext('2d'),
+		    ctx3 = document.querySelector('#weatherChart').getContext('2d');
 
 		var htmlStr = "<div>Total Objects: " + recording.totalObjects + "</div>" +
 			"<div>Pedestrians: " + recording.totalPedestrians + "</div>" +
@@ -79,9 +80,9 @@ xmlhttp.onreadystatechange = function() {
 			"<div>Recording Date: " + recording.date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", htmlStr);
 
-		var percentOfVehicles = ((recording.totalVehicles / recording.totalObjects) * 100).toFixed(2),
+		/*var percentOfVehicles = ((recording.totalVehicles / recording.totalObjects) * 100).toFixed(2),
 			percentOfPedestrians = ((recording.totalPedestrians / recording.totalObjects) * 100).toFixed(2),
-			percentOfTwoWheelers = (100 - percentOfVehicles - percentOfPedestrians).toFixed(2);
+			percentOfTwoWheelers = (100 - percentOfVehicles - percentOfPedestrians).toFixed(2);*/
 
 		pChart = new Chart(ctx, {
 			type: 'pie',
@@ -166,11 +167,10 @@ xmlhttp.onreadystatechange = function() {
 				responsive: true,
 				maintainAspectRatio: false
 			}
-		})
+		});
 
-		var mymap = L.map('map').setView([recording.latitude, recording.longitude], 18);
-
-		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+		var mymap = L.map('map').setView([recording.latitude, recording.longitude], 18),
+			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
 		maplayer = L.tileLayer(mapUrl, {
 			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -189,15 +189,15 @@ xmlhttp.onreadystatechange = function() {
 						break;
 					}
 				}
-				let closeststation = jsonstations.data[i].name.en
-				let closestactivestationid = jsonstations.data[i].id
+				let closeststation = jsonstations.data[i].name.en,
+					closestactivestationid = jsonstations.data[i].id;
 
 				//get weather info from that stationid
 				let xmlhttp3 = new XMLHttpRequest();
 				xmlhttp3.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
-						var response = this.responseText
-						hourlyweather = JSON.parse(response)
+						var response = this.responseText;
+						hourlyweather = JSON.parse(response);
 						//Chart mixing multiple weather charts
 						weatherChart = new Chart(ctx3, {
 							data: {
@@ -206,7 +206,7 @@ xmlhttp.onreadystatechange = function() {
 									//Bar chart of precipitation per hour
 									type: 'bar',
 									data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
-									label: "Precipitation per hour(in mm), provided by station: "+ closeststation,
+									label: "Precipitation per hour(in mm), provided by station "+ closeststation,
 									borderColor: "#3e95cd",
 									backgroundColor: "rgba(83, 120, 158, 0.8)",
 									order: 1
@@ -283,14 +283,17 @@ xmlAddList.onreadystatechange = function() {
 			}
 			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
-		var selectStr = '<option value="0">all objects</option>';
-		var index = 1;
+		var selectStr = '<option value="0">all objects</option>',
+			index = 1;
 		for (var o in objectType) {
 			selectStr += '<option value="'+ index +'">' + o + '</option>';
 			index++;
 		}
 		$selectObj.innerHTML = selectStr;
 		select();
+		$selectObj.addEventListener("change", function() {
+			updateObjLi($selectObj.options[$selectObj.selectedIndex].text);
+		});
 		$objList.innerHTML = htmlStr;
 	}
 }
@@ -300,7 +303,6 @@ xmlAddList.send();
 
 function updateObjLi(val) {
 	var htmlStr = "";
-	console.log(val +","+objects.length);
 	for (var i = 0; i < objects.length; i++) {
 		if (objects[i].objectType === val || val === "all objects") {
 			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
@@ -315,6 +317,7 @@ function select() {
 	x = document.querySelectorAll(".custom-select");
 	l = x.length;
 	for (i = 0; i < l; i++) {
+		var $select = x[i];
 		selElmnt = x[i].getElementsByTagName("select")[0];
 		ll = selElmnt.length;
 		/*for each element, create a new DIV that will act as the selected item:*/
@@ -340,8 +343,9 @@ function select() {
 				for (i = 0; i < sl; i++) {
 					if (s.options[i].innerHTML == this.innerHTML) {
 						s.selectedIndex = i;
+						s.dispatchEvent(new Event('change'));
 						h.innerHTML = this.innerHTML;
-						updateObjLi(this.innerHTML);
+						//updateObjLi(this.innerHTML);
 						y = this.parentNode.getElementsByClassName("same-as-selected");
 						yl = y.length;
 						for (k = 0; k < yl; k++) {
