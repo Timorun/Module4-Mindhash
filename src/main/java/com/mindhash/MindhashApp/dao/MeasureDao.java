@@ -24,14 +24,13 @@ public enum MeasureDao {
             ResultSet resultSet = st.executeQuery();
             while (resultSet.next()) {
                 Measure measurement = new Measure();
-                measurement.setRecordingId(resultSet.getInt(1));
-                measurement.setObjectId(resultSet.getInt(2));
-                measurement.setTime(resultSet.getString(3));
-                measurement.setX(resultSet.getDouble(4));
-                measurement.setY(resultSet.getDouble(5));
-                measurement.setVelocity(resultSet.getDouble(6));
-                measurement.setMaVelocity(resultSet.getDouble(7));
-                measurement.setTimeWithoutDate(resultSet.getString(8));
+                measurement.setRecordingId(resultSet.getInt("recording_id"));
+                measurement.setObjectId(resultSet.getInt("object_id"));
+                measurement.setTime(resultSet.getString("time"));
+                measurement.setX(resultSet.getDouble("x"));
+                measurement.setY(resultSet.getDouble("y"));
+                measurement.setVelocity(resultSet.getDouble("velocity"));
+                measurement.setTimeWithoutDate(resultSet.getString("time_without_date"));
                 measurement.setMeasurementId(resultSet.getInt("measurement_id"));
                 contentProvider.put(resultSet.getInt("measurement_id"), measurement);
             }

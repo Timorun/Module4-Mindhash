@@ -76,6 +76,7 @@ maplayer = L.tileLayer(mapUrl, {
 	maxZoom: 28
 }).addTo(mymap);
 
+
 let xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
@@ -144,6 +145,36 @@ let objects,
     objectType = new Object();
 const $selectObj = document.querySelector("#selectObj"),
 	$objList = document.querySelector("#objects");
+
+let xmlHeatMap = new XMLHttpRequest();
+xmlHeatMap.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var response = this.responseText;
+		measurements = JSON.parse(response);
+		var coordinates = [];
+		for (var measurement of measurements) {
+			latx = parseFloat(lat) + parseFloat(measurement.x)
+			lony = parseFloat(lon) + parseFloat(measurement.y)
+			coordinates.push([latx, lony]);
+		}
+
+		var heatMap = L.map('heatMap').setView([lat, lon], 1),
+			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+				: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+		var baseLayer = L.tileLayer(mapUrl, {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+			subdomains: 'abcd',
+			maxZoom: 28,
+		}).addTo(heatMap);
+
+		var heat = L.heatLayer(coordinates, 0.5, {
+			radius: 25
+			}).addTo(heatMap)
+	}
+}
+xmlHeatMap.open("GET", "/MindhashApp/rest/measurements", true);
+xmlHeatMap.setRequestHeader("Accept", "application/json");
+xmlHeatMap.send();
 
 let xmlAddList = new XMLHttpRequest();
 xmlAddList.onreadystatechange = function() {

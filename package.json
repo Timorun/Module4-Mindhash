@@ -1,0 +1,10 @@
+{
+  "name": "MindhashWebApp",
+  "version": "1.0.0",
+  "dependencies": {
+    "leaflet": "^1.7.1"
+  },
+  "devDependencies": {
+    "leaflet-heatmap": "^1.0.0"
+  }
+}

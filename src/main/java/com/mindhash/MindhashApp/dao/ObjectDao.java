@@ -25,14 +25,10 @@ public enum ObjectDao {
             ResultSet resultSet = st.executeQuery();
             while (resultSet.next()) {
                 Obj object = new Obj();
-                object.setObjectId(resultSet.getInt(1));
-                object.setObjectType(resultSet.getString(3));
-                object.setPoints(resultSet.getInt(4));
-                object.setLength(resultSet.getDouble(5));
-                object.setWidth(resultSet.getDouble(6));
-                contentProvider.put(resultSet.getInt(1), object);
+                object.setObjectId(resultSet.getInt("object_id"));
+                object.setObjectType(resultSet.getString("object_type"));
+                contentProvider.put(resultSet.getInt("object_id"), object);
             }
-
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
