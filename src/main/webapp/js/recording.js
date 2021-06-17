@@ -141,20 +141,16 @@ xmlhttp.open("GET", "/MindhashApp/rest/velocity/" + id + "/" + date, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
-let objects,
-    objectType = new Object();
-const $selectObj = document.querySelector("#selectObj"),
-	$objList = document.querySelector("#objects");
-
+let measurements = new Array();
 let xmlHeatMap = new XMLHttpRequest();
 xmlHeatMap.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText;
-		measurements = JSON.parse(response);
+		measurements = JSON.parse(response).measureList;
 		var coordinates = [];
 		for (var measurement of measurements) {
-			latx = parseFloat(lat) + parseFloat(measurement.x)
-			lony = parseFloat(lon) + parseFloat(measurement.y)
+			var latx = parseFloat(lat) + parseFloat(measurement.x),
+				lony = parseFloat(lon) + parseFloat(measurement.y);
 			coordinates.push([latx, lony]);
 		}
 
@@ -168,20 +164,24 @@ xmlHeatMap.onreadystatechange = function() {
 		}).addTo(heatMap);
 
 		var heat = L.heatLayer(coordinates, 0.5, {
-			radius: 25
+				radius: 25
 			}).addTo(heatMap)
 	}
 }
-xmlHeatMap.open("GET", "/MindhashApp/rest/measurements", true);
+xmlHeatMap.open("GET", "/MindhashApp/rest/measurements/" + id + "/" + date, true);
 xmlHeatMap.setRequestHeader("Accept", "application/json");
 xmlHeatMap.send();
 
+let objects,
+    objectType = new Object();
+const $selectObj = document.querySelector("#selectObj"),
+	$objList = document.querySelector("#objects");
+	
 let xmlAddList = new XMLHttpRequest();
 xmlAddList.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText;
 		objects = JSON.parse(response);
-		console.log(objects);
 		var htmlStr = "";
 		for (var i = 0; i < objects.length; i++) {
 			if (objectType.hasOwnProperty(objects[i].objectType)) {
@@ -189,7 +189,7 @@ xmlAddList.onreadystatechange = function() {
 			} else {
 				objectType[objects[i].objectType] = 1;
 			}
-			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
+			htmlStr += '<li attr-id="' + objects[i].objectId + '" attr-type="' + objects[i].objectType  + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 		var selectStr = '<option value="0">all objects</option>',
 		    generalStr = "<div>total objects: " + objects.length + "</div>";
@@ -251,6 +251,15 @@ xmlAddList.onreadystatechange = function() {
 xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
 xmlAddList.setRequestHeader("Accept", "application/json");
 xmlAddList.send();
+
+$objList.onclick = function(e) {
+	var target = e.target;
+	if(target.tagName.toLowerCase() === "li"){
+		var id = target.getAttribute("attr-id"),
+			type = target.getAttribute("attr-type");
+	}
+}
+
 
 function updateObjLi(val) {
 	var htmlStr = "";
@@ -407,7 +416,7 @@ xmlhttp2.onreadystatechange = function() {
 							borderColor: "#3e95cd",
 							fill: false,
 							lineTension: 0.5,
-							order: 2
+							order: 3
 						}]
 					},
 					options: {

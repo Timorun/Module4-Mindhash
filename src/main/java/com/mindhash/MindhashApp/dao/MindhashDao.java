@@ -12,9 +12,6 @@ import com.mindhash.MindhashApp.model.Measurement;
  **/
 public class MindhashDao {
     private static final String userHome = System.getProperty("user.home");
-    /*public static Connection conn;
-    protected static final String username= "dab_di20212b_11";
-    protected static final String password = "FGqxQ1cJXYxvmPsW";*/
 
     public static void main (String[] args) {
 
