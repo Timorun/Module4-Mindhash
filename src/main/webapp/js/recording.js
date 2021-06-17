@@ -340,14 +340,15 @@ xmlhttp2.onreadystatechange = function() {
 				//Chart mixing multiple weather charts
 				var prcp = new Array(),
 					temp = new Array(),
+					wspd = new Array(),
 					labels = new Array();
 				for (var i = 0; i < 24; i++) {
 					prcp[i] = hourlyweather.data[i].prcp;
 					temp[i] = hourlyweather.data[i].temp;
+					wspd[i] = hourlyweather.data[i].wspd;
 					labels[i] = i;
 				}
 				weatherChart = new Chart(ctx, {
-					type: 'line',
 					data: {
 						labels: labels,
 						datasets: [{
@@ -357,23 +358,32 @@ xmlhttp2.onreadystatechange = function() {
 							label: "Precipitation(in mm)",
 							borderColor: "#3e95cd",
 							backgroundColor: "rgba(83, 120, 158, 0.8)",
-							order: 2
+							order: 1
 						},{
 							//Line chart of temperature per hour
-							//type: 'line',
+							type: 'line',
 							data: temp,
 							label: "Temperature(in C°)",
 							borderColor: "#3e95cd",
-							fill: true,
+							fill: false,
 							lineTension: 0.5,
-							order: 1
+							order: 2
+						},{
+							//Bar chart of windspead per hour
+							type: 'bar',
+							data: wspd,
+							label: "Windspeed(in km/h)",
+							borderColor: "#3e95cd",
+							fill: false,
+							lineTension: 0.5,
+							order: 2
 						}]
 					},
 					options: {
 						plugins: {
 							title: {
 								display: true,
-								text: "Hourly weather information provided by station " + closeststation
+								text: "Hourly weather information provided by closest active station: " + closeststation
 							}
 						},
 						scales: {
