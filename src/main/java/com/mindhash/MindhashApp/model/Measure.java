@@ -9,10 +9,11 @@ public class Measure {
     private double velocity;
     private double maVelocity;
     private String timeWithoutDate;
+    private int measurementId;
 
     public Measure(){}
 
-    public Measure(int recordingId, int objectId, String time, double x, double y, double velocity, double maVelocity, String timeWithoutDate) {
+    public Measure(int recordingId, int objectId, String time, double x, double y, double velocity, double maVelocity, String timeWithoutDate, int measurementId) {
         this.recordingId = recordingId;
         this.objectId = objectId;
         this.time = time;
@@ -21,6 +22,7 @@ public class Measure {
         this.velocity = velocity;
         this.maVelocity = maVelocity;
         this.timeWithoutDate = timeWithoutDate;
+        this.measurementId = measurementId;
     }
 
     public int getObjectId() { return objectId; }
@@ -39,6 +41,8 @@ public class Measure {
 
     public String getTimeWithoutDate() { return timeWithoutDate; }
 
+    public int getMeasurementId() { return measurementId; }
+
     public void setObjectId(int objectId) { this.objectId = objectId; }
 
     public void setRecordingId(int recordingId) { this.recordingId = recordingId; }
@@ -54,4 +58,6 @@ public class Measure {
     public void setMaVelocity(double maVelocity) { this.maVelocity = maVelocity; }
 
     public void setTimeWithoutDate(String timeWithoutDate) { this.timeWithoutDate = timeWithoutDate; }
+
+    public void setMeasurementId(int measurementId) { this.measurementId = measurementId; }
 }

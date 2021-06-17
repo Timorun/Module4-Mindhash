@@ -32,7 +32,8 @@ public enum MeasureDao {
                 measurement.setVelocity(resultSet.getDouble(6));
                 measurement.setMaVelocity(resultSet.getDouble(7));
                 measurement.setTimeWithoutDate(resultSet.getString(8));
-                contentProvider.put(resultSet.getInt(1), measurement);
+                measurement.setMeasurementId(resultSet.getInt("measurement_id"));
+                contentProvider.put(resultSet.getInt("measurement_id"), measurement);
             }
             conn.close();
         } catch (SQLException e) {
