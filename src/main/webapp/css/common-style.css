@@ -333,9 +333,8 @@ a:hover {
 	height: 240px!important;
 }
 .info-wrapper .section-container .weatherChart {
-	width: 540px!important;
+	width: 480px!important;
 	height: 240px!important;
-	margin: 0 auto;
 }
 .info-wrapper .section-container .map {
 	width: 400px;

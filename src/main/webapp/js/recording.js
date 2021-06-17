@@ -81,48 +81,7 @@ xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText,
 			velocity = JSON.parse(response),
-			//ctx = document.querySelector('#pie-chart').getContext('2d'),
 			ctx = document.querySelector('#bar-chart').getContext('2d');
-
-		/*var htmlStr = "<div>Total Objects: " + recording.totalObjects + "</div>" +
-				"<div>Pedestrians: " + recording.totalPedestrians + "</div>" +
-				"<div>Vehicles: " + recording.totalVehicles + "</div>" +
-				"<div>Two Wheelers: " + recording.totalTwoWheelers+ "</div>" +
-				"<div>Recording Date: " + recording.date + "</div>";
-		document.querySelector("#general-tit").insertAdjacentHTML("afterend", htmlStr);
-
-		pChart = new Chart(ctx, {
-			type: 'pie',
-			data: {
-				labels: ['Vehicles', 'Pedestrians', 'Two wheelers'],
-				datasets: [
-					{
-						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
-						data: [recording.totalVehicles, recording.totalPedestrians, recording.totalTwoWheelers],
-						borderWidth: 0
-					},
-				]
-			},
-			options: {
-				plugins: {
-					tooltip: {
-						callbacks: {
-							label: function(TooltipItem, object) {
-								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / recording.totalObjects) * 100).toFixed(2) + "%)";
-							}
-						}
-					},
-					legend: {
-						onClick: function() {
-							return false;
-						}
-					}
-				},
-				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
-				responsive: true,
-				maintainAspectRatio: false
-			}
-		});*/
 
 		bChart = new Chart(ctx, {
 			type: 'bar',
@@ -203,11 +162,15 @@ xmlAddList.onreadystatechange = function() {
 		}
 		var selectStr = '<option value="0">all objects</option>',
 		    generalStr = "<div>total objects: " + objects.length + "</div>";
-			index = 1;
+			index = 0,
+			labels = new Array(),
+			data = new Array();
 		for (var o in objectType) {
+			labels[index] = o;
+			data[index] = objectType[o];
+			index++;
 			selectStr += '<option value="'+ index +'">' + o + '</option>';
 			generalStr += "<div>" + o + ": " + objectType[o] + "</div>";
-			index++;
 		}
 		generalStr += "<div>recording Date: " + date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", generalStr);
@@ -216,11 +179,11 @@ xmlAddList.onreadystatechange = function() {
 		pChart = new Chart(ctx, {
 			type: 'pie',
 			data: {
-				labels: ['Vehicles', 'Pedestrians', 'Two wheelers'],
+				labels: labels,
 				datasets: [
 					{
 						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
-						data: [64, 65, 69],
+						data: data,
 						borderWidth: 0
 					},
 				]
@@ -230,7 +193,7 @@ xmlAddList.onreadystatechange = function() {
 					tooltip: {
 						callbacks: {
 							label: function(TooltipItem, object) {
-								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / recording.totalObjects) * 100).toFixed(2) + "%)";
+								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / objects.length) * 100).toFixed(2) + "%)";
 							}
 						}
 					},
@@ -375,29 +338,44 @@ xmlhttp2.onreadystatechange = function() {
 				    hourlyweather = JSON.parse(response),
 					ctx = document.querySelector('#weatherChart').getContext('2d');
 				//Chart mixing multiple weather charts
+				var prcp = new Array(),
+					temp = new Array(),
+					labels = new Array();
+				for (var i = 0; i < 24; i++) {
+					prcp[i] = hourlyweather.data[i].prcp;
+					temp[i] = hourlyweather.data[i].temp;
+					labels[i] = i;
+				}
 				weatherChart = new Chart(ctx, {
+					type: 'line',
 					data: {
-						labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+						labels: labels,
 						datasets: [{
 							//Bar chart of precipitation per hour
 							type: 'bar',
-							data: [hourlyweather.data[0].prcp,hourlyweather.data[1].prcp,hourlyweather.data[2].prcp,hourlyweather.data[3].prcp,hourlyweather.data[4].prcp,hourlyweather.data[5].prcp,hourlyweather.data[6].prcp,hourlyweather.data[7].prcp,hourlyweather.data[8].prcp,hourlyweather.data[9].prcp,hourlyweather.data[10].prcp,hourlyweather.data[11].prcp,hourlyweather.data[12].prcp,hourlyweather.data[13].prcp,hourlyweather.data[14].prcp,hourlyweather.data[15].prcp,hourlyweather.data[16].prcp,hourlyweather.data[17].prcp,hourlyweather.data[18].prcp,hourlyweather.data[19].prcp,hourlyweather.data[20].prcp,hourlyweather.data[21].prcp,hourlyweather.data[22].prcp,hourlyweather.data[23].prcp],
-							label: "Precipitation per hour(in mm), provided by station "+ closeststation,
+							data: prcp,
+							label: "Precipitation(in mm)",
 							borderColor: "#3e95cd",
 							backgroundColor: "rgba(83, 120, 158, 0.8)",
-							order: 1
+							order: 2
 						},{
 							//Line chart of temperature per hour
-							type: 'line',
-							data: [hourlyweather.data[0].temp,hourlyweather.data[1].temp,hourlyweather.data[2].temp,hourlyweather.data[3].temp,hourlyweather.data[4].temp,hourlyweather.data[5].temp,hourlyweather.data[6].temp,hourlyweather.data[7].temp,hourlyweather.data[8].temp,hourlyweather.data[9].temp,hourlyweather.data[10].temp,hourlyweather.data[11].temp,hourlyweather.data[12].temp,hourlyweather.data[13].temp,hourlyweather.data[14].temp,hourlyweather.data[15].temp,hourlyweather.data[16].temp,hourlyweather.data[17].temp,hourlyweather.data[18].temp,hourlyweather.data[19].temp,hourlyweather.data[20].temp,hourlyweather.data[21].temp,hourlyweather.data[22].temp,hourlyweather.data[23].temp],
-							label: "Temperature per hour(in C°)"+ closeststation,
+							//type: 'line',
+							data: temp,
+							label: "Temperature(in C°)",
 							borderColor: "#3e95cd",
 							fill: true,
 							lineTension: 0.5,
-							order: 2
+							order: 1
 						}]
 					},
 					options: {
+						plugins: {
+							title: {
+								display: true,
+								text: "Hourly weather information provided by station " + closeststation
+							}
+						},
 						scales: {
 							x: {
 								grid: {
@@ -420,7 +398,7 @@ xmlhttp2.onreadystatechange = function() {
 						},
 						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 						responsive: true,
-						spanGaps: true
+						maintainAspectRatio: false
 					}
 				});
 			}

@@ -32,16 +32,17 @@ public enum RecordingDao {
             st = conn.prepareStatement(query);
             resultSet = st.executeQuery();
             while (resultSet.next()) {
+            	System.out.println(resultSet.getDouble(2));
                 Recording recording = new Recording();
-                int recordingId = resultSet.getInt(1);
-                recording.setRecordingID(resultSet.getInt(1));
-                recording.setLatitude(resultSet.getDouble(2));
-                recording.setLongitude(resultSet.getDouble(3));
-                recording.setDate(resultSet.getString(4));
-                recording.setStartTime(resultSet.getString(5));
-                recording.setEndTime(resultSet.getString(6));
-                recording.setResolution(resultSet.getString(7));
-                recording.setFrameRate(resultSet.getInt(8));
+                int recordingId = resultSet.getInt("recording_id");
+                recording.setRecordingID(recordingId);
+                recording.setLatitude(resultSet.getDouble("latitude"));
+                recording.setLongitude(resultSet.getDouble("longitude"));
+                recording.setDate(resultSet.getString("date"));
+                recording.setStartTime(resultSet.getString("start_time"));
+                recording.setEndTime(resultSet.getString("end_time"));
+                recording.setResolution(resultSet.getString("resolution"));
+                recording.setFrameRate(resultSet.getInt("framerate"));
 
                 contentProvider.put(recordingId, recording);
             }
