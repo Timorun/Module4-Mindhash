@@ -1,7 +1,8 @@
 let pChart = null,
 	bChart = null,
 	weatherChart = null,
-	maplayer = null;
+	maplayer = null,
+	timeSpeedChart = null;
 
 document.querySelector(".logo").addEventListener("click", function () {
 	if (currentTheme == "dark") {
@@ -147,13 +148,28 @@ xmlHeatMap.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText;
 		measurements = JSON.parse(response).measureList;
-		var coordinates = [];
+		console.log(measurements)
+		var coordinates = [],
+			firstTime = new Array(),
+			firstSpeed = new Array(),
+			firstId = -1,
+			name = "";
 		for (var measurement of measurements) {
 			var latx = parseFloat(lat) + parseFloat(measurement.x),
 				lony = parseFloat(lon) + parseFloat(measurement.y);
 			coordinates.push([latx, lony]);
+			
+			if (firstTime.length === 0 && firstId === -1) {
+				firstId = measurement.objectId;
+				firstSpeed.push(measurement.velocity);
+				firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+				name = measurement.objectType + ' ' + measurement.objectId;
+			} else if (firstId === measurement.objectId) {
+				firstSpeed.push(measurement.velocity);
+				firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+			}
 		}
-
+		timeSpeed(firstTime, firstSpeed, name);
 		var heatMap = L.map('heatMap').setView([lat, lon], 1),
 			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 				: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
@@ -189,7 +205,7 @@ xmlAddList.onreadystatechange = function() {
 			} else {
 				objectType[objects[i].objectType] = 1;
 			}
-			htmlStr += '<li attr-id="' + objects[i].objectId + '" attr-type="' + objects[i].objectType  + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
+			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 		var selectStr = '<option value="0">all objects</option>',
 		    generalStr = "<div>total objects: " + objects.length + "</div>";
@@ -252,11 +268,79 @@ xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
 xmlAddList.setRequestHeader("Accept", "application/json");
 xmlAddList.send();
 
+function timeSpeed(labels, speed, name) {
+	var ctx = document.querySelector('#timeSpeedChart').getContext('2d');
+	timeSpeedChart = new Chart(ctx, {
+		type: "line",
+		data: {
+			labels: labels,
+			datasets: [{
+				data: speed,
+				fill: false,
+				borderColor: "#3e95cd",
+				tension: 0.1
+			}]
+		},
+		options: {
+			plugins: {
+				title: {
+					display: true,
+					text: "Speed per second of " + name
+				},
+				legend: {
+					display: false
+				}
+			},
+			scales: {
+				x: {
+					grid: {
+						borderColor: currentTheme == "dark" ? "#aaa" : "#666",
+						color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
+					},
+					ticks: {
+						color: currentTheme == "dark" ? "#aaa" : "#666",
+					}
+				},
+				y: {
+					grid: {
+						borderColor: currentTheme == "dark" ? "#aaa" : "#666",
+						color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
+					},
+					ticks: {
+						color: currentTheme == "dark" ? "#aaa" : "#666",
+					}
+				}
+			},
+			color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+			responsive: true,
+			maintainAspectRatio: false
+		}
+	});
+}
+
 $objList.onclick = function(e) {
 	var target = e.target;
 	if(target.tagName.toLowerCase() === "li"){
-		var id = target.getAttribute("attr-id"),
-			type = target.getAttribute("attr-type");
+		var id = parseInt(target.getAttribute("attr-id")),
+			name = target.innerHTML,
+			match = 0,
+			time = new Array(),
+			speed = new Array();
+		for (var m of measurements) {
+			if (m.objectId === id && match !== 2) {
+				time.push(m.timeWithoutDate.slice(0, 8));
+				speed.push(m.velocity);
+				match = 1;
+			} else if (m.objectId !== id && match === 1) {
+				match = 2;
+			} else if (m.objectId !== id && match === 2) {
+				break;
+			}
+		}
+		timeSpeedChart.data.labels = time;
+		timeSpeedChart.data.datasets[0].data = speed;
+		timeSpeedChart.options.plugins.title.text = "Speed per second of " + name;
+		timeSpeedChart.update();
 	}
 }
 
@@ -265,7 +349,7 @@ function updateObjLi(val) {
 	var htmlStr = "";
 	for (var i = 0; i < objects.length; i++) {
 		if (objects[i].objectType === val || val === "all objects") {
-			htmlStr += '<li>' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
+			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 	}
 	$objList.innerHTML = htmlStr;
@@ -414,8 +498,6 @@ xmlhttp2.onreadystatechange = function() {
 							data: wspd,
 							label: "Windspeed(in km/h)",
 							borderColor: "#3e95cd",
-							fill: false,
-							lineTension: 0.5,
 							order: 3
 						}]
 					},

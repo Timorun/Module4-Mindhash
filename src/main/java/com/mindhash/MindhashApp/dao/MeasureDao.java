@@ -18,7 +18,8 @@ public class MeasureDao {
         res.setRecordingId(recordingId);
         res.setDate(date);
         try {
-            String query = "select object_id, time, x, y, velocity, time_without_date from measurement where recording_id = ? and date = ?";
+            String query = "select object_id, time, x, y, velocity, time_without_date " + 
+            				"from measurement where recording_id = ? and date = ? and time like '%T__:__:__.9%'";
             PreparedStatement st = conn.prepareStatement(query);
             st.setInt(1, recordingId);
             st.setString(2, date);
@@ -28,7 +29,7 @@ public class MeasureDao {
                 Measure measurement = new Measure();
                 //measurement.setRecordingId(resultSet.getInt("recording_id"));
                 measurement.setObjectId(resultSet.getInt("object_id"));
-                measurement.setTime(resultSet.getString("time"));
+                //measurement.setTime(resultSet.getString("time"));
                 measurement.setX(resultSet.getDouble("x"));
                 measurement.setY(resultSet.getDouble("y"));
                 measurement.setVelocity(resultSet.getDouble("velocity"));
