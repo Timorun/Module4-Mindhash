@@ -138,7 +138,7 @@ xmlhttp.onreadystatechange = function() {
 		});
 	}
 }
-xmlhttp.open("GET", "/MindhashApp/rest/velocity/" + id + "/" + date, true);
+xmlhttp.open("GET", "/mindhash/rest/velocity/" + id + "/" + date, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.send();
 
@@ -184,7 +184,7 @@ xmlHeatMap.onreadystatechange = function() {
 			}).addTo(heatMap)
 	}
 }
-xmlHeatMap.open("GET", "/MindhashApp/rest/measurements/" + id + "/" + date, true);
+xmlHeatMap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date, true);
 xmlHeatMap.setRequestHeader("Accept", "application/json");
 xmlHeatMap.send();
 
@@ -264,7 +264,7 @@ xmlAddList.onreadystatechange = function() {
 		$objList.innerHTML = htmlStr;
 	}
 }
-xmlAddList.open("GET", "/MindhashApp/rest/objects", true);
+xmlAddList.open("GET", "/mindhash/rest/objects", true);
 xmlAddList.setRequestHeader("Accept", "application/json");
 xmlAddList.send();
 
