@@ -1,6 +1,7 @@
 package com.mindhash.MindhashApp.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -9,13 +10,15 @@ public class MeasureRes {
 	private Integer recordingId;
 	private String date;
 	private ArrayList<Measure> measureList;
+	private HashMap<Integer, String> objectList;
 	
 	public MeasureRes() {}
 	
-	public MeasureRes(Integer recordingId, String date, ArrayList<Measure> measureList) {
+	public MeasureRes(Integer recordingId, String date, ArrayList<Measure> measureList, HashMap<Integer, String> objectList) {
 		this.recordingId = recordingId;
 		this.date = date;
 		this.measureList = measureList;
+		this.objectList = objectList;
 	}
 	
 	public Integer getRecordingId() {
@@ -30,6 +33,10 @@ public class MeasureRes {
 		return this.measureList;
 	}
 	
+	public HashMap<Integer, String> getObjectList() {
+		return this.objectList;
+	}
+	
 	public void setRecordingId(Integer recordingId) {
 		this.recordingId = recordingId;
 	}
@@ -40,5 +47,9 @@ public class MeasureRes {
 	
 	public void setMeasureList(ArrayList<Measure> measureList) {
 		this.measureList = measureList;
+	}
+	
+	public void setObjectList(HashMap<Integer, String> objectList) {
+		this.objectList = objectList;
 	}
 }

@@ -35,9 +35,8 @@ public class VelocityResourse {
 
         try {
             //get average max & min velocity per object type
-            String velocity = "select max(measurement.velocity) as max_vel, min(measurement.velocity) as min_vel, " +
-            				  "avg(measurement.velocity) as avg_vel from measurement, object " + 
-            		          "where measurement.velocity > 0 and measurement.object_id = object.object_id " + 
+            String velocity = "select max(measurement.velocity) as max_vel, min(measurement.velocity) as min_vel, avg(measurement.velocity) as avg_vel from measurement, object " + 
+            		          "where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date " + 
             				  "and object.object_type = ? and object.recording_id = ? and measurement.date = ?";
             st = conn.prepareStatement(velocity);
             st.setString(1, "vehicle");

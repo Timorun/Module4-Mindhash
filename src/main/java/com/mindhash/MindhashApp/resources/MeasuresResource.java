@@ -19,5 +19,14 @@ public class MeasuresResource {
     								@PathParam("date") String date) {
         return MeasureDao.getMeasurement(recordingId, date);
     }
+    
+    @GET
+	@Path("{recordingId}/{date}/{time}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public MeasureRes getObjects(@PathParam("recordingId") int recordingId,
+    								@PathParam("date") String date,
+    								@PathParam("time") String time) {
+        return MeasureDao.getMeasurementByTime(recordingId, date, time);
+    }
 }
 

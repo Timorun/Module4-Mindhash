@@ -3,6 +3,7 @@ package com.mindhash.MindhashApp.model;
 public class Measure {
     //private int recordingId;
     private int objectId;
+    private String objectType;
     //private String time;
     private double x;
     private double y;
@@ -13,9 +14,10 @@ public class Measure {
 
     public Measure(){}
 
-    public Measure(int objectId, double x, double y, double velocity, String timeWithoutDate) {
+    public Measure(int objectId, String objectType, double x, double y, double velocity, String timeWithoutDate) {
         //this.recordingId = recordingId;
         this.objectId = objectId;
+        this.objectType = objectType;
         //this.time = time;
         this.x = x;
         this.y = y;
@@ -26,6 +28,8 @@ public class Measure {
     }
 
     public int getObjectId() { return objectId; }
+    
+    public String getObjectType() { return objectType; }
 
     //public int getRecordingId() { return recordingId; }
 
@@ -44,6 +48,8 @@ public class Measure {
     //public int getMeasurementId() { return measurementId; }
 
     public void setObjectId(int objectId) { this.objectId = objectId; }
+    
+    public void setObjectType(String objectType) { this.objectType = objectType; }
 
     //public void setRecordingId(int recordingId) { this.recordingId = recordingId; }
 

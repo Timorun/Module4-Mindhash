@@ -49,26 +49,38 @@
 				<canvas id="pie-chart"></canvas>
 			</div>
 		</div>
-		<div class="section-container mr0"><canvas id="bar-chart" class="bar-chart"></canvas></div>
+		<div class="section-container mr0">
+			<canvas id="bar-chart" class="bar-chart"></canvas>
+		</div>
 		<!--<div class="section-container text-info mr0">
 			<div class="general">
 				<div id="general-tit" class="title">General</div>
 			</div>
 		</div>-->
-		<div class="section-container"><div id="map" class="map"></div></div>
-		<div class="section-container general mr0"><canvas id="weatherChart"></canvas></div>
-		<div class="section-container">
-			<div style="float: left;">
+		<div class="section-container" style="width: 1080px;">
+			<div style="float: left;" id="interval">
+				<div class="custom-select">
+					<select id="timeInterval"></select>
+				</div>
+				<div id="heatMap" style='width: 360px; height: 220px;'></div>
+			</div>
+			<div style="float: left;" id="objects">
 				<div class="custom-select">
 					<select id="selectObj"></select>
 				</div>
-				<ul id="objects" class="objects"></ul>
+				<ul id="objectsLi" class="objectsLi"></ul>
 			</div>
-			<div class="bar-chart" style="float: left;">
-				<canvas id="timeSpeedChart"></canvas>
+			<div class="bar-chart" style="float: left;margin-left: 12px; width: 438px!important;overflow:hidden;">
+				<canvas id="timeSpeedChart" style="width: 438px!important;"></canvas>
 			</div>
 		</div>
-		<div class = "section-container"><div id="heatMap" style='width: 600px; height: 300px;'></div></div>
+		
+		<div class="section-container">
+			<div id="map" class="map"></div>
+		</div>
+		<div class="section-container general mr0">
+			<canvas id="weatherChart" style="height: 240px;"></canvas>
+		</div>
 	</section>
 	<!--<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 		 integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
