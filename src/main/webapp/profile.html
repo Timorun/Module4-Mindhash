@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="uploadServlet" method="post" enctype="multipart/form-data">
+    <div id="err-msg" class="err-msg hide"></div>
+    <table border="0" id = "table">
+        <tr>
+            <td>Latitude (e.g. 25.093...): </td>
+            <td><input type="text" name="latitude" id = "latitude"/></td>
+        </tr>
+        <tr>
+            <td>Longitude: (e.g. 25.093...): </td>
+            <td><input id = "longitude" type="text" name="longitude"/></td>
+        </tr>
+        <tr>
+            <td>Framerate (e.g. 60): </td>
+            <td><input type="text" name="framerate"/></td>
+        </tr>
+        <tr>
+            <td>Resolution (e.g. 1280x800): </td>
+            <td><input type="text" name="resolution"/></td>
+        </tr>
+        <tr>
+            <td>JSON of the recording: </td>
+            <td><input type="file" name="file"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Upload">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
+
+<script>
+
+</script>
+
+

@@ -1,5 +1,7 @@
 package com.mindhash.MindhashApp.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Measurement {
     private String measurement;
     private Field fields;
@@ -22,6 +24,8 @@ public class Measurement {
     public void setMeasurement(String measurement) {
         this.measurement = measurement;
     }
+
+    @JsonProperty("fields")
     public Field getField() {
         return fields;
     }
@@ -30,18 +34,12 @@ public class Measurement {
         this.fields = fields;
     }
 
-    public Tag getTag() {
-        return tags;
-    }
+    @JsonProperty("tags")
+    public Tag getTag() { return tags; }
 
-    public void setTag(Tag tags) {
-        this.tags = tags;
-    }
+    public void setTag(Tag tags) { this.tags = tags; }
 
-    public String getTime() {
-        return time;
-    }
-    public void setTime(String time) {
-        this.time = time;
-    }
+    public String getTime() { return time; }
+
+    public void setTime(String time) { this.time = time; }
 }
