@@ -18,7 +18,8 @@ public class MindhashDao {
         Connection conn = DBConnectivity.createConnection();
 
         try {
-            PreparedStatement preparedStatement = conn.prepareStatement("insert into mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            conn.setAutoCommit(false);
+            PreparedStatement preparedStatement = conn.prepareStatement("insert into mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time, recording_id) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
             ObjectMapper objectMapper = new ObjectMapper();
             List<Measurement> list = objectMapper.readValue(new File(userHome + "/data2.json.txt"), new TypeReference<List<Measurement>>() {
@@ -38,6 +39,7 @@ public class MindhashDao {
                 preparedStatement.setDouble(9, m.getField().getMa_velocity());
                 preparedStatement.setString(10, m.getMeasurement());
                 preparedStatement.setString(11, m.getTime());
+                preparedStatement.setInt(12, 1);
                 preparedStatement.addBatch();
             }
 

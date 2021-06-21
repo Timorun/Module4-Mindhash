@@ -66,7 +66,7 @@ public class FileUploadDBServlet extends HttpServlet {
             inserted in (test)mindhash table */
             int recording_id = 0;
             //Get current maximum recording_id in (test)mindhash table, if null, set max recording_id to 0
-            String sql = "select coalesce(max(testmindhash.recording_id), 0) as recording_id " + "from testmindhash";
+            String sql = "select coalesce(max(mindhash.recording_id), 0) as recording_id " + "from mindhash";
             preparedStatement = conn.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -78,7 +78,7 @@ public class FileUploadDBServlet extends HttpServlet {
 
             /*Insert records into
             (test)mindhash table */
-            preparedStatement = conn.prepareStatement("insert into testmindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time, recording_id) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            preparedStatement = conn.prepareStatement("insert into mindhash(object_id, object_type, points, length, width, x, y, velocity, ma_velocity, measurement, time, recording_id) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             Iterator<Measurement> it = list.iterator();
             while (it.hasNext()) {
                 Measurement m = it.next();
@@ -101,8 +101,8 @@ public class FileUploadDBServlet extends HttpServlet {
 
             /*Query start, date and end time
             of the recording for test(recording) table*/
-            String sql2 = "select max(testmindhash.time) as end_time, " +
-                    "min(testmindhash.time) as start_time from testmindhash " + "where testmindhash.recording_id = ?";
+            String sql2 = "select max(mindhash.time) as end_time, " +
+                    "min(mindhash.time) as start_time from mindhash " + "where mindhash.recording_id = ?";
             preparedStatement = conn.prepareStatement(sql2);
             preparedStatement.setInt(1, recording_id);
             resultSet = preparedStatement.executeQuery();
@@ -123,7 +123,7 @@ public class FileUploadDBServlet extends HttpServlet {
 
             /*Insert records into
             (test)recording table*/
-            preparedStatement = conn.prepareStatement("insert into testrecording(latitude, longitude, date, start_time, end_time, resolution, framerate, recording_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
+            preparedStatement = conn.prepareStatement("insert into recording(latitude, longitude, date, start_time, end_time, resolution, framerate, recording_id) values (?, ?, ?, ?, ?, ?, ?, ?)");
             //latitude, longitude, resolution and framerate attributes are taken from user input
             preparedStatement.setDouble(1, latitude);
             preparedStatement.setDouble(2, longitude);
@@ -144,14 +144,14 @@ public class FileUploadDBServlet extends HttpServlet {
             int points = 0;
             double length = 0;
             double width = 0;
-            String sql3 = "Select distinct object_id, object_type,  points, length, width from testmindhash "  + "where testmindhash.recording_id = ?";;
+            String sql3 = "Select distinct object_id, object_type,  points, length, width from mindhash "  + "where mindhash.recording_id = ?";;
             PreparedStatement st = conn.prepareStatement(sql3);
             st.setInt(1, recording_id);
             resultSet = st.executeQuery();
 
             /*Insert records into
             (test)object table */
-            preparedStatement = conn.prepareStatement("insert into testobject(object_id, recording_id, object_type, points, length, width, date) values (?, ?, ?, ?, ?, ?, ?)");
+            preparedStatement = conn.prepareStatement("insert into object(object_id, recording_id, object_type, points, length, width, date) values (?, ?, ?, ?, ?, ?, ?)");
 
             while (resultSet.next()) {
                 object_id = resultSet.getInt("object_id");
@@ -176,7 +176,7 @@ public class FileUploadDBServlet extends HttpServlet {
             /*Insert records into
             (test)measurement table*/
             it = list.iterator();
-            preparedStatement = conn.prepareStatement("insert into testmeasurement(recording_id, object_id, timestamp, x, y, velocity, ma_velocity, date, time) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            preparedStatement = conn.prepareStatement("insert into measurement(recording_id, object_id, time_without_date, x, y, velocity, ma_velocity, date, time) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             while (it.hasNext()) {
                 Measurement m = it.next();
                 preparedStatement.setInt(1, recording_id);
