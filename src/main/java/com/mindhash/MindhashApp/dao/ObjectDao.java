@@ -11,17 +11,16 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum ObjectDao {
-    instance;
+public class ObjectDao {
 
-    private Map<Integer, Obj> contentProvider = new HashMap<>();
-
-    private ObjectDao() {
+    public static Map<Integer, Obj> getObject(int recordingId, String date) {
         Connection conn = DBConnectivity.createConnection();
-
+        Map<Integer, Obj> contentProvider = new HashMap<>();
         try {
-            String query = "select * from object";
+            String query = "select * from object where recording_id = ? and date = ?";
             PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, recordingId);
+            st.setString(2, date);
             ResultSet resultSet = st.executeQuery();
             while (resultSet.next()) {
                 Obj object = new Obj();
@@ -33,10 +32,31 @@ public enum ObjectDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public Map<Integer, Obj> getModel(){
         return contentProvider;
     }
+    
+    public static Map<String , Integer> getObjectNum(int recordingId, String date) {
+        Connection conn = DBConnectivity.createConnection();
+        Map<String, Integer> contentProvider = new HashMap<>();
+        try {
+            String query = "select * from object where recording_id = ? and date = ?";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, recordingId);
+            st.setString(2, date);
+            ResultSet resultSet = st.executeQuery();
+            while (resultSet.next()) {
+                String type = resultSet.getString("object_type");
+                if (contentProvider.putIfAbsent(type, 1) != null) {
+                	int num = contentProvider.get(type);
+                	contentProvider.put(type, num + 1);
+                }
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return contentProvider;
+    }
+
 }
 
