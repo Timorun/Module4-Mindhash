@@ -4,23 +4,21 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 	<title></title>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-	   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-	   crossorigin=""/>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
 	<link type="text/css" rel="stylesheet" href="css/common-style.css">
 </head>
 <body>
 	<header class="header box-layout center-v">
 		<div class="logo"></div>
 		<a href="#" class="home-link"></a>
-		<div class="box-col">
+		<!--<div class="box-col">
 			<ul>
 				<li>GENERAL</li>
 				<li>VISUALIZATION</li>
 				<li>LOCATION</li>
 			</ul>
-		</div>
-		<a href="profile.html" class="avatar"></a>
+		</div>-->
+		<div class="box-col"><a href="profile.html" class="avatar"></a></div>
 	</header>
 	<script>
 		const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -57,21 +55,23 @@
 				<div id="general-tit" class="title">General</div>
 			</div>
 		</div>-->
-		<div class="section-container" style="width: 1080px;">
-			<div style="float: left;" id="interval">
+		<div class="section-container w100">
+			<div id="interval" class="fl">
 				<div class="custom-select">
 					<select id="timeInterval"></select>
 				</div>
-				<div id="heatMap" style='width: 360px; height: 220px;'></div>
+				<div id="heatmap" class="heatmap">
+					<div id="heatmapInfo" class="heatmapInfo"></div>
+				</div>
 			</div>
-			<div style="float: left;" id="objects">
+			<div id="objects" class="fl">
 				<div class="custom-select">
 					<select id="selectObj"></select>
 				</div>
 				<ul id="objectsLi" class="objectsLi"></ul>
 			</div>
-			<div class="bar-chart" style="float: left;margin-left: 12px; width: 438px!important;overflow:hidden;">
-				<canvas id="timeSpeedChart" style="width: 438px!important;"></canvas>
+			<div class="timeSpeedChart float">
+				<canvas id="timeSpeedChart"></canvas>
 			</div>
 		</div>
 		
@@ -79,12 +79,9 @@
 			<div id="map" class="map"></div>
 		</div>
 		<div class="section-container general mr0">
-			<canvas id="weatherChart" style="height: 240px;"></canvas>
+			<canvas id="weatherChart" class="weatherChart"></canvas>
 		</div>
 	</section>
-	<!--<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-		 integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-		 crossorigin=""></script>-->
 	<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
 	<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 	<script src="js/chart.min.js"></script>

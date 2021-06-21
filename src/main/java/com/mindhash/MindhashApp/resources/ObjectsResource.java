@@ -1,30 +1,23 @@
 package com.mindhash.MindhashApp.resources;
 
 import com.mindhash.MindhashApp.dao.ObjectDao;
-import com.mindhash.MindhashApp.model.Obj;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 @Path("/objects")
 public class ObjectsResource {
-    @Context
-    UriInfo uriInfo;
-    @Context
-    Request request;
 
     @GET
+    @Path("{recordingId}/{date}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public List<Obj> getObjects() {
-        List<Obj> objects = new ArrayList<Obj>();
-        objects.addAll(ObjectDao.instance.getModel().values());
-        return objects;
+    public Map<String, Integer>  getObjects(@PathParam("recordingId") int recordingId,
+    										@PathParam("date") String date) {
+        return ObjectDao.getObjectNum(recordingId, date);
     }
+    
 }

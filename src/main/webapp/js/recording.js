@@ -70,184 +70,49 @@ document.querySelector(".logo").addEventListener("click", function () {
 
 let timeStr = "";
 for (var i = 0; i < 24; i++) {
-	var start = i < 10 ? "0" + i : i;
-	var end = i + 1;
-	var end = end < 10 ? "0" + end : end;
+	var start = i < 10 ? "0" + i : i,
+		end = (i + 1) < 10 ? "0" + (i + 1) : (i + 1);
 	timeStr += "<option value='" + start + "'>" + start + ":00:00 - " + end + ":00:00 (" + date + ")</option>";
 }
 const $timeInterval = document.querySelector("#timeInterval");
 $timeInterval.innerHTML = timeStr;
-let measurements = new Array(),
-    heatMap = null,
-	heatLayer = null;
-$timeInterval.addEventListener("change", function() {
-	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
-	var xmlHeatMap = new XMLHttpRequest();
-	console.log(time)
-	xmlHeatMap.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			var response = this.responseText;
-			measurements = JSON.parse(response).measureList;
-			console.log(JSON.parse(response))
-			var coordinates = [],
-				firstTime = new Array(),
-				firstSpeed = new Array(),
-				firstId = -1,
-				name = "";
-			for (var measurement of measurements) {
-				var latx = parseFloat(lat) + parseFloat(measurement.x),
-					lony = parseFloat(lon) + parseFloat(measurement.y);
-				coordinates.push([latx, lony]);
-				
-				if (firstTime.length === 0 && firstId === -1) {
-					firstId = measurement.objectId;
-					firstSpeed.push(measurement.velocity);
-					firstTime.push(measurement.timeWithoutDate.slice(0, 8));
-					name = measurement.objectType + ' ' + measurement.objectId;
-				} else if (firstId === measurement.objectId) {
-					firstSpeed.push(measurement.velocity);
-					firstTime.push(measurement.timeWithoutDate.slice(0, 8));
-				}
-			}
-			timeSpeed(firstTime, firstSpeed, name);
-			if (heatMap == null) {
-				heatMap = L.map('heatMap').setView([lat, lon], 1);
-				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-						: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
-				    baseLayer = L.tileLayer(mapUrl, {
-					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-					subdomains: 'abcd',
-					maxZoom: 28,
-				}).addTo(heatMap);
-				heatLayer = L.heatLayer(coordinates, 0.5, {
-						radius: 25
-					}).addTo(heatMap);
-			} else {
-				heatMap.removeLayer(heatLayer);
-				heatLayer = L.heatLayer(coordinates, 0.5, {
-						radius: 25
-					}).addTo(heatMap);
-			}
-		}
-	}
-	xmlHeatMap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
-	xmlHeatMap.setRequestHeader("Accept", "application/json");
-	xmlHeatMap.send();
-});
 
-var mymap = L.map('map').setView([lat, lon], 18),
-			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
-maplayer = L.tileLayer(mapUrl, {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-	subdomains: 'abcd',
-	maxZoom: 28
-}).addTo(mymap);
-
-
-let xmlhttp = new XMLHttpRequest();
-xmlhttp.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		var response = this.responseText,
-			velocity = JSON.parse(response),
-			ctx = document.querySelector('#bar-chart').getContext('2d');
-
-		bChart = new Chart(ctx, {
-			type: 'bar',
-			data: {
-				labels: ['Pedestrians', 'Two Wheelers', 'Vehicles'],
-				datasets: [
-					{
-						label: "Maximum velocity",
-						backgroundColor: ["#4b77a9"],
-						data: [velocity.pedestrians_max_velocity, velocity.wheelers_max_velocity, velocity.vehicles_max_velocity]
-					}, {
-						label: "Minimum velocity",
-						backgroundColor: ["#5f255f"],
-						data: [velocity.pedestrians_min_velocity, velocity.wheelers_min_velocity, velocity.vehicles_min_velocity]
-					}, {
-						label: "Average velocity",
-						backgroundColor: ["#d21243"],
-						data: [velocity.pedestriansAvgVelocity, velocity.wheelersAvgVelocity, velocity.vehiclesAvgVelocity]
-					}
-				]
-			},
-			options: {
-				plugins: {
-					legend: {
-						display: true
-					}
-				},
-				scales: {
-					x: {
-						grid: {
-							borderColor: currentTheme == "dark" ? "#aaa" : "#666",
-							display: false
-						},
-						ticks: {
-							color: currentTheme == "dark" ? "#aaa" : "#666",
-						}
-					},
-					y: {
-						grid: {
-							borderColor: currentTheme == "dark" ? "#aaa" : "#666",
-							display: false
-						},
-						ticks: {
-							color: currentTheme == "dark" ? "#aaa" : "#666",
-						}
-					}
-				},
-				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
-				responsive: true,
-				maintainAspectRatio: false
-			}
-		});
-	}
-}
-xmlhttp.open("GET", "/mindhash/rest/velocity/" + id + "/" + date, true);
-xmlhttp.setRequestHeader("Accept", "application/json");
-xmlhttp.send();
-
-function LongLatOffset(lon, lat, a, dst) {
-	var arc = 6371.393 * 1000;
-	lon += dst * Math.sin(a) / (arc * Math.cos(lat) * 2 * Math.PI / 360);
-	lat += dst * Math.cos(a) / (arc * 2 * Math.PI / 360);
-}
-
-let objects,
-    objectType = new Object();
 const $selectObj = document.querySelector("#selectObj"),
 	$objList = document.querySelector("#objectsLi");
 	
-let xmlAddList = new XMLHttpRequest();
-xmlAddList.onreadystatechange = function() {
+let xmlObjNum = new XMLHttpRequest();
+xmlObjNum.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		var response = this.responseText;
-		objects = JSON.parse(response);
-		var htmlStr = "";
-		for (var i = 0; i < objects.length; i++) {
-			if (objectType.hasOwnProperty(objects[i].objectType)) {
-				objectType[objects[i].objectType] = objectType[objects[i].objectType] + 1;
-			} else {
-				objectType[objects[i].objectType] = 1;
-			}
-			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
-		}
-		var selectStr = '<option value="0">all objects</option>',
-		    generalStr = "<div>total objects: " + objects.length + "</div>";
+		var response = this.responseText,
+			objectNum = JSON.parse(response);
+		
+		var selectStr = "",
+			generalStr = "",
+			total = 0,
 			index = 0,
 			labels = new Array(),
-			data = new Array();
-		for (var o in objectType) {
+			data = new Array();;
+		for (var o in objectNum) {
 			labels[index] = o;
-			data[index] = objectType[o];
+			data[index] = objectNum[o];
 			index++;
+			total += objectNum[o];
 			selectStr += '<option value="'+ index +'">' + o + '</option>';
-			generalStr += "<div>" + o + ": " + objectType[o] + "</div>";
+			generalStr += "<div>" + o + ": " + objectNum[o] + "</div>";
 		}
-		generalStr += "<div>recording Date: " + date + "</div>";
+		generalStr = "<div>all objects: " + total + "</div>" + generalStr + "<div>recording date: " + date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", generalStr);
+		$selectObj.innerHTML = selectStr;
+		select();
+		var $interval = document.querySelector("#interval"),
+			$selectInterval = $interval.querySelector(".select-items"),
+			$time07 = $selectInterval.querySelectorAll("div")[7];
+		$time07.dispatchEvent(new Event('click'));
+		$selectInterval.classList.add("select-hide");
+		$selectObj.addEventListener("change", function() {
+			updateObjLi($selectObj.options[$selectObj.selectedIndex].text);
+		});
+		document.querySelector(".select-selected").classList.remove("select-arrow-active");
 		
 		var ctx = document.querySelector('#pie-chart').getContext('2d');
 		pChart = new Chart(ctx, {
@@ -256,7 +121,7 @@ xmlAddList.onreadystatechange = function() {
 				labels: labels,
 				datasets: [
 					{
-						backgroundColor: ["#4b77a9", "#5f255f", "#d21243"],
+						backgroundColor: currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
 						data: data,
 						borderWidth: 0
 					},
@@ -267,7 +132,7 @@ xmlAddList.onreadystatechange = function() {
 					tooltip: {
 						callbacks: {
 							label: function(TooltipItem, object) {
-								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / objects.length) * 100).toFixed(2) + "%)";
+								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / total) * 100).toFixed(2) + "%)";
 							}
 						}
 					},
@@ -282,24 +147,172 @@ xmlAddList.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		});
-		
-		$selectObj.innerHTML = selectStr;
-		select();
-		var $interval = document.querySelector("#interval"),
-			$selectInterval = $interval.querySelector(".select-items"),
-			$time07 = $selectInterval.querySelectorAll("div")[7];
-		$time07.dispatchEvent(new Event('click'));
-		$selectInterval.classList.add("select-hide");
-		$selectObj.addEventListener("change", function() {
-			updateObjLi($selectObj.options[$selectObj.selectedIndex].text);
-		});
-		document.querySelector(".select-selected").classList.remove("select-arrow-active");
-		$objList.innerHTML = htmlStr;
 	}
 }
-xmlAddList.open("GET", "/mindhash/rest/objects", true);
-xmlAddList.setRequestHeader("Accept", "application/json");
-xmlAddList.send();
+xmlObjNum.open("GET", "/mindhash/rest/objects/" + id + "/" + date, true);
+xmlObjNum.setRequestHeader("Accept", "application/json");
+xmlObjNum.send();
+	
+let xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var response = this.responseText,
+			velocity = JSON.parse(response),
+			ctx = document.querySelector('#bar-chart').getContext('2d');
+
+		bChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: ['Pedestrians', 'Two Wheelers', 'Vehicles'],
+				datasets: [
+					{
+						label: "Maximum velocity",
+						backgroundColor: currentTheme == "dark" ? ["#333"] : ["#006699"],
+						data: [velocity.pedestrians_max_velocity, velocity.wheelers_max_velocity, velocity.vehicles_max_velocity]
+					}, {
+						label: "Minimum velocity",
+						backgroundColor: currentTheme == "dark" ? ["#336699"] : ["#990066"],
+						data: [velocity.pedestrians_min_velocity, velocity.wheelers_min_velocity, velocity.vehicles_min_velocity]
+					}, {
+						label: "Average velocity",
+						backgroundColor: currentTheme == "dark" ? ["#999"] : ["#ccc"],
+						data: [velocity.pedestriansAvgVelocity, velocity.wheelersAvgVelocity, velocity.vehiclesAvgVelocity]
+					}
+				]
+			},
+			options: {
+				plugins: {
+					legend: {
+						display: true
+					}
+				},
+				scales: {
+					x: {
+						grid: {
+							borderColor: currentTheme == "dark" ? "#aaa" : "#333",
+							display: false
+						},
+						ticks: {
+							color: currentTheme == "dark" ? "#aaa" : "#333",
+						}
+					},
+					y: {
+						grid: {
+							borderColor: currentTheme == "dark" ? "#aaa" : "#333",
+							display: false
+						},
+						ticks: {
+							color: currentTheme == "dark" ? "#aaa" : "#333",
+						}
+					}
+				},
+				color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+				responsive: true,
+				maintainAspectRatio: false
+			}
+		});
+	}
+}
+xmlhttp.open("GET", "/mindhash/rest/velocity/" + id + "/" + date, true);
+xmlhttp.setRequestHeader("Accept", "application/json");
+xmlhttp.send();
+
+let measurements = new Array(),
+	objects = new Array(),
+    heatmap = null,
+	heatLayer = null;
+$timeInterval.addEventListener("change", function() {
+	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
+	var xmlheatmap = new XMLHttpRequest();
+	xmlheatmap.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var response = JSON.parse(this.responseText);
+			objects = response.objList;
+			console.log(response);
+			var objNum = response.objNum;
+				infoStr = "",
+				total = 0,
+				len = 0,
+				totalLen = Object.keys(objNum).length;
+			for (var o in objNum) {
+				len++;
+				total += objNum[o];
+				if (totalLen != len) {
+					infoStr += "<span>" + o + " : "+ objNum[o] + ", </span>"; 
+				} else {
+					infoStr += "<span>" + o + " : "+ objNum[o] + ".</span>"; 
+				}
+			}
+			infoStr = "<div>(heatmap) all objects : "+ total + ",</div>" + infoStr; 
+			document.querySelector("#heatmapInfo").innerHTML = infoStr;
+			if (timeSpeedChart == null) {
+				var firstId = -1,
+					name = "",
+					firstTime = new Array(),
+					firstSpeed = new Array();
+			}
+			measurements = response.measureList;
+			var coordinates = [];
+			for (var measurement of measurements) {
+				var latx = parseFloat(lat) + parseFloat(measurement.x),
+					lony = parseFloat(lon) + parseFloat(measurement.y);
+				coordinates.push([latx, lony]);
+				
+				if (timeSpeedChart == null) {
+					if (firstTime.length === 0 && firstId === -1) {
+						firstId = measurement.objectId;
+						firstSpeed.push(measurement.velocity);
+						firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+						name = measurement.objectType + ' ' + measurement.objectId;
+					} else if (firstId === measurement.objectId) {
+						firstSpeed.push(measurement.velocity);
+						firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+					}
+				}
+			}
+			if (timeSpeedChart == null) {
+				timeSpeed(firstTime, firstSpeed, name);
+			}
+			updateObjLi($selectObj.options[$selectObj.options.selectedIndex].text);
+			if (heatmap == null) {
+				heatmap = L.map('heatmap').setView([lat, lon], 1);
+				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+						: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
+				    baseLayer = L.tileLayer(mapUrl, {
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+					subdomains: 'abcd',
+					maxZoom: 28,
+				}).addTo(heatmap);
+				heatLayer = L.heatLayer(coordinates, 0.5, {
+						radius: 25
+					}).addTo(heatmap);
+			} else {
+				heatmap.removeLayer(heatLayer);
+				heatLayer = L.heatLayer(coordinates, 0.5, {
+						radius: 25
+					}).addTo(heatmap);
+			}
+		}
+	}
+	xmlheatmap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
+	xmlheatmap.setRequestHeader("Accept", "application/json");
+	xmlheatmap.send();
+});
+
+var mymap = L.map('map').setView([lat, lon], 18),
+			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+maplayer = L.tileLayer(mapUrl, {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 28
+}).addTo(mymap);
+
+/*function LongLatOffset(lon, lat, a, dst) {
+	var arc = 6371.393 * 1000;
+	lon += dst * Math.sin(a) / (arc * Math.cos(lat) * 2 * Math.PI / 360);
+	lat += dst * Math.cos(a) / (arc * 2 * Math.PI / 360);
+}*/
 
 function timeSpeed(labels, speed, name) {
 	var ctx = document.querySelector('#timeSpeedChart').getContext('2d');
@@ -313,7 +326,7 @@ function timeSpeed(labels, speed, name) {
 			datasets: [{
 				data: speed,
 				fill: false,
-				borderColor: "#3e95cd",
+				borderColor: currentTheme == "dark" ? ["#999"] : ["#006699"],
 				tension: 0.1
 			}]
 		},
@@ -321,7 +334,8 @@ function timeSpeed(labels, speed, name) {
 			plugins: {
 				title: {
 					display: true,
-					text: "Speed (m/s) of " + name
+					text: "Speed (m/s) of " + name,
+					color: "#c9d1d9"
 				},
 				legend: {
 					display: false
@@ -330,20 +344,20 @@ function timeSpeed(labels, speed, name) {
 			scales: {
 				x: {
 					grid: {
-						borderColor: currentTheme == "dark" ? "#aaa" : "#666",
+						borderColor: currentTheme == "dark" ? "#aaa" : "#333",
 						color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
 					},
 					ticks: {
-						color: currentTheme == "dark" ? "#aaa" : "#666",
+						color: currentTheme == "dark" ? "#aaa" : "#333",
 					}
 				},
 				y: {
 					grid: {
-						borderColor: currentTheme == "dark" ? "#aaa" : "#666",
+						borderColor: currentTheme == "dark" ? "#aaa" : "#333",
 						color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
 					},
 					ticks: {
-						color: currentTheme == "dark" ? "#aaa" : "#666",
+						color: currentTheme == "dark" ? "#aaa" : "#333",
 					}
 				}
 			},
@@ -383,7 +397,7 @@ $objList.onclick = function(e) {
 function updateObjLi(val) {
 	var htmlStr = "";
 	for (var i = 0; i < objects.length; i++) {
-		if (objects[i].objectType === val || val === "all objects") {
+		if (objects[i].objectType === val) {
 			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 	}
@@ -515,15 +529,14 @@ xmlhttp2.onreadystatechange = function() {
 							type: 'bar',
 							data: prcp,
 							label: "Precipitation(in mm)",
-							borderColor: "#3e95cd",
-							backgroundColor: "rgba(83, 120, 158, 0.8)",
+							backgroundColor: currentTheme == "dark" ? ["#336699"] : ["#990066"],
 							order: 1
 						},{
 							//Line chart of temperature per hour
 							type: 'line',
 							data: temp,
 							label: "Temperature(in C°)",
-							borderColor: "#3e95cd",
+							borderColor: currentTheme == "dark" ? ["#999"] : ["#006699"],
 							fill: false,
 							lineTension: 0.5,
 							order: 2
@@ -532,7 +545,7 @@ xmlhttp2.onreadystatechange = function() {
 							type: 'bar',
 							data: wspd,
 							label: "Windspeed(in km/h)",
-							borderColor: "#3e95cd",
+							backgroundColor: currentTheme == "dark" ? ["#333"] : ["#ccc"],
 							order: 3
 						}]
 					},

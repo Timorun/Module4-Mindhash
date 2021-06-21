@@ -6,7 +6,27 @@
   --border-color: #8e8e8e;
   --text-color: #c9d1d9;
 }
-
+#stroke-1 {
+                fill: #6a34ab;
+            }
+            #stroke-2-shadow {
+                fill: #541e89;
+            }
+            #stroke-2, #stroke-4-shadow {
+                fill: #8540c4;
+            }
+            #stroke-3 {
+                fill: #a656d2;
+            }
+            #stroke-4, #stroke-6-shadow {
+                fill: #eb8e2a;
+            }
+            #stroke-5 {
+                fill: #feb635;
+            }
+            #stroke-6 {
+                fill: #fde06b;
+            }
 html, body, ol, ul, dd, dl, input, button, select, textarea {
     margin: 0;
     padding: 0; 
@@ -89,7 +109,7 @@ a:hover {
 	width: 36px;
 	min-width: 36px;
 	height: 36px;
-	background: url("../img/mindhash-logo-animated.svg");
+	background-image: url("../img/mindhash-logo-animated.svg");
 	background-size: 136px 36px;
 	background-position: left top;
 	display: block;
@@ -300,6 +320,12 @@ a:hover {
 	box-sizing: border-box;
 	overflow: hidden;
 }
+.info-wrapper .section-container .fl {
+	float: left;
+}
+.info-wrapper .section-container.w100 {
+	width: 100%;
+}
 .info-wrapper .section-container.mr0 {
 	margin-right: 0;
 }
@@ -332,7 +358,6 @@ a:hover {
 	height: 240px!important;
 }
 .info-wrapper .section-container .weatherChart {
-	width: 480px!important;
 	height: 240px!important;
 }
 .info-wrapper .section-container .map {
@@ -356,6 +381,30 @@ a:hover {
 }
 .info-wrapper .section-container .objectsLi li:hover {
 	background-color: #efefef;
+}
+.info-wrapper .section-container .heatmap {
+	position: relative; 
+	width: 360px; 
+	height: 220px;
+}
+.info-wrapper .section-container .heatmap .heatmapInfo {
+	position: absolute;
+	z-index: 799; 
+	top: 0; 
+	right: 0; 
+	left: 0; 
+	background-color: rgba(0, 0, 0, 0.4); 
+	padding: 0 15px; 
+	font-size: 12px;
+}
+.info-wrapper .section-container .timeSpeedChart {
+	margin-left: 12px; 
+	width: 438px!important;
+	height: 240px!important;
+	overflow:hidden;
+}
+.info-wrapper .section-container .timeSpeedChart canvas {
+	width: 438px!important;
 }
 
 /*.info-wrapper .section-container.text-info {
@@ -382,7 +431,7 @@ a:hover {
   display: none; /*hide original SELECT element: */
 }
 .select-selected {
-  background-color: DodgerBlue;
+  background-color: #336699;
   border-radius: 4px;
 }
 /* Style the arrow inside the select element: */
@@ -412,7 +461,7 @@ a:hover {
 /* Style items (options): */
 .select-items {
   position: absolute;
-  background-color: DodgerBlue;
+  background-color: #336699;
   top: 100%;
   left: 0;
   right: 0;
@@ -442,6 +491,10 @@ a:hover {
 	border-bottom-left-radius: 0;
 }
 
+.section-container #heatmap .leaflet-left .leaflet-control {
+    margin-top: 48px;
+}
+
 /*for dark mode*/
 .dark-mode {
 	background-color: var(--main-bg-color);
@@ -451,6 +504,9 @@ a:hover {
 .dark-mode .header {
 	background-color: var(--header-bg-color);
 }
+/*.dark-mode .header .logo {
+	background-image: url(../img/mindhash-logo-animated-dark-mode.svg);
+}*/
 
 .dark-mode .wrapper .recordings-list li {
 	color: var(--text-color);
@@ -519,6 +575,10 @@ a:hover {
 }
 .dark-mode .leaflet-bar a:hover {
 	background-color: #efefef;
+}
+
+.dark-mode .select-selected, .dark-mode .select-items {
+	background-color: #282828;
 }
 
 @media only screen and (max-width: 768px) {
