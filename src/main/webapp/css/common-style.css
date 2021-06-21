@@ -320,6 +320,12 @@ a:hover {
 	box-sizing: border-box;
 	overflow: hidden;
 }
+.info-wrapper .section-container .fl {
+	float: left;
+}
+.info-wrapper .section-container.w100 {
+	width: 100%;
+}
 .info-wrapper .section-container.mr0 {
 	margin-right: 0;
 }
@@ -376,6 +382,33 @@ a:hover {
 }
 .info-wrapper .section-container .objectsLi li:hover {
 	background-color: #efefef;
+}
+.info-wrapper .section-container .heatmap {
+	position: relative; 
+	width: 360px; 
+	height: 220px;
+}
+.info-wrapper .section-container .heatmap .heatmapInfo {
+	position: absolute;
+	z-index: 799; 
+	top: 0; 
+	right: 0; 
+	left: 0; 
+	background-color: rgba(0, 0, 0, 0.4); 
+	padding: 0 15px; 
+	font-size: 12px;
+}
+.info-wrapper .section-container .timeSpeedChart {
+	margin-left: 12px; 
+	width: 438px!important;
+	height: 240px!important;
+	overflow:hidden;
+}
+.info-wrapper .section-container .timeSpeedChart canvas {
+	width: 438px!important;
+}
+.info-wrapper .section-container .weatherChart {
+	height: 240!important;
 }
 
 /*.info-wrapper .section-container.text-info {
@@ -460,6 +493,10 @@ a:hover {
 .section-container #objects .select-selected {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+}
+
+.section-container #heatmap .leaflet-left .leaflet-control {
+    margin-top: 48px;
 }
 
 /*for dark mode*/

@@ -1,6 +1,7 @@
 package com.mindhash.MindhashApp.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -9,15 +10,17 @@ public class MeasureRes {
 	private Integer recordingId;
 	private String date;
 	private ArrayList<Measure> measureList;
-	private ArrayList<Obj> objectList;
+	private ArrayList<Obj> objList;
+	private HashMap<String, Integer> objNum;
 	
 	public MeasureRes() {}
 	
-	public MeasureRes(Integer recordingId, String date, ArrayList<Measure> measureList, ArrayList<Obj> objectList) {
+	public MeasureRes(Integer recordingId, String date, ArrayList<Measure> measureList, ArrayList<Obj> objList, HashMap<String, Integer> objNum) {
 		this.recordingId = recordingId;
 		this.date = date;
 		this.measureList = measureList;
-		this.objectList = objectList;
+		this.objList = objList;
+		this.objNum = objNum;
 	}
 	
 	public Integer getRecordingId() {
@@ -32,8 +35,12 @@ public class MeasureRes {
 		return this.measureList;
 	}
 	
-	public ArrayList<Obj> getObjectList() {
-		return this.objectList;
+	public ArrayList<Obj> getObjList() {
+		return this.objList;
+	}
+	
+	public HashMap<String, Integer> getObjNum() {
+		return this.objNum;
 	}
 	
 	public void setRecordingId(Integer recordingId) {
@@ -48,7 +55,11 @@ public class MeasureRes {
 		this.measureList = measureList;
 	}
 	
-	public void setObjectList(ArrayList<Obj> objectList) {
-		this.objectList = objectList;
+	public void setObjList(ArrayList<Obj> objList) {
+		this.objList = objList;
+	}
+	
+	public void setObjNum(HashMap<String, Integer> objNum) {
+		this.objNum = objNum;
 	}
 }

@@ -100,7 +100,7 @@ xmlObjNum.onreadystatechange = function() {
 			selectStr += '<option value="'+ index +'">' + o + '</option>';
 			generalStr += "<div>" + o + ": " + objectNum[o] + "</div>";
 		}
-		generalStr = "<div>total objects: " + total + "</div>" + generalStr + "<div>recording Date: " + date + "</div>";
+		generalStr = "<div>all objects: " + total + "</div>" + generalStr + "<div>recording date: " + date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", generalStr);
 		$selectObj.innerHTML = selectStr;
 		select();
@@ -219,65 +219,84 @@ xmlhttp.send();
 
 let measurements = new Array(),
 	objects = new Array(),
-    heatMap = null,
+    heatmap = null,
 	heatLayer = null;
 $timeInterval.addEventListener("change", function() {
 	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
-	var xmlHeatMap = new XMLHttpRequest();
-	xmlHeatMap.onreadystatechange = function() {
+	var xmlheatmap = new XMLHttpRequest();
+	xmlheatmap.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = JSON.parse(this.responseText);
-			measurements = response.measureList;
-			objects = response.objectList;
+			objects = response.objList;
 			console.log(response);
-			var coordinates = [],
-				firstTime = new Array(),
-				firstSpeed = new Array(),
-				firstId = -1,
-				name = "";
+			var objNum = response.objNum;
+				infoStr = "",
+				total = 0,
+				len = 0,
+				totalLen = Object.keys(objNum).length;
+			for (var o in objNum) {
+				len++;
+				total += objNum[o];
+				if (totalLen != len) {
+					infoStr += "<span>" + o + " : "+ objNum[o] + ", </span>"; 
+				} else {
+					infoStr += "<span>" + o + " : "+ objNum[o] + ".</span>"; 
+				}
+			}
+			infoStr = "<div>(heatmap) all objects : "+ total + ",</div>" + infoStr; 
+			document.querySelector("#heatmapInfo").innerHTML = infoStr;
+			if (timeSpeedChart == null) {
+				var firstId = -1,
+					name = "",
+					firstTime = new Array(),
+					firstSpeed = new Array();
+			}
+			measurements = response.measureList;
+			var coordinates = [];
 			for (var measurement of measurements) {
 				var latx = parseFloat(lat) + parseFloat(measurement.x),
 					lony = parseFloat(lon) + parseFloat(measurement.y);
 				coordinates.push([latx, lony]);
 				
-				if (firstTime.length === 0 && firstId === -1) {
-					firstId = measurement.objectId;
-					firstSpeed.push(measurement.velocity);
-					firstTime.push(measurement.timeWithoutDate.slice(0, 8));
-					name = measurement.objectType + ' ' + measurement.objectId;
-				} else if (firstId === measurement.objectId) {
-					firstSpeed.push(measurement.velocity);
-					firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+				if (timeSpeedChart == null) {
+					if (firstTime.length === 0 && firstId === -1) {
+						firstId = measurement.objectId;
+						firstSpeed.push(measurement.velocity);
+						firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+						name = measurement.objectType + ' ' + measurement.objectId;
+					} else if (firstId === measurement.objectId) {
+						firstSpeed.push(measurement.velocity);
+						firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+					}
 				}
 			}
 			if (timeSpeedChart == null) {
 				timeSpeed(firstTime, firstSpeed, name);
 			}
-			console.log($selectObj.options[$selectObj.options.selectedIndex].text);
 			updateObjLi($selectObj.options[$selectObj.options.selectedIndex].text);
-			if (heatMap == null) {
-				heatMap = L.map('heatMap').setView([lat, lon], 1);
+			if (heatmap == null) {
+				heatmap = L.map('heatmap').setView([lat, lon], 1);
 				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 						: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
 				    baseLayer = L.tileLayer(mapUrl, {
 					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 					subdomains: 'abcd',
 					maxZoom: 28,
-				}).addTo(heatMap);
+				}).addTo(heatmap);
 				heatLayer = L.heatLayer(coordinates, 0.5, {
 						radius: 25
-					}).addTo(heatMap);
+					}).addTo(heatmap);
 			} else {
-				heatMap.removeLayer(heatLayer);
+				heatmap.removeLayer(heatLayer);
 				heatLayer = L.heatLayer(coordinates, 0.5, {
 						radius: 25
-					}).addTo(heatMap);
+					}).addTo(heatmap);
 			}
 		}
 	}
-	xmlHeatMap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
-	xmlHeatMap.setRequestHeader("Accept", "application/json");
-	xmlHeatMap.send();
+	xmlheatmap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
+	xmlheatmap.setRequestHeader("Accept", "application/json");
+	xmlheatmap.send();
 });
 
 var mymap = L.map('map').setView([lat, lon], 18),
