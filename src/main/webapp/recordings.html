@@ -28,30 +28,38 @@
 			</ul>
 		</section>
 		<script>
-			let xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					var response = this.responseText,
-						recordings = JSON.parse(response),
-						htmlStr = "";
-					for(var recording of recordings) {
-						var id = recording.recordingID;
-						htmlStr += '<li>'
-										+ '<a href="dashboard.html?id=' + id + '&date='+ recording.date + '&lat=' + recording.latitude + '&lon=' + recording.longitude + '" class="box-layout">'
-										+ '<div class="box-col">Sensor' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
-										+ '<div class="box-col">' + recording.startTime + '</div>'
-										+ '<div class="box-col">' + recording.endTime + '</div>'
-										+ '<div class="box-col">' + recording.resolution + '</div>'
-										+ '<div class="box-col">' + recording.frameRate + '</div>'
-										+ '</a>'
-									+ '</li>'
+			var token = sessionStorage.getItem("sessionToken");
+			if (token != null) {
+				let xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						var response = this.responseText,
+							recordings = JSON.parse(response),
+							htmlStr = "";
+						for(var recording of recordings) {
+							var id = recording.recordingID;
+							htmlStr += '<li>'
+											+ '<a href="dashboard.html?id=' + id + '&date='+ recording.date + '&lat=' + recording.latitude + '&lon=' + recording.longitude + '" class="box-layout">'
+											+ '<div class="box-col">Sensor' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
+											+ '<div class="box-col">' + recording.startTime + '</div>'
+											+ '<div class="box-col">' + recording.endTime + '</div>'
+											+ '<div class="box-col">' + recording.resolution + '</div>'
+											+ '<div class="box-col">' + recording.frameRate + '</div>'
+											+ '</a>'
+										+ '</li>'
+						}
+						document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);
+					} else if (this.readyState == 4 && this.status == 511) {
+						location.href = "login.html";
 					}
-					document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);
 				}
+				xmlhttp.open("GET", "/mindhash/rest/recordings", true);
+				xmlhttp.setRequestHeader("Accept", "application/json");
+				xmlhttp.setRequestHeader("Authorization", token);
+				xmlhttp.send();
+			} else {
+				location.href = "login.html";
 			}
-			xmlhttp.open("GET", "/mindhash/rest/recordings", true);
-			xmlhttp.setRequestHeader("Accept", "application/json");
-			xmlhttp.send();
 		</script>
 	</body>
 </html>

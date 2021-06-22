@@ -21,7 +21,7 @@ public class SessionToken {
 			byte[] randomBytes = new byte[24];
 			random.nextBytes(randomBytes);
 			String token = encoder.encodeToString(randomBytes);
-			if (SessionTokenDao.getUser(token) == null) {
+			if (SessionTokenDao.getUserByToken(token) == null) {
 				return token;
 			}
 		}

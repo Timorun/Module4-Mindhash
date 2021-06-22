@@ -1,3 +1,8 @@
+var token = sessionStorage.getItem("sessionToken");
+if (token == null) {
+	location.href = "login.html";
+}
+
 let queryString = window.location.search,
 	urlParams = new URLSearchParams(queryString),
 	id = urlParams.get('id'),
@@ -148,10 +153,13 @@ xmlObjNum.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		});
+	} else if (this.readyState == 4 && this.status == 511) {
+		location.href = "login.html";
 	}
 }
 xmlObjNum.open("GET", "/mindhash/rest/objects/" + id + "/" + date, true);
 xmlObjNum.setRequestHeader("Accept", "application/json");
+xmlObjNum.setRequestHeader("Authorization", token);
 xmlObjNum.send();
 	
 let xmlhttp = new XMLHttpRequest();
@@ -212,10 +220,13 @@ xmlhttp.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		});
+	} else if (this.readyState == 4 && this.status == 511) {
+		location.href = "login.html";
 	}
 }
 xmlhttp.open("GET", "/mindhash/rest/velocity/" + id + "/" + date, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
+xmlhttp.setRequestHeader("Authorization", token);
 xmlhttp.send();
 
 let measurements = new Array(),
@@ -293,10 +304,13 @@ $timeInterval.addEventListener("change", function() {
 						radius: 25
 					}).addTo(heatmap);
 			}
+		} else if (this.readyState == 4 && this.status == 511) {
+			location.href = "login.html";
 		}
 	}
 	xmlheatmap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
 	xmlheatmap.setRequestHeader("Accept", "application/json");
+	xmlheatmap.setRequestHeader("Authorization", token);
 	xmlheatmap.send();
 });
 
@@ -497,7 +511,7 @@ xmlhttp2.onreadystatechange = function() {
 						maintainAspectRatio: false
 					}
 				});
-			}
+			} 
 		}
 		xmlhttp3.open("GET", "https://api.meteostat.net/v2/stations/hourly?station="+ closestactivestationid +"&start="+ date +"&end="+ date +"&tz=CEST", true);
 		xmlhttp3.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
