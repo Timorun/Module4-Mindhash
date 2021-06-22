@@ -3,7 +3,8 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-		<title></title>
+		<link rel="icon" href="img/mindhash.ico" type="image/x-icon">
+		<title>Mindhash - Recording list</title>
 		<link type="text/css" rel="stylesheet" href="css/common-style.css">
 	</head>
 	<body>
@@ -36,7 +37,7 @@
 					for(var recording of recordings) {
 						var id = recording.recordingID;
 						htmlStr += '<li>'
-										+ '<a href="recording.html?id=' + id + '&date='+ recording.date + '&lat=' + recording.latitude + '&lon=' + recording.longitude + '" class="box-layout">'
+										+ '<a href="dashboard.html?id=' + id + '&date='+ recording.date + '&lat=' + recording.latitude + '&lon=' + recording.longitude + '" class="box-layout">'
 										+ '<div class="box-col">Sensor' + (id > 9 ? id : ('0' + id) + "_" + recording.date) + '</div>'
 										+ '<div class="box-col">' + recording.startTime + '</div>'
 										+ '<div class="box-col">' + recording.endTime + '</div>'

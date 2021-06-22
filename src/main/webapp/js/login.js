@@ -102,7 +102,7 @@ function register() {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = JSON.parse(this.responseText);
 			if (response.res) {
-				location.href = "homepage.html";
+				location.href = "recordings.html";
 			} else {
 				if (errMsg.classList.contains("hide")) {
 					errMsg.classList.remove("hide");

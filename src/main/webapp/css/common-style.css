@@ -365,7 +365,6 @@ a:hover {
 	height: 240px;
 }
 .info-wrapper .section-container .objectsLi {
-	margin-top: 10px;
 	width: 240px;
 	height: 210px;
 	box-sizing: border-box;
@@ -393,15 +392,17 @@ a:hover {
 	top: 0; 
 	right: 0; 
 	left: 0; 
-	background-color: rgba(0, 0, 0, 0.4); 
+	background-color: rgba(0, 0, 0, 0.5); 
 	padding: 0 15px; 
 	font-size: 12px;
+	color: #fff;
 }
 .info-wrapper .section-container .timeSpeedChart {
-	margin-left: 12px; 
-	width: 438px!important;
+	padding-left: 12px; 
+	width: 450px!important;
 	height: 240px!important;
-	overflow:hidden;
+	overflow: hidden;
+	box-sizing: border-box;
 }
 .info-wrapper .section-container .timeSpeedChart canvas {
 	width: 438px!important;
@@ -423,76 +424,40 @@ a:hover {
 	margin-bottom: 10px;
 	font-weight: 500;
 }*/
-/* The container must be positioned relative: */
-.custom-select {
-  position: relative;
-}
-.custom-select select {
-  display: none; /*hide original SELECT element: */
-}
-.select-selected {
-  background-color: #336699;
-  border-radius: 4px;
-}
-/* Style the arrow inside the select element: */
-.select-selected:after {
-  position: absolute;
-  content: "";
-  top: 14px;
-  right: 10px;
-  width: 0;
-  height: 0;
-  border: 6px solid transparent;
-  border-color: #fff transparent transparent transparent;
-}
-/* Point the arrow upwards when the select box is open (active): */
-.select-selected.select-arrow-active:after {
-  border-color: transparent transparent #fff transparent;
-  top: 7px;
-}
-/* style the items (options), including the selected item: */
-.select-items div,.select-selected {
-  color: #ffffff;
-  padding: 8px 16px;
-  border: 1px solid transparent;
-  border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
-  cursor: pointer;
-}
-/* Style items (options): */
-.select-items {
-  position: absolute;
-  background-color: #336699;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 99999;
-  border-radius: 4px;
-}
-/* Hide the items when the select box is closed: */
-.select-hide {
-  display: none;
-}
-.select-items div:hover, .same-as-selected {
-  background-color: rgba(0, 0, 0, 0.1);
-}
 
 .section-container .select-items {
-	height: 240px;
+	height: 220px;
 	overflow: auto;
+	border-radius: 0;
+}
+.section-container #objects .select-items {
+	height: auto;
+	max-height: 240px;
+}
+.section-container #interval .date {
+	width: 150px;
+	height: 36px;
+	background-color: #336699;
+	color: #fff;
+	padding: 8px 16px;
+	box-sizing: border-box;
+	border-right: 1px solid hsla(0, 0%, 100%, .1);
+}
+.section-container #interval .select-wrapper {
+	width: 100%;
 }
 .section-container #interval .select-selected {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+	width: 210px;
+	border-radius: 0;
 	box-sizing: border-box;
 	border-right: 1px solid hsla(0, 0%, 100%, .1);
 }
 .section-container #objects .select-selected {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+	border-radius: 0;
 }
 
 .section-container #heatmap .leaflet-left .leaflet-control {
-    margin-top: 48px;
+    margin-top: 44px;
 }
 
 /*for dark mode*/
@@ -577,9 +542,10 @@ a:hover {
 	background-color: #efefef;
 }
 
-.dark-mode .select-selected, .dark-mode .select-items {
+.dark-mode .select-selected, .dark-mode .select-items, .dark-mode .section-container #interval .date {
 	background-color: #282828;
 }
+
 
 @media only screen and (max-width: 768px) {
 	.form-wrapper {
