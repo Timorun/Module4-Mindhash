@@ -2,7 +2,7 @@ package com.mindhash.MindhashApp.model;
 
 public class ResMsg {
 	private boolean res;
-	private String errMsg;
+	private String msg;
 	
 	public ResMsg() {
 		
@@ -12,15 +12,15 @@ public class ResMsg {
 		return res;
 	}
 	
-	public String getErrMsg() {
-		return errMsg;
+	public String getMsg() {
+		return msg;
 	}
 	
 	public void setRes(boolean res) {
 		this.res = res;
 	}
 	
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
+	public void setMsg(String errMsg) {
+		this.msg = errMsg;
 	}
 }

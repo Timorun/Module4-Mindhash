@@ -9,6 +9,7 @@ import java.util.Arrays;
 import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.EncryptPassword;
 import com.mindhash.MindhashApp.model.ResMsg;
+import com.mindhash.MindhashApp.model.SessionToken;
 import com.mindhash.MindhashApp.model.User;
 
 public class UserDao {
@@ -23,7 +24,7 @@ public class UserDao {
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
             	res.setRes(false);
-            	res.setErrMsg(user.getEmail() + " has already been taken.");
+            	res.setMsg(user.getEmail() + " has already been taken.");
             } else {
             	String register = "insert into users(email, password, salt) values (?, ?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(register);
@@ -42,7 +43,7 @@ public class UserDao {
             conn.close();
         } catch (SQLException e) {
         	res.setRes(false);
-        	res.setErrMsg(e.getMessage());
+        	res.setMsg(e.getMessage());
         }
 		return res;
 	}
@@ -58,23 +59,24 @@ public class UserDao {
 	        ResultSet result = st.executeQuery();
 	        
 	        if (result.next()) {
-	        	System.out.println(result.getBytes("salt"));
-                System.out.println(result.getBytes("password"));
                 byte[] hashedPassword = EncryptPassword.HashPassStr(user.getPassword(), result.getBytes("salt"));
                 if (Arrays.equals(hashedPassword, result.getBytes("password"))) {
+                	String sessionToken = new SessionToken(user.getEmail()).sessiontoken;
+                	SessionTokenDao.setUserToken(sessionToken, user.getEmail());
                 	res.setRes(true);
+                	res.setMsg(sessionToken);
                 } else {
                 	res.setRes(false);
-                	res.setErrMsg("Incorrect email address or password.");
+                	res.setMsg("Incorrect email address or password.");
                 }
 	        } else {
 	        	res.setRes(false);
-	        	res.setErrMsg("Incorrect email address or password.");
+	        	res.setMsg("Incorrect email address or password.");
 	        }
 	        conn.close();
 		} catch (SQLException e) {
 			res.setRes(false);
-        	res.setErrMsg(e.getMessage());
+        	res.setMsg(e.getMessage());
 		}
 		return res;
 	}

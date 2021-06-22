@@ -32,11 +32,15 @@ public class MeasureDao {
             ResultSet resultSet = st.executeQuery();
             ArrayList<Measure> mLi = new ArrayList<>();
             ArrayList<Obj> oLi = new ArrayList<>();
+            HashSet<Integer> keySet = new HashSet<>();
+            HashMap<String, Integer> objNum = new HashMap<>();
             while (resultSet.next()) {
                 Measure m = new Measure();
                 //measurement.setRecordingId(resultSet.getInt("recording_id"));
-                m.setObjectId(resultSet.getInt("object_id"));
-                m.setObjectType(resultSet.getString("object_type"));
+                int id = resultSet.getInt("object_id");
+                String type = resultSet.getString("object_type");
+                m.setObjectId(id);
+                m.setObjectType(type);
                 //measurement.setTime(resultSet.getString("time"));
                 m.setX(resultSet.getDouble("x"));
                 m.setY(resultSet.getDouble("y"));
@@ -44,9 +48,22 @@ public class MeasureDao {
                 m.setTimeWithoutDate(resultSet.getString("time_without_date"));
                 /*measurement.setMeasurementId(resultSet.getInt("measurement_id"));
                 contentProvider.put(resultSet.getInt("measurement_id"), measurement);*/
+                if (keySet.add(id)) {
+	                Obj obj = new Obj();
+	                obj.setObjectId(id);
+	                obj.setObjectType(type);
+	                oLi.add(obj);
+	                
+	                if (objNum.putIfAbsent(type, 1) != null) {
+	                	int num = objNum.get(type);
+	                	objNum.put(type, num + 1);
+	                }
+                }
                 mLi.add(m);
             }
             res.setMeasureList(mLi);
+            res.setObjList(oLi);
+            res.setObjNum(objNum);
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
