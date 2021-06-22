@@ -1,10 +1,10 @@
 package com.mindhash.MindhashApp.model;
 
-public class ResponseMsg {
+public class ResMsg {
 	private boolean res;
 	private String errMsg;
 	
-	public ResponseMsg() {
+	public ResMsg() {
 		
 	}
 	
