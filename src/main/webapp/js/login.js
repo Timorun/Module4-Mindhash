@@ -1,3 +1,22 @@
+var token = sessionStorage.getItem("sessionToken");
+console.log(token);
+if (token != null) {
+	let xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var response = JSON.parse(this.responseText);
+			if (response.res) {
+				location.href = "recordings.html";
+			}
+		}
+	}
+	xmlhttp.open("POST", "/mindhash/rest/user/login/auto", true);
+	xmlhttp.setRequestHeader("Content-type", "application/json");
+	xmlhttp.setRequestHeader("Accept", "application/json");
+	xmlhttp.setRequestHeader("Authorization", token);
+	xmlhttp.send();
+}
+	
 let	submitBtn = document.querySelector("#submit"),
 	errMsg = document.querySelector("#err-msg"),
 	emailInput =  document.querySelector("#email"),
@@ -105,7 +124,7 @@ function register() {
 			if (response.res) {
 				sessionStorage.setItem("email", email);
 				sessionStorage.setItem("sessionToken", response.msg);
-				sessionStorage.setItem("ok", "yes");
+				//sessionStorage.setItem("ok", "yes");
 				location.href = "recordings.html";
 			} else {
 				if (errMsg.classList.contains("hide")) {

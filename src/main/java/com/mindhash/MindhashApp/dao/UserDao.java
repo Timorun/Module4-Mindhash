@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.HttpHeaders;
+
 import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.EncryptPassword;
 import com.mindhash.MindhashApp.model.ResMsg;
@@ -77,6 +80,17 @@ public class UserDao {
 		} catch (SQLException e) {
 			res.setRes(false);
         	res.setMsg(e.getMessage());
+		}
+		return res;
+	}
+
+	public static ResMsg autologin(ContainerRequestContext request) {
+		ResMsg res = new ResMsg();
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		if (SessionTokenDao.getUser(token) == null) {
+			res.setRes(false);
+		} else {
+			res.setRes(true);
 		}
 		return res;
 	}

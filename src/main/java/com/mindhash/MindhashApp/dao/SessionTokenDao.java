@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -14,6 +13,7 @@ import com.mindhash.MindhashApp.DBConnectivity;
 
 public class SessionTokenDao {
 	private final static int EXPIRY = 60 * 60;
+	
 	public static void setUserToken(String sessionToken, String email) {
 		try {
 			Date currentTime = new Date();
@@ -31,6 +31,7 @@ public class SessionTokenDao {
 			e.printStackTrace();
 		}
 	}
+	
 	public static String getUser(String token) {
 		try {
 			Date currentTime = new Date();
@@ -55,7 +56,7 @@ public class SessionTokenDao {
 			conn.close();
 			if (resultSet.next()) {
 				Date expireTime = sdf.parse(resultSet.getString(2));
-				if (expireTime.before(expireTime)) {
+				if (currentTime.before(expireTime)) {
 					return resultSet.getString(1);
 				}
 			}
@@ -68,7 +69,6 @@ public class SessionTokenDao {
 	}
 	
 	public static Date addSecondsToDate(Date currentTime, Integer expiry) {
-		currentTime.setTime(currentTime.getTime() + expiry * 1000);
-		return currentTime;
+		return new Date(currentTime.getTime() + expiry * 1000);
 	}
 }
