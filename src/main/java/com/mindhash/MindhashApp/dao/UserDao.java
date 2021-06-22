@@ -5,12 +5,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 
+import com.auth0.jwt.*;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.EncryptPassword;
+import com.mindhash.MindhashApp.Integration.Sendgrid;
+import com.mindhash.MindhashApp.Security.SecurityConstants;
+import com.mindhash.MindhashApp.model.PasswordResetToken;
 import com.mindhash.MindhashApp.model.ResMsg;
 import com.mindhash.MindhashApp.model.SessionToken;
 import com.mindhash.MindhashApp.model.User;
@@ -94,4 +100,55 @@ public class UserDao {
 		}
 		return res;
 	}
+
+	public ResMsg resetPasssword(User user) {
+		ResMsg res = new ResMsg();
+		res.setRes(false);
+
+		try {
+			Connection conn = DBConnectivity.createConnection();
+			String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, user.getEmail());
+			ResultSet result = st.executeQuery();
+
+			if (result.next()) {
+				boolean operationResult = requestPasswordReset(user, res);
+				if (operationResult) {
+					res.setRes(true);
+				}
+			}
+			conn.close();
+		} catch (SQLException e) {
+			res.setMsg(e.getMessage());
+		}
+		return res;
+	}
+
+	private boolean requestPasswordReset(User user, ResMsg res) {
+		boolean result = false;
+		String token = generatePasswordResetToken();
+
+		PasswordResetToken passwordResetToken = new PasswordResetToken();
+		passwordResetToken.setToken(token);
+		passwordResetToken.setUser(user);
+		PasswordResetDao.instance.getModel().put(passwordResetToken.getTokenId(), passwordResetToken);
+
+		result = new Sendgrid().sendPasswordRequest(user.getEmail(), token, res);
+		return result;
+	}
+
+
+	/**
+	 * @return a secure password reset token
+	 */
+	private String generatePasswordResetToken() {
+		Algorithm algorithm = Algorithm.HMAC512("secret");
+		String token = JWT.create()
+				.withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
+				.sign(algorithm);
+		return token;
+
+	}
+
 }

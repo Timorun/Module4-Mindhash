@@ -4,6 +4,7 @@ public class User {
     private String email;
     private String password;
     private String salt;
+    private int id;
 
     public User() {}
 
@@ -36,4 +37,6 @@ public class User {
     public void setSalt(String salt) {
         this.salt = salt;
     }
+
+    public int getId() { return id; }
 }

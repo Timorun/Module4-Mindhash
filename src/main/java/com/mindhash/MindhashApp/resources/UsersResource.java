@@ -44,4 +44,13 @@ public class UsersResource {
 	public ResMsg autoLogin(@Context ContainerRequestContext request) {
 		return UserDao.autologin(request);
 	}
+
+	@POST
+	@Path("/password-reset")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public ResMsg resetPassword(User user) {
+		return new UserDao().resetPasssword(user);
+	}
+
 }
