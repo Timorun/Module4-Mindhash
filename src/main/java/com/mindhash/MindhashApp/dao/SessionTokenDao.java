@@ -32,40 +32,71 @@ public class SessionTokenDao {
 		}
 	}
 	
-	public static String getUser(String token) {
+	public static String getUserByToken(String token) {
+		String res = null;
 		try {
-			Date currentTime = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH); 
 			Connection conn = DBConnectivity.createConnection();
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			String query = "select email, session_expire_time from users where sessiontoken = ?";
+			String query = "select email, session_expire_time from users where sessiontoken = ? limit 1";
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setString(1, token);
 			st.execute();
 			ResultSet resultSet = st.executeQuery();
 			conn.commit();
-			query = "update users set session_expire_time = ? where sessionToken = ?";
-			st = conn.prepareStatement(query);
-			st.setString(1, sdf.format(addSecondsToDate(currentTime, EXPIRY)));
-			st.setString(2, token);
-			st.execute();
-			conn.commit();
-			conn.setAutoCommit(true);
-			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			conn.close();
+			
 			if (resultSet.next()) {
-				Date expireTime = sdf.parse(resultSet.getString(2));
-				if (currentTime.before(expireTime)) {
-					return resultSet.getString(1);
-				}
+				res = resultSet.getString(1);
 			}
-		} catch (SQLException | ParseException e) {
+			conn.close();
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return null;
+		return res;
+	}
+	
+	public static String checkUserByToken(String token) {
+		String res = null;
+		Connection conn = DBConnectivity.createConnection();
+		try {
+			Date currentTime = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH); 
+			conn.setAutoCommit(false);
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			String query = "select email, session_expire_time from users where sessiontoken = ? limit 1";
+			PreparedStatement st = conn.prepareStatement(query);
+			st.setString(1, token);
+			st.execute();
+			ResultSet resultSet = st.executeQuery();
+			conn.commit();
+			
+			if (resultSet.next()) {
+				Date expireTime = sdf.parse(resultSet.getString(2));
+				if (currentTime.before(expireTime)) {
+					/*query = "update users set session_expire_time = ? where sessionToken = ?";
+					st = conn.prepareStatement(query);
+					st.setString(1, sdf.format(addSecondsToDate(currentTime, EXPIRY)));
+					st.setString(2, token);
+					st.execute();
+					conn.commit();
+					conn.setAutoCommit(true);
+					conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);*/
+					res = resultSet.getString(1);
+				}
+			}
+			conn.close();
+		} catch (SQLException | ParseException e) {
+			try {
+				conn.rollback();
+				e.printStackTrace();
+			} catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		return res;
 	}
 	
 	public static Date addSecondsToDate(Date currentTime, Integer expiry) {

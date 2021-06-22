@@ -9,9 +9,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.DBConnectivity;
+import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.model.Velocity;
 
 @Path("/velocity")
@@ -20,8 +25,13 @@ public class VelocityResourse {
 	@GET
 	@Path("{recordingId}/{date}")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Velocity getRecordingResource(@PathParam("recordingId") int recordingId,
-										 @PathParam("date") String date) {
+	public Response getRecordingResource(@PathParam("recordingId") int recordingId,
+										 @PathParam("date") String date,
+										 @Context ContainerRequestContext request) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		if (SessionTokenDao.checkUserByToken(token) == null) {
+			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+		}
 		Connection conn = DBConnectivity.createConnection();
     	PreparedStatement st = null;
     	ResultSet resultSet = null;
@@ -92,6 +102,6 @@ public class VelocityResourse {
                 throwables.printStackTrace();
             }
         }
-        return vel;
+        return Response.status(Response.Status.OK).entity(vel).build();
 	}
 }

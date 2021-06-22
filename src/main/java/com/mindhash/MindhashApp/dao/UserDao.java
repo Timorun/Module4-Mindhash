@@ -93,7 +93,7 @@ public class UserDao {
 	public static ResMsg autologin(ContainerRequestContext request) {
 		ResMsg res = new ResMsg();
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.getUser(token) == null) {
+		if (SessionTokenDao.checkUserByToken(token) == null) {
 			res.setRes(false);
 		} else {
 			res.setRes(true);
@@ -148,7 +148,6 @@ public class UserDao {
 				.withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
 				.sign(algorithm);
 		return token;
-
 	}
 
 }

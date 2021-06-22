@@ -1,5 +1,4 @@
 var token = sessionStorage.getItem("sessionToken");
-console.log(token);
 if (token != null) {
 	let xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
