@@ -256,10 +256,13 @@ $timeInterval.addEventListener("change", function() {
 			}
 			measurements = response.measureList;
 			var coordinates = [];
+			var radius = 6378137.0;
 			for (var measurement of measurements) {
-				var latx = parseFloat(lat) + parseFloat(measurement.x),
-					lony = parseFloat(lon) + parseFloat(measurement.y);
-				coordinates.push([latx, lony]);
+				var dLat = parseFloat(measurement.y)/radius;
+				var dLon = parseFloat(measurement.x)/(radius*Math.cos(Math.PI*parseFloat(lat)/180))
+				var latO = parseFloat(lat) +dLat*180.0/Math.PI;
+					lonO = parseFloat(lon) + dLon*180/Math.PI;
+				coordinates.push([latO, lonO]);
 				
 				if (timeSpeedChart == null) {
 					if (firstTime.length === 0 && firstId === -1) {
@@ -278,7 +281,7 @@ $timeInterval.addEventListener("change", function() {
 			}
 			updateObjLi($selectObj.options[$selectObj.options.selectedIndex].text);
 			if (heatmap == null) {
-				heatmap = L.map('heatmap').setView([lat, lon], 1);
+				heatmap = L.map('heatmap').setView([lat, lon], 18);
 				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 						: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
 				heatmaplayer = L.tileLayer(mapUrl, {
@@ -286,8 +289,13 @@ $timeInterval.addEventListener("change", function() {
 					subdomains: 'abcd',
 					maxZoom: 28,
 				}).addTo(heatmap);
-				heatLayer = L.heatLayer(coordinates, 0.5, {
-						radius: 25
+				heatLayer = L.heatLayer(coordinates, {
+						radius: 15,
+						minOpacity: 0.2,
+						gradient: {
+							'0.0': 'blue',
+							'1': 'red'
+						}
 					}).addTo(heatmap);
 			} else {
 				heatmap.removeLayer(heatLayer);
