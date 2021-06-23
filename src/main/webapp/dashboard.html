@@ -1,89 +1,89 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-	<link rel="icon" href="img/mindhash.ico" type="image/x-icon">
-	<title>Traffic Analysis Dashboard | Mindhash</title>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-	<link type="text/css" rel="stylesheet" href="css/select.css">
-	<link type="text/css" rel="stylesheet" href="css/common-style.css">
-</head>
-<body>
-	<header class="header box-layout center-v">
-		<div class="logo"></div>
-		<a href="recordings.html" class="home-link"></a>
-		<div class="box-col"><a href="profile.html" class="avatar"></a></div>
-	</header>
-	<script>
-		const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
-		let currentTheme = localStorage.getItem("theme");
-		
-		if (currentTheme == null && prefersDarkScheme.matches) {
-			localStorage.setItem("theme", "dark");
-			currentTheme = "dark";
-		}
-		
-		if (currentTheme == "dark") {
-			document.body.classList.remove("light-mode");
-			document.body.classList.add("dark-mode");
-		} else if (currentTheme == "light") {
-			document.body.classList.remove("dark-mode");
-			document.body.classList.add("light-mode");
-		}
-	</script>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<link rel="icon" href="img/mindhash.ico" type="image/x-icon">
+		<title>Traffic Analysis Dashboard | Mindhash</title>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+		<link type="text/css" rel="stylesheet" href="css/select.css">
+		<link type="text/css" rel="stylesheet" href="css/common-style.css">
+	</head>
+	<body>
+		<header class="header box-layout center-v">
+			<div class="logo"></div>
+			<a href="recordings.html" class="home-link"></a>
+			<div class="box-col"><a href="profile.html" class="avatar"></a></div>
+		</header>
+		<script>
+			const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+			let currentTheme = localStorage.getItem("theme");
 
-	<section class="info-wrapper mt-64">
-		<div class="section-container general">
-			<div class="general-info">
-				<div id="general-tit" class="title">General</div>
+			if (currentTheme == null && prefersDarkScheme.matches) {
+				localStorage.setItem("theme", "dark");
+				currentTheme = "dark";
+			}
+
+			if (currentTheme == "dark") {
+				document.body.classList.remove("light-mode");
+				document.body.classList.add("dark-mode");
+			} else if (currentTheme == "light") {
+				document.body.classList.remove("dark-mode");
+				document.body.classList.add("light-mode");
+			}
+		</script>
+
+		<section class="info-wrapper mt-64">
+			<div class="section-container general">
+				<div class="general-info">
+					<div id="general-tit" class="title">General</div>
+				</div>
+				<div class="pie-chart">
+					<canvas id="pie-chart"></canvas>
+				</div>
 			</div>
-			<div class="pie-chart">
-				<canvas id="pie-chart"></canvas>
+			<div class="section-container mr0">
+				<canvas id="bar-chart" class="bar-chart"></canvas>
 			</div>
-		</div>
-		<div class="section-container mr0">
-			<canvas id="bar-chart" class="bar-chart"></canvas>
-		</div>
-		<!--<div class="section-container text-info mr0">
-			<div class="general">
-				<div id="general-tit" class="title">General</div>
-			</div>
-		</div>-->
-		<div class="section-container w100">
-			<div id="interval" class="fl">
-				<div class="select-wrapper">
-					<div id="date" class="date fl"></div>
-					<div class="custom-select fl">
-						<select id="timeInterval"></select>
+			<!--<div class="section-container text-info mr0">
+				<div class="general">
+					<div id="general-tit" class="title">General</div>
+				</div>
+			</div>-->
+			<div class="section-container w100">
+				<div id="interval" class="fl">
+					<div class="select-wrapper">
+						<div id="date" class="date fl"></div>
+						<div class="custom-select fl">
+							<select id="timeInterval"></select>
+						</div>
+					</div>
+					<div id="heatmap" class="heatmap">
+						<div id="heatmapInfo" class="heatmapInfo"></div>
 					</div>
 				</div>
-				<div id="heatmap" class="heatmap">
-					<div id="heatmapInfo" class="heatmapInfo"></div>
+				<div id="objects" class="fl">
+					<div class="custom-select">
+						<select id="selectObj"></select>
+					</div>
+					<ul id="objectsLi" class="objectsLi"></ul>
+				</div>
+				<div class="timeSpeedChart float">
+					<canvas id="timeSpeedChart"></canvas>
 				</div>
 			</div>
-			<div id="objects" class="fl">
-				<div class="custom-select">
-					<select id="selectObj"></select>
-				</div>
-				<ul id="objectsLi" class="objectsLi"></ul>
+
+			<div class="section-container">
+				<div id="map" class="map"></div>
 			</div>
-			<div class="timeSpeedChart float">
-				<canvas id="timeSpeedChart"></canvas>
+			<div class="section-container general mr0">
+				<canvas id="weatherChart" class="weatherChart"></canvas>
 			</div>
-		</div>
-		
-		<div class="section-container">
-			<div id="map" class="map"></div>
-		</div>
-		<div class="section-container general mr0">
-			<canvas id="weatherChart" class="weatherChart"></canvas>
-		</div>
-	</section>
-	<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
-	<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-	<script src="js/chart.min.js"></script>
-	<script src="js/select.js"></script>
-	<script src="js/dashboard.js"></script>
-</body>
+		</section>
+		<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
+		<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+		<script src="js/chart.min.js"></script>
+		<script src="js/select.js"></script>
+		<script src="js/dashboard.js"></script>
+	</body>
 </html>

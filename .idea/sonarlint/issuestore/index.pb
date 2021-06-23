@@ -1,8 +1,6 @@
 
 g
 7src/main/java/com/mindhash/MindhashApp/model/Field.java,d\c\dcc6d411c4f781cef579bf756a2e649bf09d6cf0
-Q
-!src/main/webapp/js/switch-mode.js,4\5\451c9117cb5673222cc703a4268181b60d81150e
 g
 7src/main/java/com/mindhash/MindhashApp/dao/UserDao.java,e\c\eca462820851df76108b544c5f7cdbc8f422c3ee
 s
