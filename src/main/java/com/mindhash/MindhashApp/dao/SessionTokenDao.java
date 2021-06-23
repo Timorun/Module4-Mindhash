@@ -76,7 +76,7 @@ public class SessionTokenDao {
 			
 			if (resultSet.next()) {
 				synchronized (lock){
-					Date expireTime = sdf.parse(resultSet.getString(2));
+					Date expireTime = sdf.parse(resultSet.getString("session_expire_time"));
 					if (currentTime.before(expireTime)) {
 						query = "update users set session_expire_time = ? where sessionToken = ?";
 						st = conn.prepareStatement(query);
@@ -86,7 +86,7 @@ public class SessionTokenDao {
 						conn.commit();
 						conn.setAutoCommit(true);
 						conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-						res = resultSet.getString(1);
+						res = resultSet.getString("email");
 					}
 				}
 			}
