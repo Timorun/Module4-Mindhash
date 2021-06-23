@@ -13,6 +13,7 @@ import com.mindhash.MindhashApp.DBConnectivity;
 
 public class SessionTokenDao {
 	private final static int EXPIRY = 60 * 60;
+	private final static Object lock = new Object();
 	
 	public static void setUserToken(String sessionToken, String email) {
 		try {
@@ -60,6 +61,7 @@ public class SessionTokenDao {
 	public static String checkUserByToken(String token) {
 		String res = null;
 		Connection conn = DBConnectivity.createConnection();
+		
 		try {
 			Date currentTime = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH); 
@@ -73,19 +75,22 @@ public class SessionTokenDao {
 			conn.commit();
 			
 			if (resultSet.next()) {
-				Date expireTime = sdf.parse(resultSet.getString(2));
-				if (currentTime.before(expireTime)) {
-					/*query = "update users set session_expire_time = ? where sessionToken = ?";
-					st = conn.prepareStatement(query);
-					st.setString(1, sdf.format(addSecondsToDate(currentTime, EXPIRY)));
-					st.setString(2, token);
-					st.execute();
-					conn.commit();
-					conn.setAutoCommit(true);
-					conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);*/
-					res = resultSet.getString(1);
+				synchronized (lock){
+					Date expireTime = sdf.parse(resultSet.getString("session_expire_time"));
+					if (currentTime.before(expireTime)) {
+						query = "update users set session_expire_time = ? where sessionToken = ?";
+						st = conn.prepareStatement(query);
+						st.setString(1, sdf.format(addSecondsToDate(currentTime, EXPIRY)));
+						st.setString(2, token);
+						st.execute();
+						conn.commit();
+						conn.setAutoCommit(true);
+						conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+						res = resultSet.getString("email");
+					}
 				}
 			}
+			
 			conn.close();
 		} catch (SQLException | ParseException e) {
 			try {

@@ -248,6 +248,11 @@ a:hover {
 	border-radius: 6px;
 	margin-top: 24px;
 }
+
+.form-wrapper .form-info {
+	text-decoration: underline darkblue;
+}
+
 .form-wrapper .form-input-field {
 	border: 0;
 	outline: none;

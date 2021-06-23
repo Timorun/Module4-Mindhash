@@ -1,152 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form action="uploadServlet" method="post" enctype="multipart/form-data" onsubmit="return validate()">
-    <label for="latitude">Latitude (e.g. 25.093...):</label><br>
-    <input type="text" id="latitude" name="latitude"><br>
-    <label for="longitude">Longitude: (e.g. 25.093...):</label><br>
-    <input type="text" id="longitude" name="longitude"><br>
-    <label for="framerate">Framerate (e.g. 60):</label><br>
-    <input type="text" id="framerate" name="framerate"><br>
-    <label for="resolution">Resolution (e.g. 1280x800):</label><br>
-    <input type="text" id="resolution" name="resolution"><br>
-    <label for="file">JSON of the recording:</label><br>
-    <input type="file" id="file" name = "file"><br>
-    <input type="submit" value="Upload">
-    <div id="err-msg" class="err-msg hide"></div>
-</form>
-</body>
+<html xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="img/mindhash.ico" type="image/x-icon">
+        <title id="title">Profile Page | MindHash</title>
+        <link type="text/css" rel="stylesheet" href="css/common-style.css">
+    </head>
+    <body>
+        <header class="header box-layout center-v">
+            <div class="logo"></div>
+            <a href="recordings.html" class="home-link" ></a>
+            <div class="box-col"><a href="" class="avatar"></a></div>
+        </header>
+        <script src="js/switch-mode.js"></script>
+
+        <section class="info-wrapper mt-64">
+            <div class="section-container">
+                <div class="general-info">
+                    <div id="general-tit" class="title"><h1>Your Profile</h1></div>
+
+                    <section class="form-wrapper">
+                        <label> Email:</label>
+                        <div type="text" class="form-input-field"> admin@mindhash.com</div>
+                        <label> Admin rights:</label>
+                        <div type="text" class="form-input-field"> YES </div>
+                        <label> Session expire:</label>
+                        <div type="text" class="form-input-field"> date </div>
+                    </section>
+
+                </div>
+            </div>
+        </section>
+        <section class="info-wrapper mt-64">
+            <h1>Admin Features (will only appear if user is Admin)</h1>
+            <div class="section-container">
+                <section class="form-wrapper" id="uploadForm"></section>
+            </div>
+            <div class="section-container">
+                <section class="form-wrapper" id="accessForm">
+                    <label> Grant access to a recording:</label>
+                    <input type="text" class="form-input-field" placeholder="user@mail.com"></input>
+                    <input type="integral" class="form-input-field" placeholder="(e.g. 1)"></input>
+                    <input id="grant" type="submit" value="Grant Access" class="form-submit-btn" />
+                </section>
+            </div>
+        </section>
+
+
+        <script src="js/profile.js"></script>
+        <script src="js/upload.js"></script>
+    </body>
 </html>
 
-<script>
-    function validate() {
-        let lat = document.getElementById("latitude").value;
-        let lon = document.getElementById("longitude").value;
-        let framerate = document.getElementById("framerate").value;
-        let res = document.getElementById("resolution").value;
-        let file = document.getElementById("file");
-        let errMsg = document.querySelector("#err-msg");
-        let regres = /([\d ]{2,5}[x][\d ]{2,5})/;
-        let regint = /^-?[0-9]+$/;
 
-
-        //check that latitude format is correct
-        if (lat.length == 0) {
-            if (errMsg.classList.contains("hide")) {
-                errMsg.classList.remove("hide");
-            }
-            errMsg.innerText = "Please input your latitude.";
-            return false;
-        } else {
-            if (Number(lat) == lat && !regint.test(lat)) {
-                if (!errMsg.classList.contains("hide")) {
-                    errMsg.classList.add("hide");
-                }
-                errMsg.innerText = "";
-            } else {
-                if (errMsg.classList.contains("hide")) {
-                    errMsg.classList.remove("hide");
-                }
-                errMsg.innerText = "Incorrect latitude format. Please enter a decimal.";
-                return false;
-            }
-        }
-
-        //check that longitude format is correct
-        if (lon.length == 0) {
-            if (errMsg.classList.contains("hide")) {
-                errMsg.classList.remove("hide");
-            }
-            errMsg.innerText = "Please input your longitude.";
-            return false;
-        } else {
-            if (Number(lon) == lon && !regint.test(lon)) {
-                if (!errMsg.classList.contains("hide")) {
-                    errMsg.classList.add("hide");
-                }
-                errMsg.innerText = "";
-            } else {
-                if (errMsg.classList.contains("hide")) {
-                    errMsg.classList.remove("hide");
-                }
-                errMsg.innerText = "Incorrect longitude format. Please enter a decimal.";
-                return false;
-            }
-        }
-
-        //check that framerate format is correct
-        if (framerate.length == 0) {
-            if (errMsg.classList.contains("hide")) {
-                errMsg.classList.remove("hide");
-            }
-            errMsg.innerText = "Please input your framerate.";
-            return false;
-        } else {
-            if (Number(framerate) == framerate && regint.test(framerate)) {
-                if (!errMsg.classList.contains("hide")) {
-                    errMsg.classList.add("hide");
-                }
-                errMsg.innerText = "";
-            } else {
-                if (errMsg.classList.contains("hide")) {
-                    errMsg.classList.remove("hide");
-                }
-                errMsg.innerText = "Incorrect framerate format. Please enter an integer.";
-                return false;
-            }
-        }
-
-        //check that resolution format is correct
-        if (res.length == 0) {
-            if (errMsg.classList.contains("hide")) {
-                errMsg.classList.remove("hide");
-            }
-            errMsg.innerText = "Please input your resolution.";
-            return false;
-        } else {
-            if (regres.test(res)) {
-                if (!errMsg.classList.contains("hide")) {
-                    errMsg.classList.add("hide");
-                }
-                errMsg.innerText = "";
-            } else {
-                if (errMsg.classList.contains("hide")) {
-                    errMsg.classList.remove("hide");
-                }
-                errMsg.innerText = "Incorrect resolution format. Please enter input of the following format: 720x540.";
-                return false;
-            }
-        }
-
-        //check that file format is correct
-        if (file.files.length === 0) {
-            if (errMsg.classList.contains("hide")) {
-                errMsg.classList.remove("hide");
-            }
-            errMsg.innerText = "No files selected. Please upload a json"
-            return false;
-        } else {
-            let fileName = file.files[0].name;
-            let fileExtension = fileName.split('.').pop();
-            if (fileExtension === 'json') {
-                if (!errMsg.classList.contains("hide")) {
-                    errMsg.classList.add("hide");
-                }
-                errMsg.innerText = "";
-            } else {
-                if (errMsg.classList.contains("hide")) {
-                    errMsg.classList.remove("hide");
-                }
-                errMsg.innerText = "Incorrect file format. Please select a json.";
-                return false;
-            }
-        }
-
-    }
-</script>
 
 
