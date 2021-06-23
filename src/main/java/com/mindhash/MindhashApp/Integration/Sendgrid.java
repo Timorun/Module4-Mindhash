@@ -11,7 +11,7 @@ public class Sendgrid {
     public String PASSWORD_RESET_BODY = "Hi, "
             + "Someone has requested to reset your password. If it was not you, please contact us as soon as possible, "
             + "otherwise here is your password reset link: "
-            + "http://localhost:8080/newpassword.html?token=$token";
+            + "http://localhost:8080/mindhash/new-password.html?token=$token";
 
     public boolean sendPasswordRequest(String email, String token, ResMsg res) {
         boolean result = false;

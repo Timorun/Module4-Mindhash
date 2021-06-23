@@ -11,6 +11,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
 import com.mindhash.MindhashApp.dao.UserDao;
+import com.mindhash.MindhashApp.model.NewPassword;
 import com.mindhash.MindhashApp.model.ResMsg;
 import com.mindhash.MindhashApp.model.User;
 
@@ -49,8 +50,12 @@ public class UsersResource {
 	@Path("/password-reset")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg resetPassword(User user) {
-		return new UserDao().resetPasssword(user);
-	}
+	public ResMsg resetPassword(User user) { return new UserDao().resetPasssword(user); }
+
+	@POST
+	@Path("/new-password")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public ResMsg newPassword(NewPassword newPassword) { return new UserDao().confirmNewPassword(newPassword); }
 
 }

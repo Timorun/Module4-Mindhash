@@ -16,10 +16,8 @@ import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.EncryptPassword;
 import com.mindhash.MindhashApp.Integration.Sendgrid;
 import com.mindhash.MindhashApp.Security.SecurityConstants;
-import com.mindhash.MindhashApp.model.PasswordResetToken;
-import com.mindhash.MindhashApp.model.ResMsg;
-import com.mindhash.MindhashApp.model.SessionToken;
-import com.mindhash.MindhashApp.model.User;
+import com.mindhash.MindhashApp.TokenUtils;
+import com.mindhash.MindhashApp.model.*;
 
 public class UserDao {
 	public static ResMsg register(User user) {
@@ -127,27 +125,68 @@ public class UserDao {
 
 	private boolean requestPasswordReset(User user, ResMsg res) {
 		boolean result = false;
-		String token = generatePasswordResetToken();
+		//generate password reset token
+		String token = new TokenUtils().generatePasswordResetToken();
 
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
 		passwordResetToken.setToken(token);
 		passwordResetToken.setUser(user);
-		PasswordResetDao.instance.getModel().put(passwordResetToken.getTokenId(), passwordResetToken);
+		PasswordResetTokenDao.instance.getModel().put(token, passwordResetToken);
 
 		result = new Sendgrid().sendPasswordRequest(user.getEmail(), token, res);
 		return result;
 	}
 
 
-	/**
-	 * @return a secure password reset token
-	 */
-	private String generatePasswordResetToken() {
-		Algorithm algorithm = Algorithm.HMAC512("secret");
-		String token = JWT.create()
-				.withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
-				.sign(algorithm);
-		return token;
+	public ResMsg confirmNewPassword(NewPassword newPassword) {
+		ResMsg res = new ResMsg();
+		res.setRes(false);
+		res.setMsg("Unable to update password at this moment.");
+		boolean operationResult = requestNewPassword(newPassword.getToken(), newPassword.getPassword(), res);
+		if (operationResult) {
+			res.setRes(true);
+		}
+		return res;
 	}
 
+	private boolean requestNewPassword(String token, String password, ResMsg res) {
+		boolean result = false;
+		//check that the password token hasn't expired i.e. less than 3600s passed
+		if (TokenUtils.isTokenExpired(token, res)) {
+			res.setMsg("The password reset token has expired. Please try again.");
+			return result;
+		}
+		//check that the token exists in the hashmap
+		PasswordResetToken passwordResetToken = PasswordResetTokenDao.instance.getModel().get(token);
+		if (passwordResetToken == null) {
+			return result;
+		}
+		//The password token is valid, new hashed password can be generated
+		User user = passwordResetToken.getUser();
+
+		Connection conn = DBConnectivity.createConnection();
+		try {
+			String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, user.getEmail());
+			ResultSet rs = st.executeQuery();
+			if (rs.next()) {
+				String updatePass = "update users " + "set password = ?, salt =? " + "where email = ?";
+				PreparedStatement preparedStatement = conn.prepareStatement(updatePass);
+				byte[] salt = EncryptPassword.generateSalt();
+				byte[] hashedPassword = EncryptPassword.HashPassStr(password, salt);
+				preparedStatement.setBytes(1, hashedPassword);
+				preparedStatement.setBytes(2, salt);
+				preparedStatement.setString(3, user.getEmail());
+				preparedStatement.executeUpdate();
+				result = true;
+			}
+			conn.close();
+		} catch (SQLException e) {
+			return result;
+		}
+		//delete token after it has been used
+		PasswordResetTokenDao.instance.getModel().remove(token);
+		return result;
+	}
 }
