@@ -149,5 +149,5 @@ public class UserDao {
 				.sign(algorithm);
 		return token;
 	}
-
+	
 }
