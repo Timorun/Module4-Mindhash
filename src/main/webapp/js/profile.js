@@ -8,13 +8,13 @@ document.getElementById('uploadForm').innerHTML += "<form action=\"uploadServlet
     "                        <input id=\"latitude\" name=\"latitude\" type=\"text\" placeholder=\"(e.g. 72.832...)\" class=\"form-input-field\" />\n" +
     "\n" +
     "                        <label for=\"longitude\">Longitude:</label>\n" +
-    "                        <input id=\"longitude\" type=\"text\" placeholder=\"(e.g. 25.093...)\" class=\"form-input-field\" />\n" +
+    "                        <input id=\"longitude\" name =\"longitude\" type=\"text\" placeholder=\"(e.g. 25.093...)\" class=\"form-input-field\" />\n" +
     "\n" +
     "                        <label for=\"framerate\">Framerate:</label>\n" +
-    "                        <input type=\"text\" id=\"framerate\" placeholder=\"(e.g. 60)\" name=\"framerate\" class=\"form-input-field\">\n" +
+    "                        <input type=\"text\" id=\"framerate\" name =\"framerate\" placeholder=\"(e.g. 60)\" name=\"framerate\" class=\"form-input-field\">\n" +
     "\n" +
     "                        <label for=\"resolution\">Resolution:</label>\n" +
-    "                        <input type=\"text\" id=\"resolution\" placeholder=\"(e.g. 1280x800)\" name=\"resolution\" class=\"form-input-field\">\n" +
+    "                        <input type=\"text\" id=\"resolution\" name =\"resolution\" placeholder=\"(e.g. 1280x800)\" name=\"resolution\" class=\"form-input-field\">\n" +
     "\n" +
     "                        <label for=\"file\">JSON of the recording:</label>\n" +
     "                        <input type=\"file\" id=\"file\" name = \"file\"><br>\n" +
