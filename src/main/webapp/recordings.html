@@ -58,6 +58,7 @@
 				xmlhttp.setRequestHeader("Authorization", token);
 				xmlhttp.send();
 			} else {
+				sessionStorage.removeItem("sessionToken");
 				location.href = "login.html";
 			}
 		</script>

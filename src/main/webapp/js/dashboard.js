@@ -11,10 +11,12 @@ let queryString = window.location.search,
 	lon = urlParams.get('lon');
 
 let pChart = null,
-	bChart = null,
+    bChart = null,
+    timeSpeedChart = null,
 	weatherChart = null,
+	lineChartsArr = new Array(),
 	maplayer = null,
-	timeSpeedChart = null;
+	heatmaplayer = null;
 
 document.querySelector(".logo").addEventListener("click", function () {
 	if (currentTheme == "dark") {
@@ -27,48 +29,35 @@ document.querySelector(".logo").addEventListener("click", function () {
 		currentTheme = "dark";
 	}
 
-	if (pChart != null && bChart != null && weatherChart != null) {
+	if (pChart != null && lineChartsArr.length > 0 && maplayer != null) {
 		if (currentTheme == "dark") {
-			pChart.options.color = "#c9d1d9";
-
-			bChart.options.color = "#c9d1d9";
-			bChart.options.scales.x.grid.borderColor = "#aaa";
-			bChart.options.scales.y.grid.borderColor = "#aaa";
-			bChart.options.scales.x.ticks.color = "#aaa";
-			bChart.options.scales.y.ticks.color = "#aaa";
-
-			weatherChart.options.color = "#c9d1d9";
-			weatherChart.options.scales.x.grid.borderColor = "#aaa";
-			weatherChart.options.scales.y.grid.borderColor = "#aaa";
-			weatherChart.options.scales.x.grid.color = "rgba(255, 255, 255, 0.1)";
-			weatherChart.options.scales.y.grid.color = "rgba(255, 255, 255, 0.1)";
-			weatherChart.options.scales.x.ticks.color = "#c9d1d9";
-			weatherChart.options.scales.y.ticks.color = "#c9d1d9";
-
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
+		    heatmaplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
-			pChart.options.color = "#333";
-
-			bChart.options.color = "#333";
-			bChart.options.scales.x.grid.borderColor = "#999";
-			bChart.options.scales.y.grid.borderColor = "#999";
-			bChart.options.scales.x.ticks.color = "#333";
-			bChart.options.scales.y.ticks.color = "#333";
-
-			weatherChart.options.color = "#333";
-			weatherChart.options.scales.x.grid.borderColor = "#999";
-			weatherChart.options.scales.y.grid.borderColor = "#999";
-			weatherChart.options.scales.x.grid.color = "#e6e6e6";
-			weatherChart.options.scales.y.grid.color = "#e6e6e6";
-			weatherChart.options.scales.x.ticks.color = "#333";
-			weatherChart.options.scales.y.ticks.color = "#333";
-
 			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
+			heatmaplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
-
+		pChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+		pChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
 		pChart.update();
-		bChart.update();
-		weatherChart.update();
+		timeSpeedChart.data.datasets[0].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
+		bChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#006699"];
+		bChart.data.datasets[1].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
+		bChart.data.datasets[2].backgroundColor = currentTheme == "dark" ? ["#999"] : ["#ccc"];
+		weatherChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
+		weatherChart.data.datasets[1].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
+		weatherChart.data.datasets[2].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#ccc"];
+		for(var chart of lineChartsArr) {
+			chart.options.plugins.title.color = currentTheme == "dark" ? "#c9d1d9" : "#333",
+			chart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+			chart.options.scales.x.grid.borderColor = currentTheme == "dark" ? "#aaa" : "#999";
+			chart.options.scales.y.grid.borderColor = currentTheme == "dark" ? "#aaa" : "#999";
+			chart.options.scales.x.grid.color = currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6";
+			chart.options.scales.y.grid.color = currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6";
+			chart.options.scales.x.ticks.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+			chart.options.scales.y.ticks.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+			chart.update();
+		}
 	}
 	localStorage.setItem("theme", currentTheme);
 });
@@ -127,8 +116,8 @@ xmlObjNum.onreadystatechange = function() {
 				labels: labels,
 				datasets: [
 					{
-						backgroundColor: currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
 						data: data,
+						backgroundColor: currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
 						borderWidth: 0
 					},
 				]
@@ -154,6 +143,7 @@ xmlObjNum.onreadystatechange = function() {
 			}
 		});
 	} else if (this.readyState == 4 && this.status == 511) {
+		sessionStorage.removeItem("sessionToken");
 		location.href = "login.html";
 	}
 }
@@ -220,7 +210,9 @@ xmlhttp.onreadystatechange = function() {
 				maintainAspectRatio: false
 			}
 		});
+		lineChartsArr.push(bChart);
 	} else if (this.readyState == 4 && this.status == 511) {
+		sessionStorage.removeItem("sessionToken");
 		location.href = "login.html";
 	}
 }
@@ -231,7 +223,7 @@ xmlhttp.send();
 
 let measurements = new Array(),
 	objects = new Array(),
-    heatmap = null,
+	heatmap = null,
 	heatLayer = null;
 $timeInterval.addEventListener("change", function() {
 	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
@@ -240,7 +232,6 @@ $timeInterval.addEventListener("change", function() {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = JSON.parse(this.responseText);
 			objects = response.objList;
-			console.log(response);
 			var objNum = response.objNum;
 				infoStr = "",
 				total = 0,
@@ -289,9 +280,9 @@ $timeInterval.addEventListener("change", function() {
 			if (heatmap == null) {
 				heatmap = L.map('heatmap').setView([lat, lon], 1);
 				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-						: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw",
-				    baseLayer = L.tileLayer(mapUrl, {
-					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+						: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+				heatmaplayer = L.tileLayer(mapUrl, {
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 					subdomains: 'abcd',
 					maxZoom: 28,
 				}).addTo(heatmap);
@@ -305,6 +296,7 @@ $timeInterval.addEventListener("change", function() {
 					}).addTo(heatmap);
 			}
 		} else if (this.readyState == 4 && this.status == 511) {
+			sessionStorage.removeItem("sessionToken");
 			location.href = "login.html";
 		}
 	}
@@ -318,7 +310,7 @@ var mymap = L.map('map').setView([lat, lon], 18),
 			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
 maplayer = L.tileLayer(mapUrl, {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 	subdomains: 'abcd',
 	maxZoom: 28
 }).addTo(mymap);
@@ -331,9 +323,9 @@ maplayer = L.tileLayer(mapUrl, {
 
 function timeSpeed(labels, speed, name) {
 	var ctx = document.querySelector('#timeSpeedChart').getContext('2d');
-	if (timeSpeedChart != null) {
+	/*if (timeSpeedChart != null) {
 		timeSpeedChart.destroy();
-	}
+	}*/
 	timeSpeedChart = new Chart(ctx, {
 		type: "line",
 		data: {
@@ -350,7 +342,7 @@ function timeSpeed(labels, speed, name) {
 				title: {
 					display: true,
 					text: "Speed (m/s) of " + name,
-					color: "#c9d1d9"
+					color: currentTheme == "dark" ? "#c9d1d9" : "#333"
 				},
 				legend: {
 					display: false
@@ -381,6 +373,7 @@ function timeSpeed(labels, speed, name) {
 			maintainAspectRatio: false
 		}
 	});
+	lineChartsArr.push(timeSpeedChart);
 }
 
 $objList.onclick = function(e) {
@@ -483,6 +476,7 @@ xmlhttp2.onreadystatechange = function() {
 						plugins: {
 							title: {
 								display: true,
+								color: currentTheme == "dark" ? "#c9d1d9" : "#333",
 								text: "Hourly weather information provided by closest active station: " + closeststation
 							}
 						},
@@ -511,6 +505,7 @@ xmlhttp2.onreadystatechange = function() {
 						maintainAspectRatio: false
 					}
 				});
+				lineChartsArr.push(weatherChart);
 			} 
 		}
 		xmlhttp3.open("GET", "https://api.meteostat.net/v2/stations/hourly?station="+ closestactivestationid +"&start="+ date +"&end="+ date +"&tz=CEST", true);
