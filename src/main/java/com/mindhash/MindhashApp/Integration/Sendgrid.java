@@ -18,7 +18,7 @@ public class Sendgrid {
     public String EMAIL_VERIFICATION_BODY = "Hi, "
             + "Thank you for registering with Mindhash. There is one last step required in order to complete your registration, "
             + "please click on the following link and log in with your new credentials: "
-            + "http://localhost:8080/mindhash/email-verification-success.html?token=$token";
+            + "http://localhost:8080/mindhash/login.html?token=$token";
 
     public boolean sendPasswordRequest(String email, String token, ResMsg res) {
         boolean result = false;

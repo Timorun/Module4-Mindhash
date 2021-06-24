@@ -14,7 +14,6 @@ import com.mindhash.MindhashApp.Integration.Sendgrid;
 import com.mindhash.MindhashApp.Security.EncryptPassword;
 import com.mindhash.MindhashApp.Security.TokenUtils;
 import com.mindhash.MindhashApp.model.*;
-import com.sendgrid.Email;
 
 public class UserDao {
 
@@ -62,7 +61,13 @@ public class UserDao {
                 preparedStatement.setBytes(3, salt);
                 int i = preparedStatement.executeUpdate();
                 if (i > 0) {
-					res.setRes(true);
+					//if all data has been inserted successfully in the db, generate a unique email verification token
+					String emailToken = new TokenUtils().generateEmailVerificationToken();
+					EmailVerificationTokenDao.setEmailToken(emailToken, user.getEmail());
+					boolean returnValue = new Sendgrid().sendEmailVerification(user.getEmail(), emailToken);
+					if (returnValue) {
+						res.setRes(true);
+					}
                 } else {
                 	res.setRes(false);
 				}
@@ -151,7 +156,7 @@ public class UserDao {
 		passwordResetToken.setToken(token);
 		passwordResetToken.setUser(user);
 		//insert newly generated token into db
-		PasswordResetTokenDao.setPasswordToken(token, user.getEmail(), res);
+		PasswordResetTokenDao.setPasswordToken(token, user.getEmail());
 
 		result = new Sendgrid().sendPasswordRequest(user.getEmail(), token, res);
 		return result;
@@ -180,7 +185,7 @@ public class UserDao {
 		String email = null;
 		try {
 			Connection conn = DBConnectivity.createConnection();
-			String query = "select * from token where password_token=? LIMIT 1";
+			String query = "select * from passwordtoken where password_token=? LIMIT 1";
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setString(1, token);
 			ResultSet resultSet = st.executeQuery();
@@ -220,7 +225,7 @@ public class UserDao {
 		}
 
 		//delete token after it has been used
-		PasswordResetTokenDao.deletePassToken(token, res);
+		PasswordResetTokenDao.deletePassToken(token);
 		return result;
 	}
 

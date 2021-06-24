@@ -15,7 +15,7 @@ public class PasswordResetTokenDao {
         int userId = 0;
         try {
             Connection conn = DBConnectivity.createConnection();
-            String query = "select * from token where password_token = ? limit 1";
+            String query = "select * from passwordtoken where password_token = ? limit 1";
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, password_token);
             st.execute();
@@ -43,7 +43,7 @@ public class PasswordResetTokenDao {
         return email;
     }
 
-    public static void setPasswordToken(String token, String email, ResMsg res) {
+    public static void setPasswordToken(String token, String email) {
         int userId = 0;
         try {
             Connection conn = DBConnectivity.createConnection();
@@ -54,24 +54,24 @@ public class PasswordResetTokenDao {
             if (rs.next()) {
                 userId = rs.getInt("id");
             }
+            st.close();
+            rs.close();
 
-            String query1 = "select * from token where user_id = ? LIMIT 1";
+            String query1 = "select * from passwordtoken where user_id = ? LIMIT 1";
             st = conn.prepareStatement(query1);
             st.setInt(1, userId);
             rs = st.executeQuery();
             if (rs.next()) {
-                String query2 = "update token set password_token = ? where user_id = ?";
-                st = conn.prepareStatement(query2);
-                st.setString(1, token);
-                st.setInt(2, userId);
-                st.executeUpdate();
-            } else {
-                String query3 = "insert into token(password_token, user_id) values(?, ?)";
-                st = conn.prepareStatement(query3);
-                st.setString(1, token);
-                st.setInt(2, userId);
-                st.executeUpdate();
+                deletePassToken(userId);
             }
+            st.close();
+
+            String query2 = "insert into passwordtoken(password_token, user_id) values(?, ?)";
+            st = conn.prepareStatement(query2);
+            st.setString(1, token);
+            st.setInt(2, userId);
+            st.executeUpdate();
+
             conn.close();
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -80,12 +80,26 @@ public class PasswordResetTokenDao {
 
     }
 
-    public static void deletePassToken(String token, ResMsg res) {
+    public static void deletePassToken(String token) {
         try {
             Connection conn = DBConnectivity.createConnection();
-            String query = "delete from token where password_token = ?";
+            String query = "delete from passwordtoken where password_token = ?";
             PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, token);
+            st.executeUpdate();
+            conn.close();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static void deletePassToken(int userId) {
+        try {
+            Connection conn = DBConnectivity.createConnection();
+            String query = "delete from passwordtoken where user_id = ?";
+            PreparedStatement st = conn.prepareStatement(query);
+            st.setInt(1, userId);
             st.executeUpdate();
             conn.close();
         } catch (SQLException e) {
