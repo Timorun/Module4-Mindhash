@@ -58,9 +58,7 @@
 							<select id="timeInterval"></select>
 						</div>
 					</div>
-					<div id="heatmap" class="heatmap">
-						<div id="heatmapInfo" class="heatmapInfo"></div>
-					</div>
+					<div id="heatmap" class="heatmap"></div>
 				</div>
 				<div id="objects" class="fl">
 					<div class="custom-select">
@@ -68,8 +66,19 @@
 					</div>
 					<ul id="objectsLi" class="objectsLi"></ul>
 				</div>
-				<div class="timeSpeedChart float">
+				<div class="timeSpeedChart fl">
 					<canvas id="timeSpeedChart"></canvas>
+				</div>
+				<div id="" class="fl" style="width: 360px; height: 240px;">
+					<canvas id="intervalChart"></canvas>
+				</div>
+				<div class="box-layout center-v fl" style="width: 240px; height: 240px;">
+					<div style="width: 240px; height: 160px;">
+						<canvas id="perChart" style="width: 240px !important; height: 160px!important;"></canvas>
+					</div>
+				</div>
+				<div class="fl" style="width: 438px; margin-left: 12px;">
+					<canvas id="scatterChart"></canvas>
 				</div>
 			</div>
 

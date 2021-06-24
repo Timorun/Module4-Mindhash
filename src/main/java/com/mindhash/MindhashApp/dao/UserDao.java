@@ -5,18 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 
-import com.auth0.jwt.*;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.mindhash.MindhashApp.DBConnectivity;
-import com.mindhash.MindhashApp.EncryptPassword;
 import com.mindhash.MindhashApp.Integration.Sendgrid;
-import com.mindhash.MindhashApp.Security.SecurityConstants;
-import com.mindhash.MindhashApp.TokenUtils;
+import com.mindhash.MindhashApp.Security.EncryptPassword;
+import com.mindhash.MindhashApp.Security.TokenUtils;
 import com.mindhash.MindhashApp.model.*;
 
 public class UserDao {

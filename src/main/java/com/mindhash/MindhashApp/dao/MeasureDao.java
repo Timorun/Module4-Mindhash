@@ -1,6 +1,7 @@
 package com.mindhash.MindhashApp.dao;
 
 import com.mindhash.MindhashApp.DBConnectivity;
+import com.mindhash.MindhashApp.ObjTypeNum;
 import com.mindhash.MindhashApp.model.Measure;
 import com.mindhash.MindhashApp.model.MeasureRes;
 import com.mindhash.MindhashApp.model.Obj;
@@ -33,7 +34,7 @@ public class MeasureDao {
             ArrayList<Measure> mLi = new ArrayList<>();
             ArrayList<Obj> oLi = new ArrayList<>();
             HashSet<Integer> keySet = new HashSet<>();
-            HashMap<String, Integer> objNum = new HashMap<>();
+            HashMap<String, Integer> objNum = ObjTypeNum.getObjTypeNumMap();
             while (resultSet.next()) {
                 Measure m = new Measure();
                 //measurement.setRecordingId(resultSet.getInt("recording_id"));
@@ -54,7 +55,7 @@ public class MeasureDao {
 	                obj.setObjectType(type);
 	                oLi.add(obj);
 	                
-	                if (objNum.putIfAbsent(type, 1) != null) {
+	                if (objNum.containsKey(type)) {
 	                	int num = objNum.get(type);
 	                	objNum.put(type, num + 1);
 	                }
@@ -91,7 +92,7 @@ public class MeasureDao {
             ArrayList<Measure> mLi = new ArrayList<>();
             ArrayList<Obj> oLi = new ArrayList<>();
             HashSet<Integer> keySet = new HashSet<>();
-            HashMap<String, Integer> objNum = new HashMap<>();
+            HashMap<String, Integer> objNum = ObjTypeNum.getObjTypeNumMap();
             while (resultSet.next()) {
                 Measure m = new Measure();
                 //measurement.setRecordingId(resultSet.getInt("recording_id"));
@@ -112,7 +113,7 @@ public class MeasureDao {
 	                obj.setObjectType(type);
 	                oLi.add(obj);
 	                
-	                if (objNum.putIfAbsent(type, 1) != null) {
+	                if (objNum.containsKey(type)) {
 	                	int num = objNum.get(type);
 	                	objNum.put(type, num + 1);
 	                }

@@ -16,7 +16,9 @@ let pChart = null,
 	weatherChart = null,
 	lineChartsArr = new Array(),
 	maplayer = null,
-	heatmaplayer = null;
+	heatmaplayer = null,
+	perChart = null,
+	scatterChart = null;
 
 document.querySelector(".logo").addEventListener("click", function () {
 	if (currentTheme == "dark") {
@@ -75,27 +77,28 @@ $timeInterval.innerHTML = timeStr;
 const $selectObj = document.querySelector("#selectObj"),
 	$objList = document.querySelector("#objectsLi");
 	
-let xmlObjNum = new XMLHttpRequest();
+let xmlObjNum = new XMLHttpRequest(),
+    totalObjNum = {},
+	totalObj = 0;
 xmlObjNum.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		var response = this.responseText,
-			objectNum = JSON.parse(response);
+		var response = this.responseText;
+		totalObjNum = JSON.parse(response);
 		
 		var selectStr = "",
 			generalStr = "",
-			total = 0,
 			index = 0,
 			labels = new Array(),
 			data = new Array();;
-		for (var o in objectNum) {
+		for (var o in totalObjNum) {
 			labels[index] = o;
-			data[index] = objectNum[o];
+			data[index] = totalObjNum[o];
 			index++;
-			total += objectNum[o];
+			totalObj += totalObjNum[o];
 			selectStr += '<option value="'+ index +'">' + o + '</option>';
-			generalStr += "<div>" + o + ": " + objectNum[o] + "</div>";
+			generalStr += "<div>" + o + ": " + totalObjNum[o] + "</div>";
 		}
-		generalStr = "<div>all objects: " + total + "</div>" + generalStr + "<div>recording date: " + date + "</div>";
+		generalStr = "<div>all objects: " + totalObj + "</div>" + generalStr + "<div>recording date: " + date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", generalStr);
 		$selectObj.innerHTML = selectStr;
 		select();
@@ -224,7 +227,8 @@ xmlhttp.send();
 let measurements = new Array(),
 	objects = new Array(),
 	heatmap = null,
-	heatLayer = null;
+	heatLayer = null,
+	intervalChart = null;
 $timeInterval.addEventListener("change", function() {
 	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
 	var xmlheatmap = new XMLHttpRequest();
@@ -233,21 +237,60 @@ $timeInterval.addEventListener("change", function() {
 			var response = JSON.parse(this.responseText);
 			objects = response.objList;
 			var objNum = response.objNum;
-				infoStr = "",
-				total = 0,
-				len = 0,
-				totalLen = Object.keys(objNum).length;
-			for (var o in objNum) {
-				len++;
-				total += objNum[o];
-				if (totalLen != len) {
-					infoStr += "<span>" + o + " : "+ objNum[o] + ", </span>"; 
-				} else {
-					infoStr += "<span>" + o + " : "+ objNum[o] + ".</span>"; 
-				}
+			if (intervalChart == null) {
+				var ctx = document.querySelector('#intervalChart').getContext('2d');
+				intervalChart = new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: Object.keys(objNum),
+						datasets: [
+							{
+								label: "one hour",
+								backgroundColor: currentTheme == "dark" ? ["#333"] : ["#ccc"],
+								data: Object.values(objNum)
+							},
+							{
+								label: "whole time",
+								backgroundColor: currentTheme == "dark" ? ["#ccc"] : ["#006699"],
+								data: Object.values(totalObjNum)
+							}
+						]
+					},
+					options: {
+						plugins: {
+							legend: {
+								display: true
+							}
+						},
+						scales: {
+							x: {
+								grid: {
+									borderColor: currentTheme == "dark" ? "#aaa" : "#333",
+									display: false
+								},
+								ticks: {
+									color: currentTheme == "dark" ? "#aaa" : "#333",
+								}
+							},
+							y: {
+								grid: {
+									borderColor: currentTheme == "dark" ? "#aaa" : "#333",
+									display: false
+								},
+								ticks: {
+									color: currentTheme == "dark" ? "#aaa" : "#333",
+								}
+							}
+						},
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						responsive: true,
+						maintainAspectRatio: false
+					}
+				});
+				lineChartsArr.push(intervalChart);
+			} else {
+				
 			}
-			infoStr = "<div>(heatmap) all objects : "+ total + ".</div>" + infoStr; 
-			document.querySelector("#heatmapInfo").innerHTML = infoStr;
 			if (timeSpeedChart == null) {
 				var firstId = -1,
 					name = "",
@@ -255,31 +298,76 @@ $timeInterval.addEventListener("change", function() {
 					firstSpeed = new Array();
 			}
 			measurements = response.measureList;
-			var coordinates = [];
-			var radius = 6378137.0;
+			var coordinates = [],
+				radius = 6378137.0,
+				xy = new Array();
 			for (var measurement of measurements) {
-				var dLat = parseFloat(measurement.y)/radius;
-				var dLon = parseFloat(measurement.x)/(radius*Math.cos(Math.PI*parseFloat(lat)/180))
-				var latO = parseFloat(lat) +dLat*180.0/Math.PI;
-					lonO = parseFloat(lon) + dLon*180/Math.PI;
+				var dLat = parseFloat(measurement.y) / radius,
+					dLon = parseFloat(measurement.x) / (radius * Math.cos(Math.PI * parseFloat(lat) / 180)),
+					latO = parseFloat(lat) + dLat * 180.0 / Math.PI;
+					lonO = parseFloat(lon) + dLon * 180 / Math.PI;
 				coordinates.push([latO, lonO]);
 				
 				if (timeSpeedChart == null) {
+					var obj = {x: 0, y: 0};
 					if (firstTime.length === 0 && firstId === -1) {
 						firstId = measurement.objectId;
 						firstSpeed.push(measurement.velocity);
 						firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+						
+						obj.x = measurement.x;
+						obj.y = measurement.y;
+						xy.push(obj);
 						name = measurement.objectType + ' ' + measurement.objectId;
 					} else if (firstId === measurement.objectId) {
 						firstSpeed.push(measurement.velocity);
 						firstTime.push(measurement.timeWithoutDate.slice(0, 8));
+						obj.x = measurement.x;
+						obj.y = measurement.y;
+						xy.push(obj);
 					}
 				}
 			}
 			if (timeSpeedChart == null) {
 				timeSpeed(firstTime, firstSpeed, name);
 			}
-			updateObjLi($selectObj.options[$selectObj.options.selectedIndex].text);
+			var type = $selectObj.options[$selectObj.options.selectedIndex].text;
+			updateObjLi(type);
+			if (perChart == null) {
+				var ctx = document.querySelector('#perChart').getContext('2d');
+				perChart = new Chart(ctx, {
+					type: 'pie',
+					data: {
+						labels: [type + " (" + objNum[type] + ")", "other objects (" + (totalObj - objNum[type]) + ")"],
+						datasets: [
+							{
+								data: [objNum[type], totalObj - objNum[type]],
+								backgroundColor: currentTheme == "dark" ? ["#999", "#333"] : ["#006699", "#ccc"],
+								borderWidth: 0
+							},
+						]
+					},
+					options: {
+						plugins: {
+							tooltip: {
+								callbacks: {
+									label: function(TooltipItem, object) {
+										return TooltipItem.label + ": " + ((TooltipItem.formattedValue / totalObj) * 100).toFixed(2) + "%";
+									}
+								}
+							},
+							legend: {
+								onClick: function() {
+									return false;
+								}
+							}
+						},
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						responsive: true,
+						maintainAspectRatio: false
+					}
+				});
+			}
 			if (heatmap == null) {
 				heatmap = L.map('heatmap').setView([lat, lon], 18);
 				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -303,6 +391,25 @@ $timeInterval.addEventListener("change", function() {
 						radius: 25
 					}).addTo(heatmap);
 			}
+			if (scatterChart == null) {
+				var ctx = document.querySelector('#scatterChart').getContext('2d');
+				scatterChart = new Chart(ctx, {
+					type: 'scatter',
+					data: {
+						datasets: [{
+										label: 'obejct position related to sensor',
+										data: xy,
+										backgroundColor: '#006699'
+									},
+									{
+										label: 'sensor',
+										data: [{x: 0, y:0}],
+										backgroundColor: '#ccc'
+									}
+								]
+					}
+				})
+			}
 		} else if (this.readyState == 4 && this.status == 511) {
 			sessionStorage.removeItem("sessionToken");
 			location.href = "login.html";
@@ -314,6 +421,8 @@ $timeInterval.addEventListener("change", function() {
 	xmlheatmap.send();
 });
 
+
+
 var mymap = L.map('map').setView([lat, lon], 18),
 			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
@@ -322,12 +431,6 @@ maplayer = L.tileLayer(mapUrl, {
 	subdomains: 'abcd',
 	maxZoom: 28
 }).addTo(mymap);
-
-/*function LongLatOffset(lon, lat, a, dst) {
-	var arc = 6371.393 * 1000;
-	lon += dst * Math.sin(a) / (arc * Math.cos(lat) * 2 * Math.PI / 360);
-	lat += dst * Math.cos(a) / (arc * 2 * Math.PI / 360);
-}*/
 
 function timeSpeed(labels, speed, name) {
 	var ctx = document.querySelector('#timeSpeedChart').getContext('2d');
@@ -425,14 +528,16 @@ let xmlhttp2 = new XMLHttpRequest();
 xmlhttp2.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText,
-			jsonstations = JSON.parse(response);
-		for (i = 0; i < 2; i++) {
-			if (jsonstations.data[i].active === true) {
+			jsonstations = JSON.parse(response).data,
+			i,
+		    len = jsonstations.length;
+		for (i = 0; i < len; i++) {
+			if (jsonstations[i].active === true) {
 				break;
 			}
 		}
-		let closeststation = jsonstations.data[i].name.en,
-			closestactivestationid = jsonstations.data[i].id;
+		let closeststation = jsonstations[i].name.en,
+			closestactivestationid = jsonstations[i].id;
 
 		//get weather info from that stationid
 		let xmlhttp3 = new XMLHttpRequest();
