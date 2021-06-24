@@ -34,4 +34,12 @@ public class TokenUtils {
         Date todaysDate = new Date();
         return expiresAt.before(todaysDate);
     }
+
+    public String generateEmailVerificationToken() {
+        Algorithm algorithm = Algorithm.HMAC512("secret");
+        String token = JWT.create()
+                .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EMAIL_VERIFICATION_EXPIRATION_TIME))
+                .sign(algorithm);
+        return token;
+    }
 }

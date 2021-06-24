@@ -18,10 +18,12 @@ import com.mindhash.MindhashApp.Integration.Sendgrid;
 import com.mindhash.MindhashApp.Security.SecurityConstants;
 import com.mindhash.MindhashApp.TokenUtils;
 import com.mindhash.MindhashApp.model.*;
+import com.sendgrid.Email;
 
 public class UserDao {
 	public static ResMsg register(User user) {
 		ResMsg res = new ResMsg();
+		res.setRes(false);
 		
 		Connection conn = DBConnectivity.createConnection();
 		try {
@@ -42,15 +44,14 @@ public class UserDao {
                 preparedStatement.setBytes(3, salt);
                 int i = preparedStatement.executeUpdate();
                 if (i > 0) {
-                	res.setRes(true);
+					res.setRes(true);
                 } else {
                 	res.setRes(false);
-                }
+				}
             }
             conn.close();
         } catch (SQLException e) {
         	res.setRes(false);
-        	res.setMsg(e.getMessage());
         }
 		return res;
 	}
@@ -118,7 +119,7 @@ public class UserDao {
 			}
 			conn.close();
 		} catch (SQLException e) {
-			res.setMsg(e.getMessage());
+			e.printStackTrace();
 		}
 		return res;
 	}
@@ -131,7 +132,8 @@ public class UserDao {
 		PasswordResetToken passwordResetToken = new PasswordResetToken();
 		passwordResetToken.setToken(token);
 		passwordResetToken.setUser(user);
-		PasswordResetTokenDao.instance.getModel().put(token, passwordResetToken);
+		//insert newly generated token into db
+		PasswordResetTokenDao.setPasswordToken(token, user.getEmail(), res);
 
 		result = new Sendgrid().sendPasswordRequest(user.getEmail(), token, res);
 		return result;
@@ -156,19 +158,32 @@ public class UserDao {
 			res.setMsg("The password reset token has expired. Please try again.");
 			return result;
 		}
-		//check that the token exists in the hashmap
-		PasswordResetToken passwordResetToken = PasswordResetTokenDao.instance.getModel().get(token);
-		if (passwordResetToken == null) {
+		//check that the token exists in the db
+		String email = null;
+		try {
+			Connection conn = DBConnectivity.createConnection();
+			String query = "select * from token where password_token=? LIMIT 1";
+			PreparedStatement st = conn.prepareStatement(query);
+			st.setString(1, token);
+			ResultSet resultSet = st.executeQuery();
+			if (resultSet.next()) {
+				email = PasswordResetTokenDao.getUserByPassToken(resultSet.getString("password_token"));
+			}
+			conn.close();
+			if (email == null) {
+				return result;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 			return result;
 		}
-		//The password token is valid, new hashed password can be generated
-		User user = passwordResetToken.getUser();
 
+		//The password token is valid, new hashed password can be generated
 		Connection conn = DBConnectivity.createConnection();
 		try {
 			String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, user.getEmail());
+			st.setString(1, email);
 			ResultSet rs = st.executeQuery();
 			if (rs.next()) {
 				String updatePass = "update users " + "set password = ?, salt =? " + "where email = ?";
@@ -177,7 +192,7 @@ public class UserDao {
 				byte[] hashedPassword = EncryptPassword.HashPassStr(password, salt);
 				preparedStatement.setBytes(1, hashedPassword);
 				preparedStatement.setBytes(2, salt);
-				preparedStatement.setString(3, user.getEmail());
+				preparedStatement.setString(3, email);
 				preparedStatement.executeUpdate();
 				result = true;
 			}
@@ -185,8 +200,10 @@ public class UserDao {
 		} catch (SQLException e) {
 			return result;
 		}
+
 		//delete token after it has been used
-		PasswordResetTokenDao.instance.getModel().remove(token);
+		PasswordResetTokenDao.deletePassToken(token, res);
 		return result;
 	}
+
 }

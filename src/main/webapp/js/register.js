@@ -127,7 +127,7 @@ function register() {
 				if (errMsg.classList.contains("hide")) {
 					errMsg.classList.remove("hide");
 				}
-				errMsg.innerText = response.errMsg;
+				errMsg.innerText = response.msg;
 			}
 		} else if(this.readyState == 4 && this.status != 200) {
 			if (errMsg.classList.contains("hide")) {
