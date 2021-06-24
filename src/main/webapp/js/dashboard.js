@@ -397,7 +397,7 @@ $timeInterval.addEventListener("change", function() {
 					type: 'scatter',
 					data: {
 						datasets: [{
-										label: 'obejct position related to sensor',
+										label: 'position relative to sensor',
 										data: xy,
 										backgroundColor: '#006699'
 									},
