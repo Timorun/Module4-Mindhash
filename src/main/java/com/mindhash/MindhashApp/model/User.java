@@ -5,6 +5,9 @@ public class User {
     private String password;
     private String salt;
     private int id;
+    private String token;
+    private String sessionexpire;
+    private boolean isadmin;
 
     public User() {}
 
@@ -12,6 +15,12 @@ public class User {
         this.email = email;
         this.password = password;
         this.salt = salt;
+    }
+
+    public User(String email, String sessionexpire, boolean isadmin) {
+        this.email = email;
+        this.sessionexpire = sessionexpire;
+        this.isadmin = isadmin;
     }
 
     public String getEmail() {
@@ -34,9 +43,15 @@ public class User {
         return salt;
     }
 
+    public String getToken() {return token;}
+
     public void setSalt(String salt) {
         this.salt = salt;
     }
 
     public int getId() { return id; }
+
+    public String getSessionexpire() {return sessionexpire;}
+
+    public boolean isIsadmin() {return isadmin;}
 }
