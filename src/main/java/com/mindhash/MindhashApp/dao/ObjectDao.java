@@ -1,6 +1,7 @@
 package com.mindhash.MindhashApp.dao;
 
 import com.mindhash.MindhashApp.DBConnectivity;
+import com.mindhash.MindhashApp.ObjTypeNum;
 import com.mindhash.MindhashApp.model.Obj;
 
 
@@ -37,7 +38,7 @@ public class ObjectDao {
     
     public static Map<String , Integer> getObjectNum(int recordingId, String date) {
         Connection conn = DBConnectivity.createConnection();
-        Map<String, Integer> contentProvider = new HashMap<>();
+        Map<String, Integer> objNum = ObjTypeNum.getObjTypeNumMap();
         try {
             String query = "select * from object where recording_id = ? and date = ?";
             PreparedStatement st = conn.prepareStatement(query);
@@ -46,16 +47,16 @@ public class ObjectDao {
             ResultSet resultSet = st.executeQuery();
             while (resultSet.next()) {
                 String type = resultSet.getString("object_type");
-                if (contentProvider.putIfAbsent(type, 1) != null) {
-                	int num = contentProvider.get(type);
-                	contentProvider.put(type, num + 1);
+                if (objNum.containsKey(type)) {
+                	int num = objNum.get(type);
+                	objNum.put(type, num + 1);
                 }
             }
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return contentProvider;
+        return objNum;
     }
 
 }

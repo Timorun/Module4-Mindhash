@@ -1,14 +1,8 @@
 
 g
 7src/main/java/com/mindhash/MindhashApp/model/Field.java,d\c\dcc6d411c4f781cef579bf756a2e649bf09d6cf0
-g
-7src/main/java/com/mindhash/MindhashApp/dao/UserDao.java,e\c\eca462820851df76108b544c5f7cdbc8f422c3ee
-s
-Csrc/main/java/com/mindhash/MindhashApp/resources/UsersResource.java,1\3\1396d17847a9ea778fb67a468f1c8b1875b63561
 S
 #src/main/webapp/reset-password.html,1\b\1bf267708e412ca044f289a21e8241e74e365ed5
-P
- src/main/webapp/reg-success.html,2\1\21ce7de085737c06fff6ba20bdf97aaf704498e9
 O
 src/main/webapp/WEB-INF/web.xml,2\e\2e22b6edd746fa3dc40ad7276c87c8d87d72a392
 7
@@ -17,7 +11,3 @@ O
 src/main/webapp/js/chart.min.js,2\b\2bad0328476ace0076b79466fcd18ffded4db40f
 m
 =src/main/java/com/mindhash/MindhashApp/model/Measurement.java,5\2\527d22c5bf49a43d01fe5047ee511d1aa8d6d793
-i
-9src/main/java/com/mindhash/MindhashApp/model/Measure.java,9\a\9adbb15861d81252d2010c3964045cc3b602203e
-u
-Esrc/main/java/com/mindhash/MindhashApp/resources/ObjectsResource.java,6\f\6f326bdb2089e96763a6d2ad7ebfc28624267aae

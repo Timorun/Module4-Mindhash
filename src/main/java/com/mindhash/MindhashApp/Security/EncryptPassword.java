@@ -1,4 +1,4 @@
-package com.mindhash.MindhashApp;
+package com.mindhash.MindhashApp.Security;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

@@ -19,35 +19,10 @@
             <div class="section-container">
                 <div class="general-info">
                     <div id="general-tit" class="title"><h1>Your Profile</h1></div>
-
-                    <section class="form-wrapper">
-                        <label> Email:</label>
-                        <div type="text" class="form-input-field"> admin@mindhash.com</div>
-                        <label> Admin rights:</label>
-                        <div type="text" class="form-input-field"> YES </div>
-                        <label> Session expire:</label>
-                        <div type="text" class="form-input-field"> date </div>
-                    </section>
-
                 </div>
             </div>
         </section>
-        <section class="info-wrapper mt-64">
-            <h1>Admin Features (will only appear if user is Admin)</h1>
-            <div class="section-container">
-                <section class="form-wrapper" id="uploadForm"></section>
-            </div>
-            <div class="section-container">
-                <section class="form-wrapper" id="accessForm">
-                    <label> Grant access to a recording:</label>
-                    <input type="text" class="form-input-field" placeholder="user@mail.com"></input>
-                    <input type="integral" class="form-input-field" placeholder="(e.g. 1)"></input>
-                    <input id="grant" type="submit" value="Grant Access" class="form-submit-btn" />
-                </section>
-            </div>
-        </section>
-
-
+        <section id="adminFeatures" class="info-wrapper mt-64"></section>
         <script src="js/profile.js"></script>
         <script src="js/upload.js"></script>
     </body>

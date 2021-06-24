@@ -1,15 +1,11 @@
 package com.mindhash.MindhashApp.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.sound.midi.Soundbank;
+import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 
+import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.UserDao;
 import com.mindhash.MindhashApp.model.NewPassword;
 import com.mindhash.MindhashApp.model.ResMsg;
@@ -21,6 +17,21 @@ public class UsersResource {
 	UriInfo uriInfo;
 	@Context
 	Request request;
+
+	@GET
+	@Path("{sessionToken}")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response userinfo(@PathParam("sessionToken") String sessionToken) {
+		if (SessionTokenDao.checkUserByToken(sessionToken) == null) {
+			System.out.println("Token not valid");
+			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+		} else {
+			System.out.println("Token validated sending user details");
+			User user = UserDao.getDetails(sessionToken);
+			return Response.status(Response.Status.OK).entity(user).build();
+		}
+	}
+
 	
 	@POST
 	@Path("/register")

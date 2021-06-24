@@ -6,27 +6,6 @@
   --border-color: #8e8e8e;
   --text-color: #c9d1d9;
 }
-#stroke-1 {
-                fill: #6a34ab;
-            }
-            #stroke-2-shadow {
-                fill: #541e89;
-            }
-            #stroke-2, #stroke-4-shadow {
-                fill: #8540c4;
-            }
-            #stroke-3 {
-                fill: #a656d2;
-            }
-            #stroke-4, #stroke-6-shadow {
-                fill: #eb8e2a;
-            }
-            #stroke-5 {
-                fill: #feb635;
-            }
-            #stroke-6 {
-                fill: #fde06b;
-            }
 html, body, ol, ul, dd, dl, input, button, select, textarea {
     margin: 0;
     padding: 0; 
@@ -371,7 +350,7 @@ a:hover {
 }
 .info-wrapper .section-container .objectsLi {
 	width: 240px;
-	height: 210px;
+	height: 220px;
 	box-sizing: border-box;
 	overflow: auto;
 }
@@ -391,21 +370,10 @@ a:hover {
 	width: 360px; 
 	height: 220px;
 }
-.info-wrapper .section-container .heatmap .heatmapInfo {
-	position: absolute;
-	z-index: 799; 
-	top: 0; 
-	right: 0; 
-	left: 0; 
-	background-color: rgba(0, 0, 0, 0.5); 
-	padding: 0 15px; 
-	font-size: 12px;
-	color: #fff;
-}
 .info-wrapper .section-container .timeSpeedChart {
 	padding-left: 12px; 
 	width: 450px!important;
-	height: 240px!important;
+	height: 256px!important;
 	overflow: hidden;
 	box-sizing: border-box;
 }
@@ -459,10 +427,6 @@ a:hover {
 }
 .section-container #objects .select-selected {
 	border-radius: 0;
-}
-
-.section-container #heatmap .leaflet-left .leaflet-control {
-    margin-top: 44px;
 }
 
 /*for dark mode*/

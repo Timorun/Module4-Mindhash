@@ -5,22 +5,40 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 
-import com.auth0.jwt.*;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.mindhash.MindhashApp.DBConnectivity;
-import com.mindhash.MindhashApp.EncryptPassword;
 import com.mindhash.MindhashApp.Integration.Sendgrid;
-import com.mindhash.MindhashApp.Security.SecurityConstants;
-import com.mindhash.MindhashApp.TokenUtils;
+import com.mindhash.MindhashApp.Security.EncryptPassword;
+import com.mindhash.MindhashApp.Security.TokenUtils;
 import com.mindhash.MindhashApp.model.*;
 import com.sendgrid.Email;
 
 public class UserDao {
+
+	public static User getDetails(String token)  {
+		Connection conn = DBConnectivity.createConnection();
+		System.out.println(token);
+
+		try {
+			String infoquery = "SELECT email, isadmin, session_expire_time FROM users WHERE sessionToken LIKE ? ";
+			PreparedStatement st = conn.prepareStatement(infoquery);
+			st.setString(1, token);
+			ResultSet rs = st.executeQuery();
+			rs.next();
+			String email = rs.getString(1);
+			boolean isadmin = rs.getBoolean(2);
+			String sessionexpire = rs.getString(3);
+
+			return new User(email, sessionexpire, isadmin);
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+			return new User();
+		}
+	}
+
 	public static ResMsg register(User user) {
 		ResMsg res = new ResMsg();
 		res.setRes(false);
