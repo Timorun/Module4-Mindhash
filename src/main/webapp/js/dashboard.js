@@ -42,6 +42,8 @@ document.querySelector(".logo").addEventListener("click", function () {
 		pChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
 		pChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
 		pChart.update();
+		perChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+		perChart.update();
 		timeSpeedChart.data.datasets[0].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
 		bChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#006699"];
 		bChart.data.datasets[1].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
@@ -168,15 +170,15 @@ xmlhttp.onreadystatechange = function() {
 				labels: ['Pedestrians', 'Two Wheelers', 'Vehicles'],
 				datasets: [
 					{
-						label: "Maximum velocity",
+						label: "Maximum",
 						backgroundColor: currentTheme == "dark" ? ["#333"] : ["#006699"],
 						data: [velocity.pedestrians_max_velocity, velocity.wheelers_max_velocity, velocity.vehicles_max_velocity]
 					}, {
-						label: "Minimum velocity",
+						label: "Minimum",
 						backgroundColor: currentTheme == "dark" ? ["#336699"] : ["#990066"],
 						data: [velocity.pedestrians_min_velocity, velocity.wheelers_min_velocity, velocity.vehicles_min_velocity]
 					}, {
-						label: "Average velocity",
+						label: "Average",
 						backgroundColor: currentTheme == "dark" ? ["#999"] : ["#ccc"],
 						data: [velocity.pedestriansAvgVelocity, velocity.wheelersAvgVelocity, velocity.vehiclesAvgVelocity]
 					}
@@ -184,6 +186,11 @@ xmlhttp.onreadystatechange = function() {
 			},
 			options: {
 				plugins: {
+					title: {
+						display: true,
+						text: "Velocity of objects",
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333"
+					},
 					legend: {
 						display: true
 					}
@@ -245,19 +252,24 @@ $timeInterval.addEventListener("change", function() {
 						labels: Object.keys(objNum),
 						datasets: [
 							{
-								label: "one hour",
-								backgroundColor: currentTheme == "dark" ? ["#333"] : ["#ccc"],
+								label: "one-hour time slot",
+								backgroundColor: ["#555"],
 								data: Object.values(objNum)
 							},
 							{
-								label: "whole time",
-								backgroundColor: currentTheme == "dark" ? ["#ccc"] : ["#006699"],
+								label: "entire peroid",
+								backgroundColor: ["#888"],
 								data: Object.values(totalObjNum)
 							}
 						]
 					},
 					options: {
 						plugins: {
+							title: {
+								display: true,
+								text: "Number of objects",
+								color: currentTheme == "dark" ? "#c9d1d9" : "#333"
+							},
 							legend: {
 								display: true
 							}
@@ -289,7 +301,8 @@ $timeInterval.addEventListener("change", function() {
 				});
 				lineChartsArr.push(intervalChart);
 			} else {
-				
+				intervalChart.data.datasets[0].data = Object.values(objNum);
+				intervalChart.update();
 			}
 			if (timeSpeedChart == null) {
 				var firstId = -1,
@@ -308,7 +321,7 @@ $timeInterval.addEventListener("change", function() {
 					lonO = parseFloat(lon) + dLon * 180 / Math.PI;
 				coordinates.push([latO, lonO]);
 				
-				if (timeSpeedChart == null) {
+				if (timeSpeedChart == null || scatterChart == null) {
 					var obj = {x: 0, y: 0};
 					if (firstTime.length === 0 && firstId === -1) {
 						firstId = measurement.objectId;
@@ -342,7 +355,7 @@ $timeInterval.addEventListener("change", function() {
 						datasets: [
 							{
 								data: [objNum[type], totalObj - objNum[type]],
-								backgroundColor: currentTheme == "dark" ? ["#999", "#333"] : ["#006699", "#ccc"],
+								backgroundColor: ["#555", "#888"],
 								borderWidth: 0
 							},
 						]
@@ -367,6 +380,10 @@ $timeInterval.addEventListener("change", function() {
 						maintainAspectRatio: false
 					}
 				});
+			} else {
+				perChart.data.labels = [type + " (" + objNum[type] + ")", "other objects (" + (totalObj - objNum[type]) + ")"];
+				perChart.data.datasets[0].data = [objNum[type], totalObj - objNum[type]];
+				perChart.update();
 			}
 			if (heatmap == null) {
 				heatmap = L.map('heatmap').setView([lat, lon], 18);
@@ -397,18 +414,51 @@ $timeInterval.addEventListener("change", function() {
 					type: 'scatter',
 					data: {
 						datasets: [{
-										label: 'position relative to sensor',
+										label: 'object position',
 										data: xy,
-										backgroundColor: '#006699'
+										backgroundColor: '#888'
 									},
 									{
 										label: 'sensor',
 										data: [{x: 0, y:0}],
-										backgroundColor: '#ccc'
+										backgroundColor: '#555'
 									}
 								]
+					},
+					options: {
+						plugins : {
+							title: {
+								display: true,
+								text: "Position relative to sensor",
+								color: currentTheme == "dark" ? "#c9d1d9" : "#333"
+							}
+						},
+						scales: {
+							x: {
+								grid: {
+									borderColor: currentTheme == "dark" ? "#aaa" : "#333",
+									color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
+								},
+								ticks: {
+									color: currentTheme == "dark" ? "#aaa" : "#333",
+								}
+							},
+							y: {
+								grid: {
+									borderColor: currentTheme == "dark" ? "#aaa" : "#333",
+									color: currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6"
+								},
+								ticks: {
+									color: currentTheme == "dark" ? "#aaa" : "#333",
+								}
+							}
+						},
+						color: currentTheme == "dark" ? "#c9d1d9" : "#333",
+						responsive: true,
+						maintainAspectRatio: false,
 					}
-				})
+				});
+				lineChartsArr.push(scatterChart);
 			}
 		} else if (this.readyState == 4 && this.status == 511) {
 			sessionStorage.removeItem("sessionToken");
@@ -492,24 +542,33 @@ $objList.onclick = function(e) {
 	if(target.tagName.toLowerCase() === "li"){
 		var id = parseInt(target.getAttribute("attr-id")),
 			name = target.innerHTML,
-			match = 0,
+			//match = 0,
 			time = new Array(),
-			speed = new Array();
+			speed = new Array(),
+			xy = new Array();
 		for (var m of measurements) {
-			if (m.objectId === id && match !== 2) {
+			//if (m.objectId === id && match !== 2) {
+			if (m.objectId === id) {
 				time.push(m.timeWithoutDate.slice(0, 8));
 				speed.push(m.velocity);
-				match = 1;
+				var position = {x: 0, y: 0};
+				position.x = m.x;
+				position.y = m.y;
+				xy.push(position);
+			}
+				/*match = 1;
 			} else if (m.objectId !== id && match === 1) {
 				match = 2;
 			} else if (m.objectId !== id && match === 2) {
 				break;
-			}
+			}*/
 		}
 		timeSpeedChart.data.labels = time;
 		timeSpeedChart.data.datasets[0].data = speed;
 		timeSpeedChart.options.plugins.title.text = "Speed (m/s) of " + name;
 		timeSpeedChart.update();
+		scatterChart.data.datasets[0].data = xy;
+		scatterChart.update();
 	}
 }
 
