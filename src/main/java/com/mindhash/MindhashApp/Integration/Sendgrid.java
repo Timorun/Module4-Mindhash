@@ -1,6 +1,9 @@
 package com.mindhash.MindhashApp.Integration;
 import com.mindhash.MindhashApp.model.ResMsg;
 import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 
 import java.io.IOException;
 

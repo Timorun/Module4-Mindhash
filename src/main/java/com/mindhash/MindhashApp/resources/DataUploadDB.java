@@ -41,8 +41,9 @@ public class DataUploadDB {
         char[] buffer = new char[4096];
         try {
             InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
-            for (int cnt; (cnt = reader.read(buffer)) > 0; )
+            for (int cnt; (cnt = reader.read(buffer)) > 0;) {
                 sb.append(buffer, 0, cnt);
+            }
         } finally {
             stream.close();
         }
@@ -199,10 +200,16 @@ public class DataUploadDB {
             message = "Records inserted successfully";
         } catch (SQLException e) {
             message = e.getMessage();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.
+            		status(Response.Status.INTERNAL_SERVER_ERROR)
+            		.entity(message)
+            		.build();
         }
         
-        return Response.status(Response.Status.OK).entity(message).build();
+        return Response
+        		.status(Response.Status.OK)
+        		.entity(message)
+        		.build();
      }
 
 }

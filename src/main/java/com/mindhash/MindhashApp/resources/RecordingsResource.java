@@ -34,14 +34,22 @@ public class RecordingsResource {
 	@GET
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response getRecordings(@Context ContainerRequestContext request) {
+		
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.checkUserByToken(token) == null) {
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
 			List<Recording> recoridings = new ArrayList<Recording>();
 			recoridings.addAll(RecordingDao.instance.getModel().values());
-			return Response.status(Response.Status.OK).entity(recoridings).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(recoridings)
+					.build();
 		}
+		
 	}
 
 }

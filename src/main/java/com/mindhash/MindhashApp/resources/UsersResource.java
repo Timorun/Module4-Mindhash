@@ -26,7 +26,10 @@ public class UsersResource {
 		String sessionToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.checkUserByToken(sessionToken) == null) {
 			System.out.println("Token not valid");
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
 			System.out.println("Token validated sending user details");
 			User user = UserDao.getDetails(sessionToken);
