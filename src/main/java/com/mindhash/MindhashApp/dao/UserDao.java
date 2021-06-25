@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -238,23 +236,9 @@ public class UserDao {
 		return result;
 	}
 
-	public static ArrayList<String> getMails()  {
-		Connection conn = DBConnectivity.createConnection();
-		try {
-			String mailquery = "SELECT email FROM users";
-			PreparedStatement st = conn.prepareStatement(mailquery);
-			ResultSet rs = st.executeQuery();
-			ArrayList<String> mails = new ArrayList<String>();
-			while (rs.next()) {
-				String email = rs.getString(1);
-				mails.add(email);
-			}
-
-			return mails;
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
-			return new ArrayList<String>();
-		}
+	public static String logout(ContainerRequestContext request) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		return SessionTokenDao.setTokenExpired(token);
 	}
 
 }

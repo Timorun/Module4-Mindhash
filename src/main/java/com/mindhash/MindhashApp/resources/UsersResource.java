@@ -4,26 +4,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.*;
 
-import com.mindhash.MindhashApp.dao.RecordingDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.UserDao;
 import com.mindhash.MindhashApp.model.NewPassword;
-import com.mindhash.MindhashApp.model.Recording;
 import com.mindhash.MindhashApp.model.ResMsg;
 import com.mindhash.MindhashApp.model.User;
 import com.mindhash.MindhashApp.model.UserJAXB;
 import com.mindhash.MindhashApp.model.UserRegJAXB;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Path("/user")
 public class UsersResource {
-	/*@Context
-	UriInfo uriInfo;
-	@Context
-	Request request;*/
-
+	
 	@GET
 	@Path("/info")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -38,26 +29,13 @@ public class UsersResource {
 		} else {
 			System.out.println("Token validated sending user details");
 			User user = UserDao.getDetails(sessionToken);
-			return Response.status(Response.Status.OK).entity(user).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(user)
+					.build();
 		}
 	}
 
-	@GET
-	@Path("/mails")
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Object mails(@Context ContainerRequestContext request) {
-		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		// only allow admin
-		if (!SessionTokenDao.checkUserByToken(token)) {
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
-		} else {
-			System.out.println("Token of admin, can get mails");
-			List<String> mails = new ArrayList<>(UserDao.getMails());
-			return Response.status(Response.Status.OK).entity(mails).build();
-		}
-	}
-
-	
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -80,6 +58,16 @@ public class UsersResource {
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public ResMsg autoLogin(@Context ContainerRequestContext request) {
 		return UserDao.autologin(request);
+	}
+	
+	@POST
+	@Path("/logout")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response logout(@Context ContainerRequestContext request) {
+		return Response
+				.status(Response.Status.OK)
+				.entity(UserDao.logout(request))
+				.build();
 	}
 
 	@POST
