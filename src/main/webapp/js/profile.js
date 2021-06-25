@@ -50,8 +50,6 @@ xmlhttp.onreadystatechange = function() {
                             "                <section class=\"form-wrapper\" id=\"accessForm\"><h4> Grant access to a recording</h4></section></div>";
             document.getElementById('adminFeatures').innerHTML += htmlStr;
 
-
-
             //get list of usermails
             let xmlhttp2 = new XMLHttpRequest();
             xmlhttp2.onreadystatechange = function () {

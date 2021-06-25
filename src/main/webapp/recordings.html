@@ -18,7 +18,7 @@
 		<section class="wrapper mt-64">
 			<ul class="recordings-list">
 				<li>Recordings</li>
-				<li id="title" class="box-layout">
+				<li class="box-layout">
 					<div class="box-col">#</div>
 					<div class="box-col">Start time</div>
 					<div class="box-col">End time</div>
@@ -29,8 +29,31 @@
 		</section>
 		<script>
 			var token = sessionStorage.getItem("sessionToken");
+			let pageNum = 1,
+				loading = false;
 			if (token != null) {
-				let xmlhttpaccess = new XMLHttpRequest();
+				loadRecordings(pageNum);
+			} else {
+				sessionStorage.removeItem("sessionToken");
+				location.href = "login.html";
+			}
+
+			window.onscroll= function(){
+				if (!loading) {
+					var scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight),
+						scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop,
+						clientHeight = window.innerHeight || Math.min(document.documentElement.clientHeight,document.body.clientHeight);
+					
+					if(clientHeight + scrollTop >= scrollHeight){
+						loading = true;
+						pageNum++;
+						loadRecordings(pageNum);
+					}
+				}
+			}
+			
+			function loadRecordings(pageNum) {
+				let xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = this.responseText,
@@ -48,18 +71,19 @@
 											+ '</a>'
 										+ '</li>'
 						}
-						document.querySelector("#title").insertAdjacentHTML("afterend", htmlStr);
+						document.querySelector(".recordings-list").insertAdjacentHTML("beforeend", htmlStr);
+					    loading = false;
 					} else if (this.readyState == 4 && this.status == 511) {
 						location.href = "login.html";
+					} else if (this.readyState == 4 && this.status != 200) {
+						loading = false;
+						pageNum--;
 					}
 				}
-				xmlhttp.open("GET", "/mindhash/rest/recordings", true);
+				xmlhttp.open("GET", "/mindhash/rest/recordings?pageNum=" + pageNum, true);
 				xmlhttp.setRequestHeader("Accept", "application/json");
 				xmlhttp.setRequestHeader("Authorization", token);
 				xmlhttp.send();
-			} else {
-				sessionStorage.removeItem("sessionToken");
-				location.href = "login.html";
 			}
 		</script>
 	</body>

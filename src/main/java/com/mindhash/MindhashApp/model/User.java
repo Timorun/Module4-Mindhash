@@ -1,10 +1,10 @@
 package com.mindhash.MindhashApp.model;
 
 public class User {
+	private int id;
     private String email;
     private String password;
     private String salt;
-    private int id;
     private String token;
     private String sessionexpire;
     private boolean isadmin;
@@ -21,6 +21,14 @@ public class User {
         this.email = email;
         this.sessionexpire = sessionexpire;
         this.isadmin = isadmin;
+    }
+    
+    public int getId() { 
+    	return id; 
+    }
+    
+    public void setId(int id) { 
+    	this.id = id; 
     }
 
     public String getEmail() {
@@ -43,15 +51,19 @@ public class User {
         return salt;
     }
 
-    public String getToken() {return token;}
+    public String getToken() {
+    	return token;
+    }
 
     public void setSalt(String salt) {
         this.salt = salt;
     }
 
-    public int getId() { return id; }
+    public String getSessionexpire() {
+    	return sessionexpire;
+    }
 
-    public String getSessionexpire() {return sessionexpire;}
-
-    public boolean isIsadmin() {return isadmin;}
+    public boolean isIsadmin() {
+    	return isadmin;
+    }
 }

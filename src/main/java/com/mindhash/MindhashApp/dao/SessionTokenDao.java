@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import com.mindhash.MindhashApp.DBConnectivity;
+import com.mindhash.MindhashApp.model.User;
 
 public class SessionTokenDao {
 	private final static int EXPIRY = 60 * 60;
@@ -33,13 +34,13 @@ public class SessionTokenDao {
 		}
 	}
 	
-	public static String getUserByToken(String token) {
-		String res = null;
+	public static User getUserByToken(String token) {
+		User user = new User();
 		try {
 			Connection conn = DBConnectivity.createConnection();
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			String query = "select email, session_expire_time from users where sessiontoken = ? limit 1";
+			String query = "select id, email from users where sessiontoken = ? limit 1";
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setString(1, token);
 			st.execute();
@@ -47,7 +48,8 @@ public class SessionTokenDao {
 			conn.commit();
 			
 			if (resultSet.next()) {
-				res = resultSet.getString(1);
+				user.setId(resultSet.getInt("id"));
+				user.setEmail(resultSet.getString("email"));
 			}
 			conn.close();
 		} catch (SQLException e) {
@@ -55,7 +57,7 @@ public class SessionTokenDao {
 			e.printStackTrace();
 		}
 		
-		return res;
+		return user;
 	}
 	
 	public static String setTokenExpired(String token) {

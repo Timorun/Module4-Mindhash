@@ -5,20 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.model.Recording;
 
 public class RecordingDao {
+	private static final int pageSize = 10;
 
-    private static Map<Integer, Recording> contentProvider = new HashMap<>();
-
-    public static Map<Integer, Recording> getRecordings(String token) {
+    public static List<Recording> getRecordings(String token, int pageNum) {
     	Connection conn = DBConnectivity.createConnection();
     	PreparedStatement st = null;
     	ResultSet resultSet = null;
+    	List<Recording> contentProvider = new ArrayList<>();
         try {
             conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             conn.setAutoCommit(false);
@@ -28,14 +27,17 @@ public class RecordingDao {
 
         try {
             //getlist of accessible recordingIDs
-            ArrayList<Integer> accessibleIDs = (ArrayList<Integer>) accessDao.getRecordings(token);
+            //ArrayList<Integer> accessibleIDs = (ArrayList<Integer>) accessDao.getRecordings(token);
 
             //get all recording table columns
-            String query = "select * from recording";
+            String query = "select distinct * from recording r, recordingaccess ra where ra.email = ? and ra.recording_id = r.recording_id limit ? offset ?";
             st = conn.prepareStatement(query);
+            st.setString(1, SessionTokenDao.getUserByToken(token).getEmail());
+            st.setInt(2, pageSize);
+            st.setInt(3, pageSize * (pageNum - 1));
             resultSet = st.executeQuery();
             while (resultSet.next()) {
-                if (accessibleIDs.contains(resultSet.getInt("recording_id"))){
+                //if (accessibleIDs.contains(resultSet.getInt("recording_id"))){
                     System.out.println(resultSet.getDouble(2));
                     Recording recording = new Recording();
                     int recordingId = resultSet.getInt("recording_id");
@@ -48,8 +50,8 @@ public class RecordingDao {
                     recording.setResolution(resultSet.getString("resolution"));
                     recording.setFrameRate(resultSet.getInt("framerate"));
 
-                    contentProvider.put(recordingId, recording);
-                }
+                    contentProvider.add(recording);
+                //}
             }
             conn.close();
         } catch (SQLException e) {
@@ -66,7 +68,4 @@ public class RecordingDao {
         return contentProvider;
     }
     
-    public Map<Integer, Recording> getModel(){
-        return contentProvider;
-    }
 }
