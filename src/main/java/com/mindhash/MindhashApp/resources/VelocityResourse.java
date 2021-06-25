@@ -30,7 +30,10 @@ public class VelocityResourse {
 										 @Context ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.checkUserByToken(token) == null) {
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		}
 		Connection conn = DBConnectivity.createConnection();
     	PreparedStatement st = null;

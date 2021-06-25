@@ -156,7 +156,7 @@ xmlObjNum.open("GET", "/mindhash/rest/objects/" + id + "/" + date, true);
 xmlObjNum.setRequestHeader("Accept", "application/json");
 xmlObjNum.setRequestHeader("Authorization", token);
 xmlObjNum.send();
-	
+
 let xmlhttp = new XMLHttpRequest();
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
