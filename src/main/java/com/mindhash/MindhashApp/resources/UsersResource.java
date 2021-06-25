@@ -18,9 +18,10 @@ public class UsersResource {
 	Request request;*/
 
 	@GET
-	@Path("{sessionToken}")
+	@Path("/info")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Response userinfo(@PathParam("sessionToken") String sessionToken) {
+	public Response userinfo(@Context ContainerRequestContext request) {
+		String sessionToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.checkUserByToken(sessionToken) == null) {
 			System.out.println("Token not valid");
 			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();

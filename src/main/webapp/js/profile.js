@@ -85,7 +85,8 @@ xmlhttp.onreadystatechange = function() {
         location.href = "login.html";
     }
 }
-xmlhttp.open("GET", "/mindhash/rest/user/"+token, true);
+xmlhttp.open("GET", "/mindhash/rest/user/info", true);
+xmlhttp.setRequestHeader("Authorization", token);
 xmlhttp.send();
 
 function grantAccess() {
