@@ -40,7 +40,7 @@ public class SessionTokenDao {
 			Connection conn = DBConnectivity.createConnection();
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			String query = "select id, email from users where sessiontoken = ? limit 1";
+			String query = "select id, email, isadmin from users where sessiontoken = ? limit 1";
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setString(1, token);
 			st.execute();
@@ -50,6 +50,7 @@ public class SessionTokenDao {
 			if (resultSet.next()) {
 				user.setId(resultSet.getInt("id"));
 				user.setEmail(resultSet.getString("email"));
+				user.setIsadmin(resultSet.getBoolean("isadmin"));
 			}
 			conn.close();
 		} catch (SQLException e) {

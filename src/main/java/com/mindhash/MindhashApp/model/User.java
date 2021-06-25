@@ -63,7 +63,11 @@ public class User {
     	return sessionexpire;
     }
 
-    public boolean isIsadmin() {
+    public boolean getIsadmin() {
     	return isadmin;
+    }
+    
+    public void setIsadmin(boolean isadmin) {
+    	this.isadmin = isadmin;
     }
 }

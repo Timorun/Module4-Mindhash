@@ -68,4 +68,60 @@ public class RecordingDao {
         return contentProvider;
     }
     
+    public static List<Recording> getAllRecordings(String token) {
+    	List<Recording> contentProvider = new ArrayList<>();
+    	if (!SessionTokenDao.getUserByToken(token).getIsadmin()) {
+    		//return empty list
+    		return contentProvider;
+    	}
+    	Connection conn = DBConnectivity.createConnection();
+    	PreparedStatement st = null;
+    	ResultSet resultSet = null;
+        try {
+            conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            conn.setAutoCommit(false);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        try {
+            //getlist of accessible recordingIDs
+            //ArrayList<Integer> accessibleIDs = (ArrayList<Integer>) accessDao.getRecordings(token);
+
+            //get all recording table columns
+            String query = "select * from recording";
+            st = conn.prepareStatement(query);
+            resultSet = st.executeQuery();
+            while (resultSet.next()) {
+                //if (accessibleIDs.contains(resultSet.getInt("recording_id"))){
+                    System.out.println(resultSet.getDouble(2));
+                    Recording recording = new Recording();
+                    int recordingId = resultSet.getInt("recording_id");
+                    recording.setRecordingID(recordingId);
+                    recording.setLatitude(resultSet.getDouble("latitude"));
+                    recording.setLongitude(resultSet.getDouble("longitude"));
+                    recording.setDate(resultSet.getString("date"));
+                    recording.setStartTime(resultSet.getString("start_time"));
+                    recording.setEndTime(resultSet.getString("end_time"));
+                    recording.setResolution(resultSet.getString("resolution"));
+                    recording.setFrameRate(resultSet.getInt("framerate"));
+
+                    contentProvider.add(recording);
+                //}
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                st.close();
+                conn.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+        return contentProvider;
+    }
+    
 }

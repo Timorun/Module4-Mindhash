@@ -35,6 +35,18 @@ public class RecordingsResource {
 		}
 		
 	}
+	
+	@GET
+	@Path("/all")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response getAllRecordings(@Context ContainerRequestContext request) {
+		
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		return Response
+				.status(Response.Status.OK)
+				.entity(RecordingDao.getAllRecordings(token))
+				.build();
+	}
 
 }
 

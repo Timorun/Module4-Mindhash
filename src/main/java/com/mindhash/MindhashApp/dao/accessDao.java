@@ -4,14 +4,11 @@ import com.mindhash.MindhashApp.DBConnectivity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class accessDao {
 
-    public static List<Integer> getRecordings(String token) {
+    /*public static List<Integer> getRecordings(String token) {
         Connection conn = DBConnectivity.createConnection();
         ArrayList<Integer> accessibleids = new ArrayList<>();
 
@@ -31,7 +28,7 @@ public class accessDao {
             e.printStackTrace();
         }
         return accessibleids;
-    }
+    }*/
 
     public static void giveAccess(String email, Integer id) {
         Connection conn = DBConnectivity.createConnection();

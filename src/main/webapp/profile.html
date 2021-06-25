@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
         <link rel="icon" href="img/mindhash.ico" type="image/x-icon">
-        <title id="title">Profile Page | MindHash</title>
+        <title>Profile Page | MindHash</title>
         <link type="text/css" rel="stylesheet" href="css/common-style.css">
     </head>
     <body>
@@ -15,15 +15,52 @@
         </header>
         <script src="js/switch-mode.js"></script>
 
-
         <section class="info-wrapper mt-64">
             <div class="section-container">
                 <div class="general-info">
                     <div id="general-tit" class="title"><h1>Your Profile</h1></div>
+					<section class="form-wrapper">
+                        <label> Email:</label>
+                        <div id="email" class="form-input-field"></div>
+                        <label> Admin rights:</label>
+                        <div id="adminRight" class="form-input-field"></div>
+                        <!--<label> Your session will expire on:</label>
+                        <div type="text" class="form-input-field">"+ user.sessionexpire +"</div>-->
+                    </section>
                 </div>
             </div>
         </section>
-        <section id="adminFeatures" class="info-wrapper mt-64">
+        <section id="adminFeatures" class="info-wrapper hide">
+			<h1>Admin Features</h1>
+			<div id="uploadform" class="section-container">
+				<section class="form-wrapper"><h4>Upload a recording</h4>
+					<form action="/mindhash/rest/upload/json" method="post" enctype="multipart/form-data" onsubmit="return validate()">
+						<label for="latitude">Latitude:</label>
+						<input id="latitude" name="latitude" type="text" placeholder="(e.g. 72.832...)" class="form-input-field" />
+						<label for="longitude">Longitude:</label>
+						<input id="longitude" name ="longitude" type="text" placeholder="(e.g. 25.093...)" class="form-input-field" />
+						<label for="framerate">Framerate:</label>
+						<input type="text" id="framerate" name ="framerate" placeholder="(e.g. 60)" name="framerate" class="form-input-field">
+						<label for="resolution">Resolution:</label>
+						<input type="text" id="resolution" name ="resolution" placeholder="(e.g. 1280x800)" name="resolution" class="form-input-field">
+						<label for="file">JSON of the recording:</label>
+						<input type="file" id="file" name = "file">
+						<input type="submit" value="Upload" class="form-submit-btn">
+						<div id="err-msg" class="err-msg hide"></div>
+					</form>
+				</section>
+			</div>
+			<div class="section-container">
+			    <section  id="accessForm" class="form-wrapper">
+					<h4> Grant access to a recording</h4>
+					<label for="recordings">email:  </label>
+					<select name="mails" id="mails"></select>
+					<label for="recordings">RecordingID:  </label>
+					<select name="recordingids" id="recordingids"></select>
+					<button id="grant" class="form-submit-btn" onclick="grantAccess()">Grant Access</button>
+					<div id="responsemsg" class="err-msg hide"></div>
+				</section>
+			</div>
         </section>
         <script src="js/profile.js"></script>
         <script src="js/upload.js"></script>

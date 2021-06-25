@@ -18,7 +18,7 @@ import com.mindhash.MindhashApp.model.*;
 
 public class UserDao {
 
-	public static User getDetails(String token)  {
+	/*public static User getDetails(String token)  {
 		Connection conn = DBConnectivity.createConnection();
 		System.out.println(token);
 
@@ -37,7 +37,7 @@ public class UserDao {
 			throwables.printStackTrace();
 			return new User();
 		}
-	}
+	}*/
 
 	public static ArrayList<String> getMails() {
 		Connection conn = DBConnectivity.createConnection();

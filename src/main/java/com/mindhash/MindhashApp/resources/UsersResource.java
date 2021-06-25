@@ -19,7 +19,7 @@ public class UsersResource {
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response userinfo(@Context ContainerRequestContext request) {
 		String sessionToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.checkUserByToken(sessionToken) == null) {
+		if (SessionTokenDao.getUserByToken(sessionToken) == null) {
 			System.out.println("Token not valid");
 			return Response
 					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
@@ -27,7 +27,7 @@ public class UsersResource {
 					.build();
 		} else {
 			System.out.println("Token validated sending user details");
-			User user = UserDao.getDetails(sessionToken);
+			User user = SessionTokenDao.getUserByToken(sessionToken);
 			return Response
 					.status(Response.Status.OK)
 					.entity(user)
@@ -42,7 +42,10 @@ public class UsersResource {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		// only allow admin
 		if (!SessionTokenDao.checkUserByToken(token)) {
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
 			System.out.println("Token of admin, can get mails");
 			List<String> mails = new ArrayList<>(UserDao.getMails());
