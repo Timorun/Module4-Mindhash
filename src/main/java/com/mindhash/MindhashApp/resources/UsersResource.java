@@ -1,6 +1,5 @@
 package com.mindhash.MindhashApp.resources;
 
-import javax.sound.midi.Soundbank;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.*;
@@ -13,10 +12,10 @@ import com.mindhash.MindhashApp.model.User;
 
 @Path("/user")
 public class UsersResource {
-	@Context
+	/*@Context
 	UriInfo uriInfo;
 	@Context
-	Request request;
+	Request request;*/
 
 	@GET
 	@Path("{sessionToken}")
@@ -61,12 +60,16 @@ public class UsersResource {
 	@Path("/password-reset")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg resetPassword(User user) { return new UserDao().resetPasssword(user); }
+	public ResMsg resetPassword(User user) { 
+		return new UserDao().resetPasssword(user); 
+	}
 
 	@POST
 	@Path("/new-password")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg newPassword(NewPassword newPassword) { return new UserDao().confirmNewPassword(newPassword); }
+	public ResMsg newPassword(NewPassword newPassword) { 
+		return new UserDao().confirmNewPassword(newPassword); 
+	}
 
 }
