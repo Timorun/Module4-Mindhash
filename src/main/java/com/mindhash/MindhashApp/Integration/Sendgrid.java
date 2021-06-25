@@ -11,14 +11,14 @@ public class Sendgrid {
     public String PASSWORD_RESET_BODY = "Hi, "
             + "Someone has requested to reset your password. If it was not you, please contact us as soon as possible, "
             + "otherwise here is your password reset link: "
-            + "http://localhost:8080/mindhash/verify-email?token=$token";
+            + "http://localhost:8080/mindhash/new-password.html?token=$token";
 
     public String EMAIL_VERIFICATION_SUBJECT = "Email verification required";
 
     public String EMAIL_VERIFICATION_BODY = "Hi, "
             + "Thank you for registering with Mindhash. There is one last step required in order to complete your registration, "
             + "please click on the following link and log in with your new credentials: "
-            + "http://localhost:8080/mindhash/login.html?token=$token";
+            + "http://localhost:8080/mindhash/email-verification-sucess.html?token=$token";
 
     public boolean sendPasswordRequest(String email, String token, ResMsg res) {
         boolean result = false;

@@ -6,11 +6,7 @@ import javax.ws.rs.core.*;
 
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.UserDao;
-import com.mindhash.MindhashApp.model.NewPassword;
-import com.mindhash.MindhashApp.model.ResMsg;
-import com.mindhash.MindhashApp.model.User;
-import com.mindhash.MindhashApp.model.UserJAXB;
-import com.mindhash.MindhashApp.model.UserRegJAXB;
+import com.mindhash.MindhashApp.model.*;
 
 @Path("/user")
 public class UsersResource {
@@ -73,6 +69,14 @@ public class UsersResource {
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public ResMsg newPassword(NewPassword newPassword) { 
 		return new UserDao().confirmNewPassword(newPassword); 
+	}
+
+	@POST
+	@Path("/verify-email")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public ResMsg verifyEmail(EmailTokenJAXB emailToken) {
+		return new UserDao().verifyEmail(emailToken);
 	}
 
 }

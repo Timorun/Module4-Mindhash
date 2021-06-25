@@ -67,6 +67,10 @@ public class UserDao {
                 if (i > 0) {
 					//if all data has been inserted successfully in the db, generate a unique email verification token
 					String emailToken = new TokenUtils().generateEmailVerificationToken();
+					EmailToken emailToken1 = new EmailToken();
+					emailToken1.setToken(emailToken);
+					emailToken1.setUser(user);
+					//insert token into the db
 					EmailVerificationTokenDao.setEmailToken(emailToken, user.getEmail());
 					boolean returnValue = new Sendgrid().sendEmailVerification(user.getEmail(), emailToken);
 					if (returnValue) {
@@ -184,7 +188,7 @@ public class UserDao {
 	private boolean requestNewPassword(String token, String password, ResMsg res) {
 		boolean result = false;
 		//check that the password token hasn't expired i.e. less than 3600s passed
-		if (TokenUtils.isTokenExpired(token, res)) {
+		if (TokenUtils.isTokenExpired(token)) {
 			res.setMsg("The password reset token has expired. Please try again.");
 			return result;
 		}
@@ -233,6 +237,29 @@ public class UserDao {
 
 		//delete token after it has been used
 		PasswordResetTokenDao.deletePassToken(token);
+		return result;
+	}
+
+    public ResMsg verifyEmail(EmailTokenJAXB emailToken) {
+		ResMsg res = new ResMsg();
+		res.setRes(false);
+		boolean isVerified = verifyEmailToken(emailToken.geToken());
+		if (isVerified) {
+			res.setRes(true);
+		}
+		return res;
+    }
+
+	private boolean verifyEmailToken(String emailToken) {
+		boolean result = false;
+		String email = EmailVerificationTokenDao.getUserByEmailToken(emailToken);
+		if (email != null) {
+			if (!TokenUtils.isTokenExpired(emailToken)) {
+				EmailVerificationTokenDao.deleteEmailToken(emailToken);
+				EmailVerificationTokenDao.setEmailVerifiedStatus(email);
+				result = true;
+			}
+		}
 		return result;
 	}
 
