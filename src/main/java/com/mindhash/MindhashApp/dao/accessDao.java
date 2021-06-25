@@ -16,8 +16,8 @@ public class accessDao {
         ArrayList<Integer> accessibleids = new ArrayList<>();
 
         try {
-            String idquery = "SELECT a.recording_id" +
-                    "FROM recordingaccess a, users u" +
+            String idquery = "SELECT a.recording_id " +
+                    "FROM recordingaccess a, users u " +
                     "WHERE u.sessiontoken = ? AND u.email = a.email";
             PreparedStatement st = conn.prepareStatement(idquery);
             st.setString(1, token);
@@ -26,6 +26,7 @@ public class accessDao {
                 accessibleids.add(rs.getInt(1));
             }
 
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,6 +43,7 @@ public class accessDao {
             st.setInt(1, id);
             st.setString(2, email);
             st.executeUpdate();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

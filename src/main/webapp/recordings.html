@@ -30,7 +30,7 @@
 		<script>
 			var token = sessionStorage.getItem("sessionToken");
 			if (token != null) {
-				let xmlhttp = new XMLHttpRequest();
+				let xmlhttpaccess = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						var response = this.responseText,

@@ -50,7 +50,6 @@ public class UserDao {
 				String email = rs.getString(1);
 				mails.add(email);
 			}
-
 			return mails;
 		} catch (SQLException throwables) {
 			throwables.printStackTrace();

@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.dao.RecordingDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
+import com.mindhash.MindhashApp.dao.accessDao;
 import com.mindhash.MindhashApp.model.Recording;
 
 @Path("/recordings")
@@ -43,7 +44,7 @@ public class RecordingsResource {
 					.build();
 		} else {
 			List<Recording> recoridings = new ArrayList<Recording>();
-			recoridings.addAll(RecordingDao.instance.getModel().values());
+			recoridings.addAll(RecordingDao.getRecordings(token).values());
 			return Response
 					.status(Response.Status.OK)
 					.entity(recoridings)
