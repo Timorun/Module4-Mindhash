@@ -38,9 +38,13 @@ public class UserDao {
 		}
 	}
 
-	public static ResMsg register(User user) {
+	public static ResMsg register(UserRegJAXB user) {
 		ResMsg res = new ResMsg();
-		res.setRes(false);
+		if (!user.getPassword().equals(user.getConfirmPassword())) {
+			res.setRes(false);
+			res.setMsg("Confirm Password should match with Password");
+			return res;
+		}
 		
 		Connection conn = DBConnectivity.createConnection();
 		try {
@@ -67,19 +71,22 @@ public class UserDao {
 					boolean returnValue = new Sendgrid().sendEmailVerification(user.getEmail(), emailToken);
 					if (returnValue) {
 						res.setRes(true);
+						res.setMsg("Registration successul");
 					}
                 } else {
                 	res.setRes(false);
+                	res.setMsg("Registration unsuccessul");
 				}
             }
             conn.close();
         } catch (SQLException e) {
         	res.setRes(false);
+        	res.setMsg(e.getMessage());
         }
 		return res;
 	}
 	
-	public static ResMsg login(User user) {
+	public static ResMsg login(UserJAXB user) {
 		ResMsg res = new ResMsg();
 		
 		try {
@@ -123,7 +130,7 @@ public class UserDao {
 		return res;
 	}
 
-	public ResMsg resetPasssword(User user) {
+	public ResMsg resetPasssword(UserJAXB user) {
 		ResMsg res = new ResMsg();
 		res.setRes(false);
 
@@ -147,7 +154,7 @@ public class UserDao {
 		return res;
 	}
 
-	private boolean requestPasswordReset(User user, ResMsg res) {
+	private boolean requestPasswordReset(UserJAXB user, ResMsg res) {
 		boolean result = false;
 		//generate password reset token
 		String token = new TokenUtils().generatePasswordResetToken();

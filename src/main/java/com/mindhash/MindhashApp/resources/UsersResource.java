@@ -9,6 +9,8 @@ import com.mindhash.MindhashApp.dao.UserDao;
 import com.mindhash.MindhashApp.model.NewPassword;
 import com.mindhash.MindhashApp.model.ResMsg;
 import com.mindhash.MindhashApp.model.User;
+import com.mindhash.MindhashApp.model.UserJAXB;
+import com.mindhash.MindhashApp.model.UserRegJAXB;
 
 @Path("/user")
 public class UsersResource {
@@ -37,7 +39,7 @@ public class UsersResource {
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg register(User user) {
+	public ResMsg register(UserRegJAXB user) {
 		return UserDao.register(user);
 	}
 	
@@ -45,7 +47,7 @@ public class UsersResource {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg login(User user) {
+	public ResMsg login(UserJAXB user) {
 		return UserDao.login(user);
 	}
 	
@@ -61,7 +63,7 @@ public class UsersResource {
 	@Path("/password-reset")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg resetPassword(User user) { 
+	public ResMsg resetPassword(UserJAXB user) { 
 		return new UserDao().resetPasssword(user); 
 	}
 
