@@ -14,27 +14,17 @@
             <div class="box-col"><a href="profile.html" class="avatar"></a></div>
         </header>
         <script src="js/switch-mode.js"></script>
-		
-		<section class="info-wrapper mt-64">
-			<div id="uploadform" class="section-container">
-				<div class="form-wrapper">
-					<form action="/mindhash/rest/upload/json" method="post" enctype="multipart/form-data" onsubmit="return validate()">
-						<label for="latitude">Latitude:</label>
-						<input id="latitude" name="latitude" type="text" placeholder="(e.g. 72.832...)" class="form-input-field" />
-						<label for="longitude">Longitude:</label>
-						<input id="longitude" name ="longitude" type="text" placeholder="(e.g. 25.093...)" class="form-input-field" />
-						<label for="framerate">Framerate:</label>
-						<input type="text" id="framerate" name ="framerate" placeholder="(e.g. 60)" name="framerate" class="form-input-field">
-						<label for="resolution">Resolution:</label>
-						<input type="text" id="resolution" name ="resolution" placeholder="(e.g. 1280x800)" name="resolution" class="form-input-field">
-						<label for="file">JSON of the recording:</label>
-						<input type="file" id="file" name = "file">
-						<input type="submit" value="Upload" class="form-submit-btn">
-						<div id="err-msg" class="err-msg hide"></div>
-					</form>
-				</div>
-			</div>
-		</div>
+
+
+        <section class="info-wrapper mt-64">
+            <div class="section-container">
+                <div class="general-info">
+                    <div id="general-tit" class="title"><h1>Your Profile</h1></div>
+                </div>
+            </div>
+        </section>
+        <section id="adminFeatures" class="info-wrapper mt-64">
+        </section>
         <script src="js/profile.js"></script>
         <script src="js/upload.js"></script>
     </body>

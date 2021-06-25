@@ -58,8 +58,8 @@ public class SessionTokenDao {
 		return res;
 	}
 	
-	public static String checkUserByToken(String token) {
-		String res = null;
+	public static Boolean checkUserByToken(String token) {
+		Boolean res = null;
 		Connection conn = DBConnectivity.createConnection();
 		
 		try {
@@ -67,7 +67,7 @@ public class SessionTokenDao {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH); 
 			conn.setAutoCommit(false);
 			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-			String query = "select email, session_expire_time from users where sessiontoken = ? limit 1";
+			String query = "select email, session_expire_time, isadmin from users where sessiontoken = ? limit 1";
 			PreparedStatement st = conn.prepareStatement(query);
 			st.setString(1, token);
 			st.execute();
@@ -86,11 +86,11 @@ public class SessionTokenDao {
 						conn.commit();
 						conn.setAutoCommit(true);
 						conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-						res = resultSet.getString("email");
+						res = resultSet.getBoolean("isadmin");
 					}
 				}
 			}
-			
+
 			conn.close();
 		} catch (SQLException | ParseException e) {
 			try {
@@ -103,7 +103,7 @@ public class SessionTokenDao {
 		
 		return res;
 	}
-	
+
 	public static Date addSecondsToDate(Date currentTime, Integer expiry) {
 		return new Date(currentTime.getTime() + expiry * 1000);
 	}
