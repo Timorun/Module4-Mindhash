@@ -10,11 +10,7 @@ import com.mindhash.MindhashApp.model.*;
 
 @Path("/user")
 public class UsersResource {
-	/*@Context
-	UriInfo uriInfo;
-	@Context
-	Request request;*/
-
+	
 	@GET
 	@Path("/info")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -22,15 +18,20 @@ public class UsersResource {
 		String sessionToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.checkUserByToken(sessionToken) == null) {
 			System.out.println("Token not valid");
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
 			System.out.println("Token validated sending user details");
 			User user = UserDao.getDetails(sessionToken);
-			return Response.status(Response.Status.OK).entity(user).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(user)
+					.build();
 		}
 	}
 
-	
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -53,6 +54,16 @@ public class UsersResource {
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public ResMsg autoLogin(@Context ContainerRequestContext request) {
 		return UserDao.autologin(request);
+	}
+	
+	@POST
+	@Path("/logout")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response logout(@Context ContainerRequestContext request) {
+		return Response
+				.status(Response.Status.OK)
+				.entity(UserDao.logout(request))
+				.build();
 	}
 
 	@POST

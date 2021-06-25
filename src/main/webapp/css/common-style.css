@@ -156,10 +156,10 @@ a:hover {
 	text-decoration: none;
 }
 .wrapper .recordings-list li:nth-child(even) {
-	background-color: #c6c6c6;
+	background-color: #cfcfcf;
 }
 .wrapper .recordings-list li:nth-child(odd) {
-	background-color: #cacaca;
+	background-color: #c9c9c9;
 }
 .wrapper .recordings-list li:first-child {
 	font-size: 20px;
@@ -168,7 +168,7 @@ a:hover {
 	line-height: 64px;
 }
 .wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
-	background-color: #cfcfcf;
+	background-color: #c3c3c3;
 	cursor: pointer;
 }
 .wrapper .recordings-list li:first-child,
@@ -445,6 +445,7 @@ a:hover {
 .dark-mode .wrapper .recordings-list li {
 	color: var(--text-color);
 	background-color: #181818;
+	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
 }
 .dark-mode .wrapper .recordings-list li a {
 	color: var(--text-color);
@@ -453,8 +454,9 @@ a:hover {
 .dark-mode .wrapper .recordings-list li:nth-child(2) {
 	background-color: #161616;
 }
-.dark-mode .wrapper .recordings-list li:nth-child(2) {
-	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
+.dark-mode .wrapper .recordings-list li:nth-child(1),
+.dark-mode .wrapper .recordings-list li:last-child {
+	border-bottom: none;
 }
 .dark-mode .wrapper .recordings-list li:not(:first-child):not(:nth-child(2)):hover {
 	background-color: #282828;

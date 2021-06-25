@@ -51,7 +51,8 @@ public class VelocityResourse {
             /*String velocity = "select max(measurement.velocity) as max_vel, min(measurement.velocity) as min_vel, avg(measurement.velocity) as avg_vel from measurement, object " + 
             		          "where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date " + 
             				  "and object.object_type = ? and object.recording_id = ? and measurement.date = ?";*/
-        	String velocity = "with measure as (select distinct object.recording_id, object.object_type, measurement.date, measurement.velocity from measurement, object where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date) " +
+        	String velocity = "with measure as (select distinct object.recording_id, object.object_type, measurement.date, measurement.velocity from measurement, object " + 
+            				  "where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date) " +
             				  "select max(measure.velocity) as max_vel, min(measure.velocity) as min_vel, avg(measure.velocity) as avg_vel from measure " + 
   				              "where measure.object_type = ? and measure.recording_id = ? and measure.date = ?";
             st = conn.prepareStatement(velocity);
@@ -105,6 +106,9 @@ public class VelocityResourse {
                 throwables.printStackTrace();
             }
         }
-        return Response.status(Response.Status.OK).entity(vel).build();
+        return Response
+        		.status(Response.Status.OK)
+        		.entity(vel)
+        		.build();
 	}
 }

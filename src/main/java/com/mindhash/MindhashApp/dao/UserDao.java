@@ -263,4 +263,9 @@ public class UserDao {
 		return result;
 	}
 
+	public static String logout(ContainerRequestContext request) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		return SessionTokenDao.setTokenExpired(token);
+	}
+
 }

@@ -58,6 +58,28 @@ public class SessionTokenDao {
 		return res;
 	}
 	
+	public static String setTokenExpired(String token) {
+		String res = null;
+		try {
+			Date currentTime = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+			Connection conn = DBConnectivity.createConnection();
+			String query = "update users set session_expire_time = ? where sessiontoken = ?";
+			PreparedStatement st = conn.prepareStatement(query);
+			st.setString(1, sdf.format(currentTime));
+			st.setString(2, token);
+			int update = st.executeUpdate();
+			if (update == 1) {
+				res = "logout";
+			}
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
+	}
+	
 	public static String checkUserByToken(String token) {
 		String res = null;
 		Connection conn = DBConnectivity.createConnection();

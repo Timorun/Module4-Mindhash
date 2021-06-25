@@ -22,12 +22,20 @@ public class ObjectsResource {
     public Response getObjects(@PathParam("recordingId") int recordingId,
     							@PathParam("date") String date,
     							@Context ContainerRequestContext request) {
+    	
     	String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.checkUserByToken(token) == null) {
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
-			return Response.status(Response.Status.OK).entity(ObjectDao.getObjectNum(recordingId, date)).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(ObjectDao.getObjectNum(recordingId, date))
+					.build();
 		}
+		
     }
     
 }
