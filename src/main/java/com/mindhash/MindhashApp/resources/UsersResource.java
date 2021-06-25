@@ -8,6 +8,9 @@ import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.UserDao;
 import com.mindhash.MindhashApp.model.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Path("/user")
 public class UsersResource {
 	
@@ -31,6 +34,22 @@ public class UsersResource {
 					.build();
 		}
 	}
+
+	@GET
+	@Path("/mails")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Object mails(@Context ContainerRequestContext request) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		// only allow admin
+		if (!SessionTokenDao.checkUserByToken(token)) {
+			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+		} else {
+			System.out.println("Token of admin, can get mails");
+			List<String> mails = new ArrayList<>(UserDao.getMails());
+			return Response.status(Response.Status.OK).entity(mails).build();
+		}
+	}
+
 
 	@POST
 	@Path("/register")

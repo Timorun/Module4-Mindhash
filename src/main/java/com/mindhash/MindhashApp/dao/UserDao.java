@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.ws.rs.container.ContainerRequestContext;
@@ -38,7 +39,27 @@ public class UserDao {
 		}
 	}
 
-	public static ResMsg register(UserRegJAXB user) {
+	public static ArrayList<String> getMails() {
+		Connection conn = DBConnectivity.createConnection();
+		try {
+			String mailquery = "SELECT email FROM users";
+			PreparedStatement st = conn.prepareStatement(mailquery);
+			ResultSet rs = st.executeQuery();
+			ArrayList<String> mails = new ArrayList<String>();
+			while (rs.next()) {
+				String email = rs.getString(1);
+				mails.add(email);
+			}
+
+			return mails;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+			return new ArrayList<String>();
+		}
+	}
+
+
+		public static ResMsg register(UserRegJAXB user) {
 		ResMsg res = new ResMsg();
 		if (!user.getPassword().equals(user.getConfirmPassword())) {
 			res.setRes(false);

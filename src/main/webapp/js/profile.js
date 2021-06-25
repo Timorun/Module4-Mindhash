@@ -28,7 +28,7 @@ xmlhttp.onreadystatechange = function() {
             //add adminfeatures html
             document.getElementById('adminFeatures').innerHTML += "<h1>Admin Features</h1>\n" +
                 "<div id=\"uploadform\" class=\"section-container\">\n" +
-                "        <div class=\"form-wrapper\">\n" +
+                "        <section class=\"form-wrapper\"><h4>Upload a recording</h4>" +
                 "            <form action=\"/mindhash/rest/upload/json\" method=\"post\" enctype=\"multipart/form-data\" onsubmit=\"return validate()\">\n" +
                 "                <label for=\"latitude\">Latitude:</label>\n" +
                 "                <input id=\"latitude\" name=\"latitude\" type=\"text\" placeholder=\"(e.g. 72.832...)\" class=\"form-input-field\" />\n" +
@@ -43,11 +43,11 @@ xmlhttp.onreadystatechange = function() {
                 "                <input type=\"submit\" value=\"Upload\" class=\"form-submit-btn\">\n" +
                 "                <div id=\"err-msg\" class=\"err-msg hide\"></div>\n" +
                 "            </form>\n" +
-                "        </div></div>"
+                "        </section></div>"
             document.getElementById('title').innerHTML = "Admin Page"
 
             let htmlStr = "<div class=\"section-container\">\n" +
-                            "                <section class=\"form-wrapper\" id=\"accessForm\"><h3> Grant access to a recording</h3><br></section></div>";
+                            "                <section class=\"form-wrapper\" id=\"accessForm\"><h4> Grant access to a recording</h4></section></div>";
             document.getElementById('adminFeatures').innerHTML += htmlStr;
 
 
@@ -65,6 +65,32 @@ xmlhttp.onreadystatechange = function() {
                     }
                     htmlStr += "</select>"
                     document.getElementById('accessForm').innerHTML += htmlStr;
+
+
+                    //get list of recordingids
+                    let xmlhttp3 = new XMLHttpRequest();
+                    xmlhttp3.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var response = this.responseText;
+                            recordings = JSON.parse(response);
+                            htmlStr = "<br><label for=\"recordings\">RecordingID:  </label>\n" +
+                                "<select name=\"recordingids\" id=\"recordingids\">";
+                            for (var recording of recordings) {
+                                var id = recording.recordingID;
+                                htmlStr += "<option value=" + id + ">" + id + "</option>"
+                            }
+                            htmlStr += "</select><button  id=\"grant\" class=\"form-submit-btn\" onclick=\"grantAccess()\">Grant Access</button>" +
+                                "<br><div id=\"responsemsg\" class=\"err-msg hide\"></div>"
+                            document.getElementById('accessForm').innerHTML += htmlStr;
+                        } else if (this.readyState == 4 && this.status == 511) {
+                            location.href = "login.html";
+                        }
+                    }
+                    xmlhttp3.open("GET", "/mindhash/rest/recordings", true);
+                    xmlhttp3.setRequestHeader("Accept", "application/json");
+                    xmlhttp3.setRequestHeader("Authorization", token);
+                    xmlhttp3.send();
+
                 } else if (this.readyState == 4 && this.status == 511) {
                     location.href = "login.html";
                 }
@@ -74,34 +100,6 @@ xmlhttp.onreadystatechange = function() {
             xmlhttp2.setRequestHeader("Authorization", token);
             xmlhttp2.send();
 
-
-            //get list of recordingids
-            if (token != null) {
-                let xmlhttp3 = new XMLHttpRequest();
-                xmlhttp3.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var response = this.responseText;
-                        recordings = JSON.parse(response);
-                        htmlStr = "<label for=\"recordings\">RecordingID:  </label>\n" +
-                                "<select name=\"recordingids\" id=\"recordingids\">";
-                        for (var recording of recordings) {
-                            var id = recording.recordingID;
-                            htmlStr += "<option value=" + id + ">" + id + "</option>"
-                        }
-                        htmlStr += "</select><button  id=\"grant\" class=\"form-submit-btn\" onclick=\"grantAccess()\">Grant Access</button>"
-                        document.getElementById('accessForm').innerHTML += htmlStr;
-                    } else if (this.readyState == 4 && this.status == 511) {
-                        location.href = "login.html";
-                    }
-                }
-                xmlhttp3.open("GET", "/mindhash/rest/recordings", true);
-                xmlhttp3.setRequestHeader("Accept", "application/json");
-                xmlhttp3.setRequestHeader("Authorization", token);
-                xmlhttp3.send();
-            } else {
-                sessionStorage.removeItem("sessionToken");
-                location.href = "login.html";
-            }
         }
     } else if (this.readyState == 4 && this.status == 511) {
         location.href = "login.html";
@@ -112,5 +110,29 @@ xmlhttp.setRequestHeader("Authorization", token);
 xmlhttp.send();
 
 function grantAccess() {
-    console.log("grantclicked");
+    var selectedmail = document.getElementById("mails").value;
+    var selectedid = document.getElementById("recordingids").value;
+    console.log(selectedmail+"\n"+selectedid);
+
+    //Post grantaccess
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            var response = this.responseText;
+            console.log(response);
+            let responsemsg = document.querySelector("#responsemsg");
+            if (responsemsg.classList.contains("hide")) {
+                responsemsg.classList.remove("hide");
+            }
+            responsemsg.innerText = "Access Granted";
+        } else if (this.readyState == 4 && this.status == 511) {
+            if (responsemsg.classList.contains("hide")) {
+                responsemsg.classList.remove("hide");
+            }
+            responsemsg.innerText = "You do not have admin rights";
+        }
+    }
+    xmlhttp.open("POST", "/mindhash/rest/access/"+selectedmail+"/"+selectedid, true);
+    xmlhttp.setRequestHeader("Authorization", token);
+    xmlhttp.send();
 }
