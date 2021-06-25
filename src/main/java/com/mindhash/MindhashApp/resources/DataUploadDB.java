@@ -176,7 +176,7 @@ public class DataUploadDB {
             /*Insert records into
             (test)measurement table*/
             it = list.iterator();
-            preparedStatement = conn.prepareStatement("insert into measurement(recording_id, object_id, time_without_date, x, y, velocity, ma_velocity, date, time) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            preparedStatement = conn.prepareStatement("insert into measurement(recording_id, object_id, time, x, y, velocity, ma_velocity, date, time_without_date) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             while (it.hasNext()) {
                 Measurement m = it.next();
                 preparedStatement.setInt(1, recording_id);

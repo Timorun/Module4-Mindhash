@@ -1,9 +1,6 @@
 package com.mindhash.MindhashApp.Integration;
 import com.mindhash.MindhashApp.model.ResMsg;
 import com.sendgrid.*;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
 
 import java.io.IOException;
 
@@ -14,7 +11,7 @@ public class Sendgrid {
     public String PASSWORD_RESET_BODY = "Hi, "
             + "Someone has requested to reset your password. If it was not you, please contact us as soon as possible, "
             + "otherwise here is your password reset link: "
-            + "http://localhost:8080/mindhash/new-password.html?token=$token";
+            + "http://localhost:8080/mindhash/verify-email?token=$token";
 
     public String EMAIL_VERIFICATION_SUBJECT = "Email verification required";
 
