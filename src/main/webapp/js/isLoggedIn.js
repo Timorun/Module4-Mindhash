@@ -6,9 +6,9 @@
 		let xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				if (this.responseText === "NO") {
-					location.href = "login.html";
-				}
+				console.log(this.responseText);
+			} else if (this.readyState == 4 && this.status == 511) {
+				location.href = "login.html";
 			}
 		}
 		xmlhttp.open("POST", "/mindhash/rest/user/isLoggedIn", true);

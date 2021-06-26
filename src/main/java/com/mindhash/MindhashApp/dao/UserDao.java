@@ -154,8 +154,8 @@ public class UserDao {
 					.build();
 		} else {
 			return Response
-					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
-					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.status(Response.Status.OK)
+					.entity(user)
 					.build();
 		}
 	}
