@@ -62,10 +62,10 @@ public class UserDaoTest {
         //Tests if user's unexpired session token is updated
         String newToken = UUID.randomUUID().toString();
         SessionTokenDao.setUserToken(newToken, "admin@mindhash.com");
-        assertTrue(SessionTokenDao.checkUserByTokenAndUpdate(newToken));
+        assertNotNull(SessionTokenDao.checkUserByTokenAndUpdate(newToken));
         //Tests if user's expired session token is not updated
         SessionTokenDao.setTokenExpired(newToken);
-        assertFalse(SessionTokenDao.checkUserByTokenAndUpdate(newToken));
+        assertNull(SessionTokenDao.checkUserByTokenAndUpdate(newToken).getEmail());
     }
 
     /*
