@@ -11,7 +11,7 @@ public class User {
 
     public User() {}
 
-    public User(String email, String password, String salt) {
+    /*public User(String email, String password, String salt) {
         this.email = email;
         this.password = password;
         this.salt = salt;
@@ -21,7 +21,7 @@ public class User {
         this.email = email;
         this.sessionexpire = sessionexpire;
         this.isadmin = isadmin;
-    }
+    }*/
     
     public int getId() { 
     	return id; 
@@ -61,6 +61,10 @@ public class User {
 
     public String getSessionexpire() {
     	return sessionexpire;
+    }
+    
+    public void setSessionexpire(String sessionexpire) {
+    	this.sessionexpire = sessionexpire;
     }
 
     public boolean getIsadmin() {

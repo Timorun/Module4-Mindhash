@@ -6,7 +6,7 @@ let queryString = window.location.search,
 	lon = urlParams.get('lon'),
 	token = sessionStorage.getItem("sessionToken");
 
-let xmlhttpaccess = new XMLHttpRequest();
+/*let xmlhttpaccess = new XMLHttpRequest();
 xmlhttpaccess.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var access = this.responseText;
@@ -19,7 +19,7 @@ xmlhttpaccess.onreadystatechange = function() {
 }
 xmlhttpaccess.open("GET", "/mindhash/rest/access/" + id, true);
 xmlhttpaccess.setRequestHeader("Authorization", token);
-xmlhttpaccess.send();
+xmlhttpaccess.send();*/
 
 let pChart = null,
     bChart = null,

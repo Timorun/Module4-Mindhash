@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import com.mindhash.MindhashApp.dao.MeasureDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.accessDao;
+import com.mindhash.MindhashApp.model.User;
 
 @Path("/measurements")
 public class MeasuresResource {
@@ -25,13 +26,14 @@ public class MeasuresResource {
     							@PathParam("time") String time,
     							@Context ContainerRequestContext request) {
     	String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.getUserByToken(token).getEmail() == null) {
+    	User user = SessionTokenDao.getUserByToken(token);
+		if (user.getEmail() == null) {
 			return Response
 					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
 					.entity("NETWORK AUTHENTICATION REQUIRED")
 					.build();
 		} else {
-			if (accessDao.getRecordingById(token, recordingId) || SessionTokenDao.getUserByToken(token).getIsadmin()) {
+			if (accessDao.getRecordingById(token, recordingId) || user.getIsadmin()) {
 				return Response
 						.status(Response.Status.OK)
 						.entity(MeasureDao.getMeasurementByTime(recordingId, date, time))

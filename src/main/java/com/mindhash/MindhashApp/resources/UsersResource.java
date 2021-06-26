@@ -19,7 +19,8 @@ public class UsersResource {
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public Response userinfo(@Context ContainerRequestContext request) {
 		String sessionToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.getUserByToken(sessionToken) == null) {
+		User user = SessionTokenDao.getUserByToken(sessionToken);
+		if (user.getEmail() == null) {
 			System.out.println("Token not valid");
 			return Response
 					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
@@ -27,7 +28,6 @@ public class UsersResource {
 					.build();
 		} else {
 			System.out.println("Token validated sending user details");
-			User user = SessionTokenDao.getUserByToken(sessionToken);
 			return Response
 					.status(Response.Status.OK)
 					.entity(user)
@@ -73,7 +73,7 @@ public class UsersResource {
 	@POST
 	@Path("/isLoggedIn")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public String autoLogin(@Context ContainerRequestContext request) {
+	public Response autoLogin(@Context ContainerRequestContext request) {
 		return UserDao.autologin(request);
 	}
 	
