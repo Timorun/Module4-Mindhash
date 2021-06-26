@@ -13,4 +13,6 @@ public class UserRegJAXB extends UserJAXB {
 	public String getConfirmPassword() {
 		return this.confirmPassword;
 	}
+
+	public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
 }
