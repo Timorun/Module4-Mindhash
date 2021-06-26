@@ -2,6 +2,7 @@ package com.mindhash.MindhashApp.resources;
 
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.accessDao;
+import com.mindhash.MindhashApp.model.User;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -38,19 +39,23 @@ public class grantAccessResource {
     @Path("/{recordingid}")
     public static Response checkAccess(@Context ContainerRequestContext request, @PathParam("recordingid") int recordingId) {
         String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-        if (SessionTokenDao.getUserByToken(token).getEmail() == null) {
+        User user = SessionTokenDao.getUserByToken(token);
+        if (user.getEmail() == null) {
             return Response
             		.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
             		.entity("NETWORK AUTHENTICATION REQUIRED")
             		.build();
         } else {
             boolean succesful;
-            if (accessDao.getRecordingById(token, recordingId) || SessionTokenDao.getUserByToken(token).getIsadmin()) {
+            if (accessDao.getRecordingById(token, recordingId) || user.getIsadmin()) {
                 succesful = true;
             } else {
                 succesful = false;
             }
-            return Response.status(Response.Status.OK).entity(succesful).build();
+            return Response
+            		.status(Response.Status.OK)
+            		.entity(succesful)
+            		.build();
         }
     }
 

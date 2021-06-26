@@ -28,9 +28,39 @@ xmlhttp.onreadystatechange = function() {
             admin = "No";
         }
 		
-		document.querySelector("#email").innerHTML = user.email;
-		document.querySelector("#adminRight").innerHTML = admin;
-
+		document.querySelector("#email").innerHTML = "Email: " +user.email;
+		document.querySelector("#adminRight").innerHTML = "Admin Right: "  + admin;
+		document.querySelector("#sessionSign").innerHTML = "Logged until: "  + user.sessionexpire + "<div id='logout' class='func'>Log out</div>";
+		document.querySelector("#mode").innerHTML = (localStorage.getItem("theme") == "dark" ? "Dark Mode" : "Light Mode") + "<div id='switch' class='func'>Switch</div>";;
+		
+		document.querySelector("#switch").onclick = function() {
+			if (currentTheme == "dark") {
+				document.body.classList.remove("dark-mode");
+				document.body.classList.add("light-mode");
+				currentTheme = "light";
+			} else {
+				document.body.classList.remove("light-mode");
+				document.body.classList.add("dark-mode");
+				currentTheme = "dark";
+			}
+			localStorage.setItem("theme", currentTheme);
+		}
+		
+		document.querySelector("#logout").onclick = function() {
+			let xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					if (this.responseText === "logout") {
+						location.href = "login.html";
+					}
+				}
+			}
+			xmlhttp.open("POST", "/mindhash/rest/user/logout", true);
+			xmlhttp.setRequestHeader("Accept", "application/json");
+			xmlhttp.setRequestHeader("Authorization", token);
+			xmlhttp.send();
+		}
+		
         if (user.isadmin) {
             document.querySelector("#adminFeatures").classList.remove("hide")
             document.title = "Admin Page";

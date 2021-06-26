@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.Integration.Sendgrid;
@@ -143,12 +144,19 @@ public class UserDao {
 		return res;
 	}
 
-	public static String autologin(ContainerRequestContext request) {
+	public static Response autologin(ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.checkUserByTokenAndUpdate(token)) {
-			return "YES";
+		User user = SessionTokenDao.checkUserByTokenAndUpdate(token);
+		if (user.getEmail() == null) {
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
-			return "NO";
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		}
 	}
 

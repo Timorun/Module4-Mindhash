@@ -82,6 +82,7 @@ public class SessionTokenDao {
 					user.setId(resultSet.getInt("id"));
 					user.setEmail(resultSet.getString("email"));
 					user.setIsadmin(resultSet.getBoolean("isadmin"));
+					user.setSessionexpire(resultSet.getString("session_expire_time"));
 				}
 			}
 			conn.close();
@@ -169,8 +170,8 @@ public class SessionTokenDao {
 		return res;
 	}
 	
-	public static Boolean checkUserByTokenAndUpdate(String token) {
-		Boolean res = false;
+	public static User checkUserByTokenAndUpdate(String token) {
+		User user = new User();
 		Connection conn = DBConnectivity.createConnection();
 		
 		try {
@@ -197,7 +198,9 @@ public class SessionTokenDao {
 						conn.commit();
 						conn.setAutoCommit(true);
 						conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-						res = true;
+						user.setEmail(resultSet.getNString("email"));
+						user.setSessionexpire(resultSet.getString("session_expire_time"));
+						user.setIsadmin(resultSet.getBoolean("isadmin"));
 					}
 				}
 			}
@@ -211,7 +214,7 @@ public class SessionTokenDao {
 				e1.printStackTrace();
 			}
 		}
-		return res;
+		return user;
 	}
 	
 	public static Date addSecondsToDate(Date currentTime, Integer expiry) {
