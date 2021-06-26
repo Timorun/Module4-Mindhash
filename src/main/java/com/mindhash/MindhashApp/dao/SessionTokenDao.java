@@ -93,6 +93,57 @@ public class SessionTokenDao {
 		return user;
 	}
 	
+	/*public static Response getUserByTokenAndCheckAccess(String token, int rid) {
+		User user = new User();
+		try {
+			Date currentTime = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+			Connection conn = DBConnectivity.createConnection();
+			conn.setAutoCommit(false);
+			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+			String query = "select id, email, isadmin, session_expire_time from users where sessiontoken = ? limit 1";
+			PreparedStatement st = conn.prepareStatement(query);
+			st.setString(1, token);
+			st.execute();
+			ResultSet resultSet = st.executeQuery();
+			conn.commit();
+			
+			if (resultSet.next()) {
+				Date expireTime = sdf.parse(resultSet.getString("session_expire_time"));
+				if (currentTime.before(expireTime)) {
+					if (accessDao.getRecordingById(token, rid)) {
+						user.setId(resultSet.getInt("id"));
+						user.setEmail(resultSet.getString("email"));
+						user.setIsadmin(resultSet.getBoolean("isadmin"));
+					} else {
+						return Response
+								.status(Response.Status.UNAUTHORIZED)
+								.entity("UNAUTHORIZED")
+								.build();
+					}
+				} else {
+					return Response
+							.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+							.entity("NETWORK AUTHENTICATION REQUIRED")
+							.build();
+				}
+			}
+			conn.close();
+		} catch (SQLException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return Response
+					.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("INTERNAL SERVER ERROR")
+					.build();
+		}
+		return Response
+				.status(Response.Status.OK)
+				.entity(user)
+				.build();
+
+	}*/
+	
 	/*
 	 * used for logout
 	 */

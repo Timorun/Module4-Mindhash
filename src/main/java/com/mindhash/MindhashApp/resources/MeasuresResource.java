@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.dao.MeasureDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
+import com.mindhash.MindhashApp.dao.accessDao;
 
 @Path("/measurements")
 public class MeasuresResource {
@@ -30,10 +31,17 @@ public class MeasuresResource {
 					.entity("NETWORK AUTHENTICATION REQUIRED")
 					.build();
 		} else {
-			return Response
-					.status(Response.Status.OK)
-					.entity(MeasureDao.getMeasurementByTime(recordingId, date, time))
-					.build();
+			if (accessDao.getRecordingById(token, recordingId) || SessionTokenDao.getUserByToken(token).getIsadmin()) {
+				return Response
+						.status(Response.Status.OK)
+						.entity(MeasureDao.getMeasurementByTime(recordingId, date, time))
+						.build();
+			} else {
+				return Response
+						.status(Response.Status.UNAUTHORIZED)
+						.entity("UNAUTHORIZED")
+						.build();
+			}
 		}
     }
 }

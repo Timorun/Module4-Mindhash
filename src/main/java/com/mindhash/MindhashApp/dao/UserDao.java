@@ -58,7 +58,7 @@ public class UserDao {
 	}
 
 
-		public static ResMsg register(UserRegJAXB user) {
+	public static ResMsg register(UserRegJAXB user) {
 		ResMsg res = new ResMsg();
 		if (!user.getPassword().equals(user.getConfirmPassword())) {
 			res.setRes(false);

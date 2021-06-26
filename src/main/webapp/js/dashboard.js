@@ -1,21 +1,17 @@
-var token = sessionStorage.getItem("sessionToken");
-if (token == null) {
-	location.href = "login.html";
-}
-
 let queryString = window.location.search,
 	urlParams = new URLSearchParams(queryString),
 	id = urlParams.get('id'),
 	date = urlParams.get('date'),
 	lat = urlParams.get('lat'),
-	lon = urlParams.get('lon');
+	lon = urlParams.get('lon'),
+	token = sessionStorage.getItem("sessionToken");
 
 let xmlhttpaccess = new XMLHttpRequest();
 xmlhttpaccess.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var access = this.responseText;
 		if (access == "false") {
-			location.href = "accessdenied.html";
+			location.href = "access-denied.html";
 		}
 	} else if (this.readyState == 4 && this.status == 511) {
 		location.href = "login.html";
@@ -478,6 +474,8 @@ $timeInterval.addEventListener("change", function() {
 		} else if (this.readyState == 4 && this.status == 511) {
 			sessionStorage.removeItem("sessionToken");
 			location.href = "login.html";
+		} else if (this.readyState == 4 && this.status == 401) {
+			location.href = "access-denied.html";
 		}
 	}
 	xmlheatmap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
@@ -485,8 +483,6 @@ $timeInterval.addEventListener("change", function() {
 	xmlheatmap.setRequestHeader("Authorization", token);
 	xmlheatmap.send();
 });
-
-
 
 var mymap = L.map('map').setView([lat, lon], 18),
 			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
