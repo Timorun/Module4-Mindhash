@@ -3,14 +3,12 @@ if (token != null) {
 	let xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			var response = JSON.parse(this.responseText);
-			if (response.res) {
+			if (this.responseText === "YES") {
 				location.href = "recordings.html";
 			}
 		}
 	}
-	xmlhttp.open("POST", "/mindhash/rest/user/login/auto", true);
-	xmlhttp.setRequestHeader("Content-type", "application/json");
+	xmlhttp.open("POST", "/mindhash/rest/user/isLoggedIn", true);
 	xmlhttp.setRequestHeader("Accept", "application/json");
 	xmlhttp.setRequestHeader("Authorization", token);
 	xmlhttp.send();

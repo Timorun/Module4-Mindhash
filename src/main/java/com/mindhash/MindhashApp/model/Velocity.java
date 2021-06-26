@@ -17,8 +17,8 @@ public class Velocity {
 	public Velocity() {}
 	
 	public Velocity(double pedestrians_min_velocity, double pedestrians_max_velocity, double wheelers_min_velocity, 
-			double wheelers_max_velocity, double vehicles_min_velocity, double vehicles_max_velocity, 
-			double vehiclesAvgVelocity, double pedestriansAvgVelocity, double wheelersAvgVelocity) {
+					double wheelers_max_velocity, double vehicles_min_velocity, double vehicles_max_velocity, 
+					double vehiclesAvgVelocity, double pedestriansAvgVelocity, double wheelersAvgVelocity) {
 		this.pedestrians_min_velocity = pedestrians_min_velocity;
 		this.pedestrians_max_velocity = pedestrians_max_velocity;
 		this.wheelers_min_velocity = wheelers_min_velocity;

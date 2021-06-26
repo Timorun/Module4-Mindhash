@@ -1,7 +1,6 @@
 package com.mindhash.MindhashApp.dao;
 
 import com.mindhash.MindhashApp.DBConnectivity;
-import com.mindhash.MindhashApp.model.ResMsg;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

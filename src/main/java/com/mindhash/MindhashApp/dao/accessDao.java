@@ -6,31 +6,27 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class accessDao {
 
-    public static List<Integer> getRecordings(String token) {
+    public static boolean getRecordingById(String token, int id) {
         Connection conn = DBConnectivity.createConnection();
-        ArrayList<Integer> accessibleids = new ArrayList<>();
-
+        boolean res = false;
         try {
-            String idquery = "SELECT a.recording_id " +
-                    "FROM recordingaccess a, users u " +
-                    "WHERE u.sessiontoken = ? AND u.email = a.email";
-            PreparedStatement st = conn.prepareStatement(idquery);
+            String query = "SELECT * FROM recordingaccess ra, users u " +
+                    	"WHERE u.sessiontoken = ? AND ra.recording_id = ? AND u.email = ra.email LIMIT 1";
+            PreparedStatement st = conn.prepareStatement(query);
             st.setString(1, token);
+            st.setInt(2, id);
             ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                accessibleids.add(rs.getInt(1));
+            if (rs.next()) {
+                res = true;
             }
-
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return accessibleids;
+        return res;
     }
 
     public static void giveAccess(String email, Integer id) {

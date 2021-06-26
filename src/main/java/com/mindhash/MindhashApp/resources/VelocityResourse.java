@@ -29,7 +29,7 @@ public class VelocityResourse {
 										 @PathParam("date") String date,
 										 @Context ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.checkUserByToken(token) == null) {
+		if (SessionTokenDao.getUserByToken(token).getEmail() == null) {
 			return Response
 					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
 					.entity("NETWORK AUTHENTICATION REQUIRED")

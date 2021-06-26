@@ -41,7 +41,7 @@ public class UsersResource {
 	public Object mails(@Context ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		// only allow admin
-		if (!SessionTokenDao.checkUserByToken(token)) {
+		if (!SessionTokenDao.getUserByToken(token).getIsadmin()) {
 			return Response
 					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
 					.entity("NETWORK AUTHENTICATION REQUIRED")
@@ -71,10 +71,9 @@ public class UsersResource {
 	}
 	
 	@POST
-	@Path("/login/auto")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/isLoggedIn")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg autoLogin(@Context ContainerRequestContext request) {
+	public String autoLogin(@Context ContainerRequestContext request) {
 		return UserDao.autologin(request);
 	}
 	

@@ -143,15 +143,13 @@ public class UserDao {
 		return res;
 	}
 
-	public static ResMsg autologin(ContainerRequestContext request) {
-		ResMsg res = new ResMsg();
+	public static String autologin(ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.checkUserByToken(token) == null) {
-			res.setRes(false);
+		if (SessionTokenDao.checkUserByTokenAndUpdate(token)) {
+			return "YES";
 		} else {
-			res.setRes(true);
+			return "NO";
 		}
-		return res;
 	}
 
 	public ResMsg resetPasssword(UserJAXB user) {

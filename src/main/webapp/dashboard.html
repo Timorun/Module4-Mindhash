@@ -89,27 +89,6 @@
 				<canvas id="weatherChart" class="weatherChart"></canvas>
 			</div>
 		</section>
-		<script>
-			let queryString1 = window.location.search,
-					urlParams1 = new URLSearchParams(queryString1)
-			var recid = urlParams1.get('id');
-			var token1 = sessionStorage.getItem("sessionToken");
-			let xmlhttpaccess = new XMLHttpRequest();
-			xmlhttpaccess.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					var access = this.responseText;
-					console.log("Xmlhttpaccess: "+access);
-					if (access == "false") {
-						location.href = "accessdenied.html";
-					}
-				} else if (this.readyState == 4 && this.status == 511) {
-					location.href = "login.html";
-				}
-			}
-			xmlhttpaccess.open("GET", "/mindhash/rest/access/"+recid, true);
-			xmlhttpaccess.setRequestHeader("Authorization", token1);
-			xmlhttpaccess.send();
-		</script>
 		<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
 		<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 		<script src="js/chart.min.js"></script>

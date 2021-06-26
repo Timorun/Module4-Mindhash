@@ -10,6 +10,21 @@ let queryString = window.location.search,
 	lat = urlParams.get('lat'),
 	lon = urlParams.get('lon');
 
+let xmlhttpaccess = new XMLHttpRequest();
+xmlhttpaccess.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		var access = this.responseText;
+		if (access == "false") {
+			location.href = "accessdenied.html";
+		}
+	} else if (this.readyState == 4 && this.status == 511) {
+		location.href = "login.html";
+	}
+}
+xmlhttpaccess.open("GET", "/mindhash/rest/access/" + id, true);
+xmlhttpaccess.setRequestHeader("Authorization", token);
+xmlhttpaccess.send();
+
 let pChart = null,
     bChart = null,
     timeSpeedChart = null,
@@ -132,7 +147,7 @@ xmlObjNum.onreadystatechange = function() {
 					tooltip: {
 						callbacks: {
 							label: function(TooltipItem, object) {
-								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / total) * 100).toFixed(2) + "%)";
+								return TooltipItem.label + ": " + TooltipItem.formattedValue + " (" + ((TooltipItem.formattedValue / totalObj) * 100).toFixed(2) + "%)";
 							}
 						}
 					},

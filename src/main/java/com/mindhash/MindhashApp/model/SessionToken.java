@@ -21,7 +21,7 @@ public class SessionToken {
 			byte[] randomBytes = new byte[24];
 			random.nextBytes(randomBytes);
 			String token = encoder.encodeToString(randomBytes);
-			if (SessionTokenDao.getUserByToken(token).getEmail() == null) {
+			if (!SessionTokenDao.checkTokenExist(token)) {
 				return token;
 			}
 		}

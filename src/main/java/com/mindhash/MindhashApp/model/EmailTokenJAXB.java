@@ -10,11 +10,15 @@ public class EmailTokenJAXB {
         this.emailtoken = emailtoken;
     }
 
-    public EmailTokenJAXB(){}
+    public EmailTokenJAXB() {
+    	
+    }
 
     public String geToken() {
         return this.emailtoken;
     }
 
-    public void setEmailtoken(String emailtoken){ this.emailtoken = emailtoken; }
+    public void setEmailtoken(String emailtoken){ 
+    	this.emailtoken = emailtoken; 
+    }
 }
