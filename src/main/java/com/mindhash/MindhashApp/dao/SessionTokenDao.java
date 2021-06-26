@@ -198,7 +198,7 @@ public class SessionTokenDao {
 						conn.commit();
 						conn.setAutoCommit(true);
 						conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-						user.setEmail(resultSet.getNString("email"));
+						user.setEmail(resultSet.getString("email"));
 						user.setSessionexpire(resultSet.getString("session_expire_time"));
 						user.setIsadmin(resultSet.getBoolean("isadmin"));
 					}
@@ -207,12 +207,7 @@ public class SessionTokenDao {
 			
 			conn.close();
 		} catch (SQLException | ParseException e) {
-			try {
-				conn.rollback();
-				e.printStackTrace();
-			} catch(SQLException e1) {
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 		return user;
 	}
