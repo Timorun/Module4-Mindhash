@@ -32,10 +32,9 @@ public class AdminTest {
         user.setPassword("12345678A");
         assertFalse(userDao.login(user).getRes());
 
-        //Tests if user can be registered if email has not been taken yet
         //Tests if user cannot be logged in if he enters incorrect password
-        user.setPassword("12345678A");
-        assertFalse(userDao.login(user).getRes());
+        user.setPassword("Mindhash#21");
+        assertTrue(userDao.login(user).getRes());
     }
 
     /*

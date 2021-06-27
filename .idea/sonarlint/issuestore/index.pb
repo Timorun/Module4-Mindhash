@@ -15,10 +15,6 @@ J
 MindhashApp.iml,3\a\3a3c11cf46bc684ffa9a6e69011f4d31c0f6c47c
 \
 ,.idea/artifacts/MindhashApp_war_exploded.xml,6\5\65b8e6da5c0b8969346929173632bacae2ba1feb
-f
-6src/main/java/com/mindhash/MindhashApp/model/User.java,2\3\23b53ee4eaf0403773bdb9dc04d2e421c4bc0f56
-L
-src/main/webapp/js/upload.js,3\1\318691ba79d9d5f5ab81c014955cda178254a4c0
 j
 :src/main/java/com/mindhash/MindhashApp/dao/MeasureDao.java,9\d\9d4ee044fb4ffcfdacddec1718dfe491f6d17f7c
 P
@@ -27,3 +23,33 @@ r
 Bsrc/main/java/com/mindhash/MindhashApp/resources/DataUploadDB.java,a\5\a5d13c9b5fd0bcc14644dd3280f5f47cbe69ff88
 N
 src/main/webapp/css/select.css,6\f\6fd4478c3c08155b352e570a9b8d66ba75f7db30
+j
+:src/main/java/com/mindhash/MindhashApp/DBConnectivity.java,3\6\365292bb24c6dc3b7c0e8f703451df641dd2799e
+P
+ src/main/webapp/js/isLoggedIn.js,6\2\62f7aba3be3d5388a0ca214ebf86cc049e5fd1b8
+O
+src/main/webapp/js/dashboard.js,0\d\0d4f13f4daa8a1178d0ce52cf7a86a460ecfea97
+s
+Csrc/main/java/com/mindhash/MindhashApp/resources/UsersResource.java,1\3\1396d17847a9ea778fb67a468f1c8b1875b63561
+T
+$src/main/webapp/css/common-style.css,3\6\36d8359be8706e2f520b194735cebea0cc5e041b
+M
+src/main/webapp/js/profile.js,a\5\a5e1b8433660639c302cc13403c5e73e06f56524
+l
+<src/main/java/com/mindhash/MindhashApp/dao/RecordingDao.java,6\c\6c347fc44de06fb43add53fa5880c1dd49dbb3f8
+L
+src/main/webapp/profile.html,9\4\9474b166b209d161a727de49e23bde318996f744
+N
+src/main/webapp/dashboard.html,4\e\4e0436607adc0672e480b21440673f0347337769
+O
+src/main/webapp/recordings.html,9\0\90ea91898486c1a02a4d234f0227ccb6445437b5
+x
+Hsrc/main/java/com/mindhash/MindhashApp/resources/RecordingsResource.java,e\2\e254685f5025be1fe292fe5e2290b81b1246bd92
+P
+ src/main/webapp/js/recordings.js,5\c\5c5323feab0390c316a5f845c98692a1bf9da718
+J
+src/main/webapp/admin.html,7\6\76725d4fb55c8bc07fedd8a5cb4f9f8cd26c3ad8
+y
+Isrc/main/java/com/mindhash/MindhashApp/resources/grantAccessResource.java,d\8\d82291b35d974fb5f5e45102c739fdf7c382453d
+v
+Fsrc/main/java/com/mindhash/MindhashApp/resources/MeasuresResource.java,3\f\3f01d4f1dd7c1fd6f0f9df0e1cb808c4457b04d5

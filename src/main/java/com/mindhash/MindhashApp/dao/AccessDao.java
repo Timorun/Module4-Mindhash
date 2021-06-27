@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class accessDao {
+public class AccessDao {
 
     public static boolean getRecordingById(String token, int id) {
         Connection conn = DBConnectivity.createConnection();
