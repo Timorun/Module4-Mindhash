@@ -297,6 +297,7 @@ $timeInterval.addEventListener("change", function() {
 			if (timeSpeedChart == null) {
 				timeSpeed(firstTime, firstSpeed, name);
 			}
+			
 			var type = $selectObj.options[$selectObj.options.selectedIndex].text;
 			updateObjLi(type);
 			/*if (perChart == null) {
