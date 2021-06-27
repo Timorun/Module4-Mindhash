@@ -4,80 +4,9 @@ let queryString = window.location.search,
 	date = urlParams.get('date'),
 	lat = urlParams.get('lat'),
 	lon = urlParams.get('lon'),
+	lineChartsArr = new Array(),
 	token = sessionStorage.getItem("sessionToken");
 
-/*let xmlhttpaccess = new XMLHttpRequest();
-xmlhttpaccess.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		var access = this.responseText;
-		if (access == "false") {
-			location.href = "access-denied.html";
-		}
-	} else if (this.readyState == 4 && this.status == 511) {
-		location.href = "login.html";
-	}
-}
-xmlhttpaccess.open("GET", "/mindhash/rest/access/" + id, true);
-xmlhttpaccess.setRequestHeader("Authorization", token);
-xmlhttpaccess.send();*/
-
-let pChart = null,
-    bChart = null,
-    timeSpeedChart = null,
-	weatherChart = null,
-	lineChartsArr = new Array(),
-	maplayer = null,
-	heatmaplayer = null,
-	perChart = null,
-	scatterChart = null;
-
-document.querySelector(".logo").addEventListener("click", function () {
-	if (currentTheme == "dark") {
-		document.body.classList.remove("dark-mode");
-		document.body.classList.add("light-mode");
-		currentTheme = "light";
-	} else {
-		document.body.classList.remove("light-mode");
-		document.body.classList.add("dark-mode");
-		currentTheme = "dark";
-	}
-
-	if (pChart != null && lineChartsArr.length > 0 && maplayer != null) {
-		if (currentTheme == "dark") {
-			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
-		    heatmaplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
-		} else {
-			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
-			heatmaplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
-		}
-		pChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
-		pChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
-		pChart.update();
-		perChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
-		perChart.update();
-		timeSpeedChart.data.datasets[0].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
-		bChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#006699"];
-		bChart.data.datasets[1].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
-		bChart.data.datasets[2].backgroundColor = currentTheme == "dark" ? ["#999"] : ["#ccc"];
-		weatherChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
-		weatherChart.data.datasets[1].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
-		weatherChart.data.datasets[2].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#ccc"];
-		for(var chart of lineChartsArr) {
-			chart.options.plugins.title.color = currentTheme == "dark" ? "#c9d1d9" : "#333",
-			chart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
-			chart.options.scales.x.grid.borderColor = currentTheme == "dark" ? "#aaa" : "#999";
-			chart.options.scales.y.grid.borderColor = currentTheme == "dark" ? "#aaa" : "#999";
-			chart.options.scales.x.grid.color = currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6";
-			chart.options.scales.y.grid.color = currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6";
-			chart.options.scales.x.ticks.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
-			chart.options.scales.y.ticks.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
-			chart.update();
-		}
-	}
-	localStorage.setItem("theme", currentTheme);
-});
-
-document.querySelector("#date").innerText = date;
 let timeStr = "";
 for (var i = 0; i < 24; i++) {
 	var start = i < 10 ? "0" + i : i,
@@ -91,6 +20,7 @@ const $selectObj = document.querySelector("#selectObj"),
 	$objList = document.querySelector("#objectsLi");
 	
 let xmlObjNum = new XMLHttpRequest(),
+    pChart = null,
     totalObjNum = {},
 	totalObj = 0;
 xmlObjNum.onreadystatechange = function() {
@@ -114,6 +44,7 @@ xmlObjNum.onreadystatechange = function() {
 		generalStr = "<div>all objects: " + totalObj + "</div>" + generalStr + "<div>recording date: " + date + "</div>";
 		document.querySelector("#general-tit").insertAdjacentHTML("afterend", generalStr);
 		$selectObj.innerHTML = selectStr;
+		document.querySelector("#date").innerText = date;
 		select();
 		var $interval = document.querySelector("#interval"),
 			$selectInterval = $interval.querySelector(".select-items"),
@@ -168,7 +99,8 @@ xmlObjNum.setRequestHeader("Accept", "application/json");
 xmlObjNum.setRequestHeader("Authorization", token);
 xmlObjNum.send();
 
-let xmlhttp = new XMLHttpRequest();
+let xmlhttp = new XMLHttpRequest(),
+    bChart = null;
 xmlhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText,
@@ -246,7 +178,11 @@ let measurements = new Array(),
 	objects = new Array(),
 	heatmap = null,
 	heatLayer = null,
-	intervalChart = null;
+	intervalChart = null,
+	timeSpeedChart = null,
+	heatmaplayer = null,
+	perChart = null,
+	scatterChart = null;
 $timeInterval.addEventListener("change", function() {
 	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
 	var xmlheatmap = new XMLHttpRequest();
@@ -484,10 +420,10 @@ $timeInterval.addEventListener("change", function() {
 	xmlheatmap.send();
 });
 
-var mymap = L.map('map').setView([lat, lon], 18),
+let mymap = L.map('map').setView([lat, lon], 18),
 			mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 									: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
-maplayer = L.tileLayer(mapUrl, {
+let maplayer = L.tileLayer(mapUrl, {
 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 	subdomains: 'abcd',
 	maxZoom: 28
@@ -495,9 +431,6 @@ maplayer = L.tileLayer(mapUrl, {
 
 function timeSpeed(labels, speed, name) {
 	var ctx = document.querySelector('#timeSpeedChart').getContext('2d');
-	/*if (timeSpeedChart != null) {
-		timeSpeedChart.destroy();
-	}*/
 	timeSpeedChart = new Chart(ctx, {
 		type: "line",
 		data: {
@@ -594,13 +527,17 @@ function updateObjLi(val) {
 }
 
 // get closest station based on coordinates
-let xmlhttp2 = new XMLHttpRequest();
+let xmlhttp2 = new XMLHttpRequest(),
+    weatherChart = null;
 xmlhttp2.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		var response = this.responseText,
 			jsonstations = JSON.parse(response).data,
-			i,
-		    len = jsonstations.length;
+			i;
+		if (jsonstations == null) {
+			return;
+		}
+		var len = jsonstations.length;
 		for (i = 0; i < len; i++) {
 			if (jsonstations[i].active === true) {
 				break;
@@ -699,3 +636,49 @@ xmlhttp2.onreadystatechange = function() {
 xmlhttp2.open("GET", "https://api.meteostat.net/v2/stations/nearby?lat="+ lat +"&lon="+ lon + "&limit=3", true);
 xmlhttp2.setRequestHeader("x-api-key", "qrTVaDSZR5djogSYK67hIjqFBy1avCTk");
 xmlhttp2.send();
+
+document.querySelector(".logo").addEventListener("click", function () {
+	if (currentTheme == "dark") {
+		document.body.classList.remove("dark-mode");
+		document.body.classList.add("light-mode");
+		currentTheme = "light";
+	} else {
+		document.body.classList.remove("light-mode");
+		document.body.classList.add("dark-mode");
+		currentTheme = "dark";
+	}
+
+	if (pChart != null && lineChartsArr.length > 0 && maplayer != null) {
+		if (currentTheme == "dark") {
+			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
+		    heatmaplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
+		} else {
+			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
+			heatmaplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
+		}
+		pChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+		pChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
+		pChart.update();
+		perChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+		perChart.update();
+		timeSpeedChart.data.datasets[0].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
+		bChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#006699"];
+		bChart.data.datasets[1].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
+		bChart.data.datasets[2].backgroundColor = currentTheme == "dark" ? ["#999"] : ["#ccc"];
+		weatherChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
+		weatherChart.data.datasets[1].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
+		weatherChart.data.datasets[2].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#ccc"];
+		for(var chart of lineChartsArr) {
+			chart.options.plugins.title.color = currentTheme == "dark" ? "#c9d1d9" : "#333",
+			chart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+			chart.options.scales.x.grid.borderColor = currentTheme == "dark" ? "#aaa" : "#999";
+			chart.options.scales.y.grid.borderColor = currentTheme == "dark" ? "#aaa" : "#999";
+			chart.options.scales.x.grid.color = currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6";
+			chart.options.scales.y.grid.color = currentTheme == "dark" ? "rgba(255, 255, 255, 0.1)" : "#e6e6e6";
+			chart.options.scales.x.ticks.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+			chart.options.scales.y.ticks.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+			chart.update();
+		}
+	}
+	localStorage.setItem("theme", currentTheme);
+});

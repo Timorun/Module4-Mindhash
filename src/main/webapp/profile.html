@@ -11,7 +11,7 @@
         <header class="header box-layout center-v">
             <div class="logo"></div>
             <a href="recordings.html" class="home-link"></a>
-            <div class="box-col"><a href="javascript:void(0);" class="avatar"></a></div>
+            <div class="box-col"><a href="profile.html" class="avatar"></a></div>
         </header>
         <script src="js/switch-mode.js"></script>
 
@@ -24,52 +24,7 @@
 				<li><a href="recordings.html">See Your Recordings</a></li>
 			</ul>
         </section>
-        <section id="adminFeatures" class="info-wrapper hide">
-			<h1>Admin Features</h1>
-			<div id="uploadform" class="section-container">
-				<section class="form-wrapper"><h4>Upload a recording</h4>
-					<form action="/mindhash/rest/upload/json" method="post" enctype="multipart/form-data" onsubmit="return validate()">
-						<label for="latitude">Latitude:</label>
-						<input id="latitude" name="latitude" type="text" placeholder="(e.g. 72.832...)" class="form-input-field" />
-						<label for="longitude">Longitude:</label>
-						<input id="longitude" name ="longitude" type="text" placeholder="(e.g. 25.093...)" class="form-input-field" />
-						<label for="framerate">Framerate:</label>
-						<input type="text" id="framerate" name ="framerate" placeholder="(e.g. 60)" name="framerate" class="form-input-field">
-						<label for="resolution">Resolution:</label>
-						<input type="text" id="resolution" name ="resolution" placeholder="(e.g. 1280x800)" name="resolution" class="form-input-field">
-						<label for="file">JSON of the recording:</label>
-						<input type="file" id="file" name = "file">
-						<input type="submit" value="Upload" class="form-submit-btn">
-						<div id="err-msg" class="err-msg hide"></div>
-					</form>
-				</section>
-			</div>
-			<div class="section-container">
-			    <section  id="accessForm" class="form-wrapper">
-					<h4> Grant access to a recording</h4>
-					<label for="mails">Email:</label>
-					<select name="mails" id="mails"></select>
-					<label for="recordingids">RecordingID:  </label>
-					<select name="recordingids" id="recordingids"></select>
-					<button id="grant" class="form-submit-btn" onclick="grantAccess()">Grant Access</button>
-					<div id="responsemsg" class="err-msg hide"></div>
-				</section>
-			</div>
-
-			<div class="section-container">
-				<section  id="deleteForm" class="form-wrapper">
-					<h4> Delete a recording</h4>
-					<label for="recordingids2">RecordingID:  </label>
-					<select name="recordingids2" id="recordingids2"></select>
-					<p><input type="checkbox" id="deletecheck"> By clicking the <b> delete </b> button, you acknowledge that once deleted, the recording will not be retrievable from the server.</p>
-					<button id="delete" class="form-submit-btn" onclick="deleteRecording()">Delete Recording</button>
-					<div id="deleteresponse" class="err-msg hide"></div>
-				</section>
-			</div>
-
-        </section>
         <script src="js/profile.js"></script>
-        <script src="js/upload.js"></script>
     </body>
 </html>
 

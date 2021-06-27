@@ -8,13 +8,12 @@
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
 		<link type="text/css" rel="stylesheet" href="css/select.css">
 		<link type="text/css" rel="stylesheet" href="css/common-style.css">
-		<script src="js/isLoggedIn.js"></script>
 	</head>
 	<body>
 		<header class="header box-layout center-v">
 			<div class="logo"></div>
 			<a href="recordings.html" class="home-link"></a>
-			<div class="box-col"><a href="profile.html" class="avatar"></a></div>
+			<div class="box-col"><a href="javascript:void(0);" class="avatar"></a></div>
 		</header>
 		<script>
 			const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -90,6 +89,7 @@
 				<canvas id="weatherChart" class="weatherChart"></canvas>
 			</div>
 		</section>
+		<script src="js/isLoggedIn.js"></script>
 		<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
 		<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
 		<script src="js/chart.min.js"></script>

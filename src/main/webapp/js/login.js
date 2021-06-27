@@ -3,9 +3,10 @@ if (token != null) {
 	let xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			if (this.responseText === "YES") {
-				location.href = "recordings.html";
-			}
+			location.href = "recordings.html";
+		} else if (this.readyState == 4 && this.status == 511) {
+			sessionStorage.removeItem("sessionToken");
+			location.href = "login.html";
 		}
 	}
 	xmlhttp.open("POST", "/mindhash/rest/user/isLoggedIn", true);

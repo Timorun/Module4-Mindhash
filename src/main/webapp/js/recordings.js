@@ -4,7 +4,6 @@ let token = sessionStorage.getItem("sessionToken"),
 if (token != null) {
 	loadRecordings(pageNum);
 } else {
-	sessionStorage.removeItem("sessionToken");
 	location.href = "login.html";
 }
 
