@@ -93,7 +93,7 @@ a:hover {
 	height: 36px;
 	background-image: url("../img/mindhash-logo-animated.svg");
 	background-size: 136px 36px;
-	background-position: left top;
+	background-position: 0 0;
 	display: block;
 	cursor: pointer;
 	-webkit-transition: -webkit-transform .2s ease;
@@ -599,16 +599,16 @@ a:hover {
 	margin-right: 20px;
 }
 .info-wrapper.admin #uploadform .form-body {
-	height: 430px;
+	min-height: 420px;
 }
 .info-wrapper.admin #accessForm .form-body {
-	height: 180px;
+	min-height: 180px;
 }
 .info-wrapper.admin #deleteForm {
-	margin-top: 30px;
+	margin-top: 20px;
 }
 .info-wrapper.admin #deleteForm .form-body {
-	height: 220px;
+	min-height: 220px;
 }
 .info-wrapper.admin .fl {
 	float: left;
@@ -627,7 +627,7 @@ a:hover {
 	margin-top: 5px;
 }
 .info-wrapper.admin .form-wrapper .select-field {
-	height: 20px;
+	min-height: 24px;
 }
 
 /*.profile-wrapper.admin {

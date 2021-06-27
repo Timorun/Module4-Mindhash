@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -23,10 +23,9 @@ import com.mindhash.MindhashApp.model.Velocity;
 public class VelocityResourse {
 	
 	@GET
-	@Path("{recordingId}/{date}")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Response getRecordingResource(@PathParam("recordingId") int recordingId,
-										 @PathParam("date") String date,
+	public Response getRecordingResource(@QueryParam("rid") int recordingId,
+										 @QueryParam("date") String date,
 										 @Context ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
 		if (SessionTokenDao.getUserByToken(token).getEmail() == null) {

@@ -2,8 +2,8 @@ package com.mindhash.MindhashApp.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -19,11 +19,10 @@ import com.mindhash.MindhashApp.model.User;
 public class MeasuresResource {
     
     @GET
-	@Path("{recordingId}/{date}/{time}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Response getObjects(@PathParam("recordingId") int recordingId,
-    							@PathParam("date") String date,
-    							@PathParam("time") String time,
+    public Response getObjects(@QueryParam("rid") int recordingId,
+    							@QueryParam("date") String date,
+    							@QueryParam("time") String time,
     							@Context ContainerRequestContext request) {
     	String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
     	User user = SessionTokenDao.getUserByToken(token);
