@@ -586,7 +586,51 @@ a:hover {
 .form-wrapper h4 {
 	margin: 0 0 12px 0;
 }
-.profile-wrapper.admin {
+.info-wrapper.admin .form-wrapper {
+	margin: 0;
+	width: 530px;
+}
+.info-wrapper.admin .form-wrapper .form-body {
+	box-sizing: border-box;
+	padding: 20px;
+}
+.info-wrapper.admin #uploadform {
+	float: left;
+	margin-right: 20px;
+}
+.info-wrapper.admin #uploadform .form-body {
+	height: 430px;
+}
+.info-wrapper.admin #accessForm .form-body {
+	height: 180px;
+}
+.info-wrapper.admin #deleteForm {
+	margin-top: 30px;
+}
+.info-wrapper.admin #deleteForm .form-body {
+	height: 220px;
+}
+.info-wrapper.admin .fl {
+	float: left;
+	width: 530px;
+}
+.info-wrapper.admin .form-wrapper .err-msg {
+	margin-bottom: 5px;
+}
+.info-wrapper.admin .form-wrapper .form-body {
+	margin-top: 0;
+}
+.info-wrapper.admin .form-wrapper .form-body .form-input-field {
+	margin: 6px 0 8px;
+}
+.info-wrapper.admin .form-wrapper .form-body #file {
+	margin-top: 5px;
+}
+.info-wrapper.admin .form-wrapper .select-field {
+	height: 20px;
+}
+
+/*.profile-wrapper.admin {
 	width: 1000px;
 	margin: 88px auto 0;
 }
@@ -621,7 +665,7 @@ a:hover {
 }
 .profile-wrapper.admin .form-wrapper.upload .form-body #file {
 	margin-top: 5px;
-}
+}*/
 
 @media only screen and (max-width: 768px) {
 	.form-wrapper {
@@ -632,11 +676,3 @@ a:hover {
 		display: none;
 	}
 }
-
-/*@media (prefers-color-scheme: dark) {
-	body.dark-mode {
-		background-color: var(--main-bg-color);
-		color: var(--text-color);
-		visibility: visible;
-	}
-}*/

@@ -1,7 +1,7 @@
 package com.mindhash.MindhashApp.resources;
 
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
-import com.mindhash.MindhashApp.dao.accessDao;
+import com.mindhash.MindhashApp.dao.AccessDao;
 import com.mindhash.MindhashApp.model.User;
 
 import javax.ws.rs.GET;
@@ -22,7 +22,7 @@ public class grantAccessResource {
         String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
         // only allow admin
         if (SessionTokenDao.getUserByToken(token).getIsadmin()) {
-        	accessDao.giveAccess(email, recordingId);
+        	AccessDao.giveAccess(email, recordingId);
             return Response
             		.status(Response.Status.OK)
             		.entity(true)
@@ -47,7 +47,7 @@ public class grantAccessResource {
             		.build();
         } else {
             boolean succesful;
-            if (accessDao.getRecordingById(token, recordingId) || user.getIsadmin()) {
+            if (AccessDao.getRecordingById(token, recordingId) || user.getIsadmin()) {
                 succesful = true;
             } else {
                 succesful = false;

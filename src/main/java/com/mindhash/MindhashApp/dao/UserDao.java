@@ -43,7 +43,7 @@ public class UserDao {
 	public static ArrayList<String> getMails() {
 		Connection conn = DBConnectivity.createConnection();
 		try {
-			String mailquery = "SELECT email FROM users";
+			String mailquery = "SELECT email FROM users WHERE isadmin = FALSE";
 			PreparedStatement st = conn.prepareStatement(mailquery);
 			ResultSet rs = st.executeQuery();
 			ArrayList<String> mails = new ArrayList<String>();
