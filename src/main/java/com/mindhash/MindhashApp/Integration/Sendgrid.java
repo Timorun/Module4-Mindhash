@@ -26,7 +26,7 @@ public class Sendgrid {
     public boolean sendPasswordRequest(String email, String token, ResMsg res) {
         boolean result = false;
         String bodyWithToken = PASSWORD_RESET_BODY.replace("$token", token);
-        Email from = new Email("test@example.com");
+        Email from = new Email("passwordreset-noreply@mindhash.com");
         String subject = PASSWORD_RESET_SUBJECT;
         Email to = new Email(email);
         Content content = new Content("text/plain", bodyWithToken);
@@ -44,29 +44,21 @@ public class Sendgrid {
             System.out.println(response.getBody());
             System.out.println(response.getHeaders());
 
-            //TODO: create thread which periodically checks for status code; remove current condition?
             if (!response.getHeaders().isEmpty()) {
                 result = true;
             }
-            /*if (response.getStatusCode() == 200) {
-                result = true;
-            } */
 
         } catch (IOException ex) {
             ex.getMessage();
         }
         return result;
 
-        /*public static String PASSWORD_RESET_BODY = "Hi, "
-            + "Someone has requested to reset your password. If it was not you, please contact us as soon as possible, "
-            + "otherwise here is your password reset link: "
-            + "http://localhost:8080/newpassword.html?token=$token"; */
     }
 
     public boolean sendEmailVerification(String email, String emailToken) {
         boolean result = false;
         String bodyWithToken = EMAIL_VERIFICATION_BODY.replace("$token", emailToken);
-        Email from = new Email("test@example.com");
+        Email from = new Email("verification-noreply@mindhash.com");
         String subject = EMAIL_VERIFICATION_SUBJECT;
         Email to = new Email(email);
         Content content = new Content("text/plain", bodyWithToken);
@@ -84,13 +76,10 @@ public class Sendgrid {
             System.out.println(response.getBody());
             System.out.println(response.getHeaders());
 
-            //TODO: create thread which periodically checks for status code; remove current condition?
             if (!response.getHeaders().isEmpty()) {
                 result = true;
             }
-            /*if (response.getStatusCode() == 200) {
-                result = true;
-            } */
+
 
         } catch (IOException ex) {
             ex.getMessage();
@@ -99,29 +88,4 @@ public class Sendgrid {
 
     }
 
-    /*public static void main(String[] args) throws IOException {
-
-        String bodyWithToken = PASSWORD_RESET_BODY.replace("$token", "1");
-
-        Email from = new Email("test@example.com");
-        Email to = new Email("d.kulyk@student.utwente.nl"); // use your own email address here
-
-        String subject = "Test email";
-        Content content = new Content("text/html", bodyWithToken);
-
-        Mail mail = new Mail(from, subject, to, content);
-
-        SendGrid sg = new SendGrid("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");
-        Request request = new Request();
-
-        request.setMethod(Method.POST);
-        request.setEndpoint("mail/send");
-        request.setBody(mail.build());
-
-        Response response = sg.api(request);
-
-        System.out.println(response.getStatusCode());
-        System.out.println(response.getHeaders());
-        System.out.println(response.getBody());
-    } */
 }
