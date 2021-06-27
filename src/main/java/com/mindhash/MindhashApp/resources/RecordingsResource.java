@@ -9,11 +9,6 @@ import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.dao.RecordingDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
-import com.mindhash.MindhashApp.dao.UserDao;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/recordings")
 public class RecordingsResource {
