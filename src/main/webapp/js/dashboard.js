@@ -297,6 +297,7 @@ $timeInterval.addEventListener("change", function() {
 			if (timeSpeedChart == null) {
 				timeSpeed(firstTime, firstSpeed, name);
 			}
+			console.log(coordinates);
 			var type = $selectObj.options[$selectObj.options.selectedIndex].text;
 			updateObjLi(type);
 			/*if (perChart == null) {
@@ -358,7 +359,12 @@ $timeInterval.addEventListener("change", function() {
 			} else {
 				heatmap.removeLayer(heatLayer);
 				heatLayer = L.heatLayer(coordinates, 0.5, {
-						radius: 25
+						radius: 15,
+						minOpacity: 0.2,
+						gradient: {
+							'0.0': 'blue',
+							'1': 'red'
+						}
 					}).addTo(heatmap);
 			}
 			if (scatterChart == null) {
@@ -524,16 +530,11 @@ $objList.onclick = function(e) {
 
 function updateObjLi(type) {
 	var htmlStr = "",
-		coordinates = new Array(),
+		coord = new Array(),
 	    radius = 6378137.0;
-	for (var i = 0; i < objects.length; i++) {
-		if (objects[i].objectType === type) {
-			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
-		    var dLat = parseFloat(objects[i].y) / radius,
-		    	dLon = parseFloat(objects[i].x) / (radius * Math.cos(Math.PI * parseFloat(lat) / 180)),
-		    	latO = parseFloat(lat) + dLat * 180.0 / Math.PI;
-		    	lonO = parseFloat(lon) + dLon * 180 / Math.PI;
-		    coordinates.push([latO, lonO]);
+	for (var object of objects) {
+		if (object.objectType === type) {
+			htmlStr += '<li attr-id="' + object.objectId + '">' + object.objectType + ' ' + object.objectId + '</li>';
 		}
 	}
 	$objList.innerHTML = htmlStr;
@@ -542,6 +543,16 @@ function updateObjLi(type) {
 		perChart.data.datasets[0].data = [objNum[type], totalObj - objNum[type]];
 		perChart.update();
 	}*/
+	for (var m of measurements) {
+		if (m.objectType === type) {
+		    var dLat = parseFloat(m.y) / radius,
+		    	dLon = parseFloat(m.x) / (radius * Math.cos(Math.PI * parseFloat(lat) / 180)),
+		    	latO = parseFloat(lat) + dLat * 180.0 / Math.PI;
+		    	lonO = parseFloat(lon) + dLon * 180 / Math.PI;
+		    coord.push([latO, lonO]);
+		}
+	}
+	console.log(coord);
 	if (typeheatmap == null) {
 		typeheatmap = L.map('typeheatmap', { zoomControl: false }).setView([lat, lon], 18);
 		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -551,7 +562,7 @@ function updateObjLi(type) {
 			subdomains: 'abcd',
 			maxZoom: 28,
 		}).addTo(typeheatmap);
-		typeheatLayer = L.heatLayer(coordinates, {
+		typeheatLayer = L.heatLayer(coord, {
 				radius: 15,
 				minOpacity: 0.2,
 				gradient: {
@@ -561,8 +572,13 @@ function updateObjLi(type) {
 			}).addTo(typeheatmap);
 	} else {
 		typeheatmap.removeLayer(typeheatLayer);
-		typeheatLayer = L.heatLayer(coordinates, 0.5, {
-				radius: 25
+		typeheatLayer = L.heatLayer(coord, 0.5, {
+				radius: 15,
+				minOpacity: 0.2,
+				gradient: {
+					'0.0': 'blue',
+					'1': 'red'
+				}
 			}).addTo(typeheatmap);
 	}
 }
