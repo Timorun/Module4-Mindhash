@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
@@ -71,7 +72,7 @@ public class UserDao {
 		try {
 			String checkTaken = "SELECT * FROM users WHERE email = ? LIMIT 1";
             PreparedStatement st = conn.prepareStatement(checkTaken);
-            st.setString(1, user.getEmail());
+            st.setString(1, user.getEmail().toLowerCase());
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
             	res.setRes(false);
@@ -118,7 +119,7 @@ public class UserDao {
 			Connection conn = DBConnectivity.createConnection();
 	        String sql = "SELECT * FROM users WHERE email = ? LIMIT 1";
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setString(1, user.getEmail());
+			st.setString(1, user.getEmail().toLowerCase());
 	        ResultSet result = st.executeQuery();
 	        
 	        if (result.next()) {
@@ -287,6 +288,25 @@ public class UserDao {
 			}
 		}
 		return result;
+	}
+
+	public static Boolean checkVerified(String email) {
+		Boolean isverified = null;
+		email.toLowerCase();
+		try {
+			Connection conn = DBConnectivity.createConnection();
+			String sql = "SELECT isverified FROM users WHERE email = ? LIMIT 1";
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, email);
+			ResultSet result = st.executeQuery();
+			if (result.next()) {
+				isverified = result.getBoolean(1);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return isverified;
 	}
 
 	public static String logout(ContainerRequestContext request) {

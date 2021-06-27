@@ -67,6 +67,12 @@ public class UsersResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public ResMsg login(UserJAXB user) {
+		if (UserDao.checkVerified(user.getEmail()) == false){
+			//User not verified
+			ResMsg response = new ResMsg();
+			response.setMsg("Account not verified, please check your email");
+			return response;
+		}
 		return UserDao.login(user);
 	}
 	
