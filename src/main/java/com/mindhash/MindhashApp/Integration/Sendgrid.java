@@ -26,7 +26,7 @@ public class Sendgrid {
     public boolean sendPasswordRequest(String email, String token, ResMsg res) {
         boolean result = false;
         String bodyWithToken = PASSWORD_RESET_BODY.replace("$token", token);
-        Email from = new Email("test@example.com");
+        Email from = new Email("verification-noreply@mindhash.com");
         String subject = PASSWORD_RESET_SUBJECT;
         Email to = new Email(email);
         Content content = new Content("text/plain", bodyWithToken);
