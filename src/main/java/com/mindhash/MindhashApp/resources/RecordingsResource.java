@@ -1,9 +1,6 @@
 package com.mindhash.MindhashApp.resources;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -12,6 +9,11 @@ import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.dao.RecordingDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
+import com.mindhash.MindhashApp.dao.UserDao;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/recordings")
 public class RecordingsResource {
@@ -33,7 +35,6 @@ public class RecordingsResource {
 					.entity(RecordingDao.getRecordings(token, pageNum))
 					.build();
 		}
-		
 	}
 	
 	@GET
@@ -46,6 +47,24 @@ public class RecordingsResource {
 				.status(Response.Status.OK)
 				.entity(RecordingDao.getAllRecordings(token))
 				.build();
+	}
+
+	@Path("/delete/{recordingid}")
+	@POST
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response deleteRecording(@Context ContainerRequestContext request, @PathParam("recordingid") int recordingid) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		// only allow admin
+		if (!SessionTokenDao.getUserByToken(token).getIsadmin()) {
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
+		} else {
+			System.out.println("Token of admin, can delete recording");
+			RecordingDao.deleteRecording(recordingid);
+			return Response.status(Response.Status.OK).entity(true).build();
+		}
 	}
 
 }

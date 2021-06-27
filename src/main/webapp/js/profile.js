@@ -157,7 +157,7 @@ function deleteRecording() {
     }
     responsemsg.innerText = "Processing...";
 
-    var recordingid = document.querySelector("#recordingids2");
+    var recordingid = document.getElementById("recordingids2").value;
     const cb = document.getElementById('deletecheck');
 
     if (!cb.checked) {
@@ -172,17 +172,14 @@ function deleteRecording() {
         //Post deleteRecording
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function () {
+            let responsemsg = document.querySelector("#deleteresponse");
             if (this.readyState == 4 && this.status == 200) {
                 var response = this.responseText;
                 console.log(response);
-                let responsemsg = document.querySelector("#responsemsg");
                 if (responsemsg.classList.contains("hide")) {
                     responsemsg.classList.remove("hide");
                 }
-                responsemsg.innerText = "Access Granted";
-
-
-
+                responsemsg.innerText = "Recording deleted";
 
             } else if (this.readyState == 4 && this.status == 511) {
                 if (responsemsg.classList.contains("hide")) {
@@ -191,7 +188,7 @@ function deleteRecording() {
                 responsemsg.innerText = "You do not have admin rights";
             }
         }
-        xmlhttp.open("POST", "/mindhash/rest/delete/"+recordingid, true);
+        xmlhttp.open("POST", "/mindhash/rest/recordings/delete/"+recordingid, true);
         xmlhttp.setRequestHeader("Authorization", token);
         xmlhttp.send();
     }
