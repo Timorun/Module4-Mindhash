@@ -94,7 +94,7 @@ function saveNewPass() {
             document.querySelector("#confirm-password").value ="";
             var response = JSON.parse(this.responseText);
             if (response.res) {
-                location.href = "reg-success.html";
+                location.href = "pass-reset-success.html";
             } else {
                 if (errMsg.classList.contains("hide")) {
                     errMsg.classList.remove("hide");
