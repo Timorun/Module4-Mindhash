@@ -52,7 +52,8 @@ xmlObjNum.onreadystatechange = function() {
 		$time07.dispatchEvent(new Event('click'));
 		$selectInterval.classList.add("select-hide");
 		$selectObj.addEventListener("change", function() {
-			updateObjLi($selectObj.options[$selectObj.selectedIndex].text);
+			var type = $selectObj.options[$selectObj.selectedIndex].text;
+			updateObjLi(type);
 		});
 		document.querySelector(".select-selected").classList.remove("select-arrow-active");
 		
@@ -94,7 +95,7 @@ xmlObjNum.onreadystatechange = function() {
 		location.href = "login.html";
 	}
 }
-xmlObjNum.open("GET", "/mindhash/rest/objects/" + id + "/" + date, true);
+xmlObjNum.open("GET", "/mindhash/rest/objects?rid=" + id + "&date=" + date, true);
 xmlObjNum.setRequestHeader("Accept", "application/json");
 xmlObjNum.setRequestHeader("Authorization", token);
 xmlObjNum.send();
@@ -169,7 +170,7 @@ xmlhttp.onreadystatechange = function() {
 		location.href = "login.html";
 	}
 }
-xmlhttp.open("GET", "/mindhash/rest/velocity/" + id + "/" + date, true);
+xmlhttp.open("GET", "/mindhash/rest/velocity?rid=" + id + "&date=" + date, true);
 xmlhttp.setRequestHeader("Accept", "application/json");
 xmlhttp.setRequestHeader("Authorization", token);
 xmlhttp.send();
@@ -182,7 +183,8 @@ let measurements = new Array(),
 	timeSpeedChart = null,
 	heatmaplayer = null,
 	perChart = null,
-	scatterChart = null;
+	scatterChart = null,
+	objNum = {};
 $timeInterval.addEventListener("change", function() {
 	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
 	var xmlheatmap = new XMLHttpRequest();
@@ -190,7 +192,7 @@ $timeInterval.addEventListener("change", function() {
 		if (this.readyState == 4 && this.status == 200) {
 			var response = JSON.parse(this.responseText);
 			objects = response.objList;
-			var objNum = response.objNum;
+			objNum = response.objNum;
 			if (intervalChart == null) {
 				var ctx = document.querySelector('#intervalChart').getContext('2d');
 				intervalChart = new Chart(ctx, {
@@ -414,7 +416,7 @@ $timeInterval.addEventListener("change", function() {
 			location.href = "access-denied.html";
 		}
 	}
-	xmlheatmap.open("GET", "/mindhash/rest/measurements/" + id + "/" + date + "/" + time, true);
+	xmlheatmap.open("GET", "/mindhash/rest/measurements?rid=" + id + "&date=" + date + "&time=" + time, true);
 	xmlheatmap.setRequestHeader("Accept", "application/json");
 	xmlheatmap.setRequestHeader("Authorization", token);
 	xmlheatmap.send();
@@ -516,14 +518,19 @@ $objList.onclick = function(e) {
 	}
 }
 
-function updateObjLi(val) {
+function updateObjLi(type) {
 	var htmlStr = "";
 	for (var i = 0; i < objects.length; i++) {
-		if (objects[i].objectType === val) {
+		if (objects[i].objectType === type) {
 			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
 		}
 	}
 	$objList.innerHTML = htmlStr;
+	if (perChart != null) {
+		perChart.data.labels = [type + " (" + objNum[type] + ")", "other objects (" + (totalObj - objNum[type]) + ")"];
+		perChart.data.datasets[0].data = [objNum[type], totalObj - objNum[type]];
+		perChart.update();
+	}
 }
 
 // get closest station based on coordinates

@@ -18,7 +18,7 @@ public class GrantAccessResource {
 
     @POST
     @Path("/{email}/{recordingid}")
-    public static Response giveAccess(@Context ContainerRequestContext request,@PathParam("email") String email, @PathParam("recordingid") int recordingId) {
+    public static Response giveAccess(@Context ContainerRequestContext request, @PathParam("email") String email, @PathParam("recordingid") int recordingId) {
         String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
         // only allow admin
         if (SessionTokenDao.getUserByToken(token).getIsadmin()) {
