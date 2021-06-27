@@ -134,5 +134,26 @@ public class RecordingDao {
         }
         return contentProvider;
     }
+
+    public static void deleteRecording(int recordingid) {
+        Connection conn = DBConnectivity.createConnection();
+        PreparedStatement st = null;
+
+        String delete = "DELETE FROM measurement WHERE recording_id = ?;" +
+                "DELETE FROM mindhash WHERE recording_id = ?;" +
+                "DELETE FROM object WHERE recording_id = ?;" +
+                "DELETE FROM recording WHERE recording_id = ?;" +
+                "DELETE FROM recordingaccess WHERE recording_id = ?;";
+        try {
+            st = conn.prepareStatement(delete);
+            for (int i = 1; i <= 5; i++) {
+                st.setInt(i, recordingid);
+            }
+            st.executeUpdate();
+            conn.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
     
 }

@@ -89,6 +89,7 @@ xmlhttp.onreadystatechange = function() {
                                 htmlStr += "<option value=" + id + ">" + id + "</option>"
                             }
                             document.querySelector('#recordingids').innerHTML = htmlStr;
+                            document.querySelector('#recordingids2').innerHTML = htmlStr;
                         } else if (this.readyState == 4 && this.status == 511) {
                             location.href = "login.html";
                         }
@@ -120,6 +121,11 @@ function grantAccess() {
     var selectedmail = document.getElementById("mails").value;
     var selectedid = document.getElementById("recordingids").value;
     console.log(selectedmail+"\n"+selectedid);
+    let responsemsg = document.querySelector("#responsemsg");
+    if (responsemsg.classList.contains("hide")) {
+        responsemsg.classList.remove("hide");
+    }
+    responsemsg.innerText = "Processing...";
 
     //Post grantaccess
     let xmlhttp = new XMLHttpRequest();
@@ -142,4 +148,48 @@ function grantAccess() {
     xmlhttp.open("POST", "/mindhash/rest/access/"+selectedmail+"/"+selectedid, true);
     xmlhttp.setRequestHeader("Authorization", token);
     xmlhttp.send();
+}
+
+function deleteRecording() {
+    let responsemsg = document.querySelector("#deleteresponse");
+    if (responsemsg.classList.contains("hide")) {
+        responsemsg.classList.remove("hide");
+    }
+    responsemsg.innerText = "Processing...";
+
+    var recordingid = document.getElementById("recordingids2").value;
+    const cb = document.getElementById('deletecheck');
+
+    if (!cb.checked) {
+        //if checkbox not ticked show message
+        let responsemsg = document.querySelector("#deleteresponse");
+        if (responsemsg.classList.contains("hide")) {
+            responsemsg.classList.remove("hide");
+        }
+        responsemsg.innerText = "Please acknowledge the conditions";
+    } else {
+
+        //Post deleteRecording
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            let responsemsg = document.querySelector("#deleteresponse");
+            if (this.readyState == 4 && this.status == 200) {
+                var response = this.responseText;
+                console.log(response);
+                if (responsemsg.classList.contains("hide")) {
+                    responsemsg.classList.remove("hide");
+                }
+                responsemsg.innerText = "Recording deleted";
+
+            } else if (this.readyState == 4 && this.status == 511) {
+                if (responsemsg.classList.contains("hide")) {
+                    responsemsg.classList.remove("hide");
+                }
+                responsemsg.innerText = "You do not have admin rights";
+            }
+        }
+        xmlhttp.open("POST", "/mindhash/rest/recordings/delete/"+recordingid, true);
+        xmlhttp.setRequestHeader("Authorization", token);
+        xmlhttp.send();
+    }
 }

@@ -26,6 +26,12 @@ input, button, select, textarea {
     -webkit-appearance: none;
     appearance: none;
 }
+
+input[type=checkbox]
+{
+	-webkit-appearance:checkbox;
+}
+
 li {
 	list-style-type: none;
 }
