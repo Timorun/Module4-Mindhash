@@ -297,7 +297,6 @@ $timeInterval.addEventListener("change", function() {
 			if (timeSpeedChart == null) {
 				timeSpeed(firstTime, firstSpeed, name);
 			}
-			console.log(coordinates);
 			var type = $selectObj.options[$selectObj.options.selectedIndex].text;
 			updateObjLi(type);
 			/*if (perChart == null) {
@@ -358,7 +357,7 @@ $timeInterval.addEventListener("change", function() {
 					}).addTo(heatmap);
 			} else {
 				heatmap.removeLayer(heatLayer);
-				heatLayer = L.heatLayer(coordinates, 0.5, {
+				heatLayer = L.heatLayer(coordinates, {
 						radius: 15,
 						minOpacity: 0.2,
 						gradient: {
@@ -552,8 +551,9 @@ function updateObjLi(type) {
 		    coord.push([latO, lonO]);
 		}
 	}
-	console.log(coord);
+	
 	if (typeheatmap == null) {
+		console.log(coord);
 		typeheatmap = L.map('typeheatmap', { zoomControl: false }).setView([lat, lon], 18);
 		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 				: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
@@ -562,24 +562,10 @@ function updateObjLi(type) {
 			subdomains: 'abcd',
 			maxZoom: 28,
 		}).addTo(typeheatmap);
-		typeheatLayer = L.heatLayer(coord, {
-				radius: 15,
-				minOpacity: 0.2,
-				gradient: {
-					'0.0': 'blue',
-					'1': 'red'
-				}
-			}).addTo(typeheatmap);
+		typeheatLayer = L.heatLayer(coord).addTo(typeheatmap);
 	} else {
 		typeheatmap.removeLayer(typeheatLayer);
-		typeheatLayer = L.heatLayer(coord, 0.5, {
-				radius: 15,
-				minOpacity: 0.2,
-				gradient: {
-					'0.0': 'blue',
-					'1': 'red'
-				}
-			}).addTo(typeheatmap);
+		typeheatLayer = L.heatLayer(coord).addTo(typeheatmap);
 	}
 }
 
