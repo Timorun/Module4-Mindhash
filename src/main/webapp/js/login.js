@@ -68,17 +68,17 @@ passwordInput.addEventListener("blur", function() {
 });
 
 submitBtn.addEventListener("click", function(e) {
-	register();
+	login();
 	e.preventDefault();
 });
 
 document.querySelector("#login-form").addEventListener("submit", function(e) {
-	register();
+	login();
 	e.preventDefault();
 });
 
-function register() {
-	let email = emailInput.value.trim(),
+function login() {
+	let email = emailInput.value.trim().toLowerCase(),
 		password = passwordInput.value.trim();
 			
 	if (email.length === 0) {

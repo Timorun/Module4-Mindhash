@@ -25,7 +25,7 @@ function profile(userInfo) {
 		location.href = "admin.html";
 	}
 	document.querySelector("#email").innerHTML = "Email: " + userInfo.email;
-	document.querySelector("#adminRight").innerHTML = "Admin Right: No";
+	document.querySelector("#adminRight").innerHTML = "Admin Rights: No";
 	document.querySelector("#sessionSign").innerHTML = "Logged until: "  + userInfo.sessionexpire + "<div id='logout' class='func'>Log out</div>";
 	document.querySelector("#mode").innerHTML = (localStorage.getItem("theme") == "dark" ? "Dark Mode" : "Light Mode") + "<div id='switch' class='func'>Switch</div>";;
 

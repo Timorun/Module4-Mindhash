@@ -74,7 +74,7 @@ document.querySelector("#register-form").addEventListener("submit", function(e) 
 });
 
 function register() {
-	let email = emailInput.value.trim(),
+	let email = emailInput.value.trim().toLowerCase(),
 		password = passwordInput.value.trim(),
 		confirmPassword= confirmPasswordInput.value.trim();
 			
