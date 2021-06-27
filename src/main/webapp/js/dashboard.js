@@ -206,12 +206,12 @@ $timeInterval.addEventListener("change", function() {
 						datasets: [
 							{
 								label: "one-hour time slot",
-								backgroundColor: ["#555"],
+								backgroundColor: currentTheme == "dark" ? ["#555"] : ["#006699"],
 								data: Object.values(objNum)
 							},
 							{
 								label: "entire peroid",
-								backgroundColor: ["#888"],
+								backgroundColor: ["#999"],
 								data: Object.values(totalObjNum)
 							}
 						]
@@ -375,7 +375,7 @@ $timeInterval.addEventListener("change", function() {
 						datasets: [{
 										label: 'object position',
 										data: xy,
-										backgroundColor: '#888'
+										backgroundColor: currentTheme == "dark" ? '#888' : '#006699'
 									},
 									{
 										label: 'sensor',
@@ -554,7 +554,6 @@ function updateObjLi(type) {
 	}
 	
 	if (typeheatmap == null) {
-		console.log(coord);
 		typeheatmap = L.map('typeheatmap', { zoomControl: false }).setView([lat, lon], 18);
 		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
 				: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
@@ -707,6 +706,8 @@ document.querySelector(".logo").addEventListener("click", function () {
 		pChart.update();
 		/*perChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
 		perChart.update();*/
+		intervalChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#555"] : ["#006699"]
+		scatterChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? '#888' : '#006699';
 		timeSpeedChart.data.datasets[0].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
 		bChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#006699"];
 		bChart.data.datasets[1].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
