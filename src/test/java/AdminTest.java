@@ -17,7 +17,6 @@ public class AdminTest {
 
     @BeforeEach
     void setUp() throws Exception{
-        userDao = new UserDao();
         user = new UserRegJAXB();
         accessDao = new AccessDao();
     }
@@ -30,11 +29,11 @@ public class AdminTest {
         //Check that admin cannot login with wrong pass
         user.setEmail("admin@mindhash.com");
         user.setPassword("12345678A");
-        assertFalse(userDao.login(user).getRes());
+        assertFalse(UserDao.login(user).getRes());
 
         //Tests if user cannot be logged in if he enters incorrect password
         user.setPassword("Mindhash#21");
-        assertTrue(userDao.login(user).getRes());
+        assertTrue(UserDao.login(user).getRes());
     }
 
     /*

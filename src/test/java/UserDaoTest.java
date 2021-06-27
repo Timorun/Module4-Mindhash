@@ -15,7 +15,6 @@ public class UserDaoTest {
 
     @BeforeEach
     void setUp() throws Exception{
-        userDao = new UserDao();
         user = new UserRegJAXB();
     }
 
@@ -28,12 +27,12 @@ public class UserDaoTest {
         user.setEmail("admin@mindhash.com");
         user.setPassword("12345678A");
         user.setConfirmPassword("12345678A");
-        assertFalse(userDao.register(user).getRes());
+        assertFalse(UserDao.register(user).getRes());
 
         //Tests if user can be registered if email has not been taken yet
         //Also tests if email token is sent to user's email account after registration
         user.setEmail("random-" + UUID.randomUUID().toString() + "@example.com");
-        assertTrue(userDao.register(user).getRes());
+        assertTrue(UserDao.register(user).getRes());
     }
 
     /*
@@ -44,11 +43,11 @@ public class UserDaoTest {
         //Test if user can be logged in if he enters correct password
         user.setEmail("admin@mindhash.com");
         user.setPassword("Mindhash#21");
-        assertTrue(userDao.login(user).getRes());
+        assertTrue(UserDao.login(user).getRes());
 
         //Tests if user cannot be logged in if he enters incorrect password
         user.setPassword("12345678A");
-        assertFalse(userDao.login(user).getRes());
+        assertFalse(UserDao.login(user).getRes());
 
     }
 
@@ -73,6 +72,7 @@ public class UserDaoTest {
      */
     @Test
     public void testResetPassword() {
+        UserDao userDao = new UserDao();
         user.setEmail("admin@mindhash.com");
         user.setPassword("Mindhash#2");
         //Tests if password reset token is sent to user's email
