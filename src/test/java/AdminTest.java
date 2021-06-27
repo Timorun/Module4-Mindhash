@@ -1,6 +1,4 @@
-import com.mindhash.MindhashApp.Security.TokenUtils;
-import com.mindhash.MindhashApp.dao.AccessDao;
-import com.mindhash.MindhashApp.dao.PasswordResetTokenDao;
+//import com.mindhash.MindhashApp.dao.AccessDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.UserDao;
 import com.mindhash.MindhashApp.model.*;
@@ -11,14 +9,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AdminTest {
-    private UserDao userDao;
     private UserRegJAXB user;
-    private AccessDao accessDao;
+    //private AccessDao accessDao;
 
     @BeforeEach
     void setUp() throws Exception{
         user = new UserRegJAXB();
-        accessDao = new AccessDao();
+        //accessDao = new AccessDao();
     }
 
     /*
