@@ -40,10 +40,13 @@ public class MeasureDao {
                 //measurement.setRecordingId(resultSet.getInt("recording_id"));
                 int id = resultSet.getInt("object_id");
                 String type = resultSet.getString("object_type");
+                double x = resultSet.getDouble("x");
+                double y = resultSet.getDouble("y");
                 m.setObjectId(id);
                 m.setObjectType(type);
                 //measurement.setTime(resultSet.getString("time"));
-                m.setX(resultSet.getDouble("x"));
+                m.setX(x);
+                m.setY(y);
                 m.setY(resultSet.getDouble("y"));
                 m.setVelocity(resultSet.getDouble("velocity"));
                 m.setTimeWithoutDate(resultSet.getString("time_without_date"));

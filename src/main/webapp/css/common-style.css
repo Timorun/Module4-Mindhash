@@ -352,7 +352,7 @@ a:hover {
 	height: 240px;
 }
 .info-wrapper .section-container .objectsLi {
-	width: 240px;
+	width: 275px;
 	height: 220px;
 	box-sizing: border-box;
 	overflow: auto;
@@ -370,19 +370,29 @@ a:hover {
 }
 .info-wrapper .section-container .heatmap {
 	position: relative; 
-	width: 360px; 
+	width: 340px; 
 	height: 220px;
 }
 .info-wrapper .section-container .timeSpeedChart {
-	padding-left: 12px; 
-	width: 450px!important;
+	padding-left: 15px; 
+	width: 435px!important;
 	height: 256px!important;
 	overflow: hidden;
 	box-sizing: border-box;
 }
 .info-wrapper .section-container .timeSpeedChart canvas {
-	width: 438px!important;
+	width: 420px!important;
 }
+.info-wrapper .section-container .typeheatmap {
+	width: 275px; 
+	height: 240px;
+}
+.info-wrapper .section-container .scatterChart {
+	width: 420px; 
+	height: 240px; 
+	margin-left: 15px;
+}
+
 
 /*.info-wrapper .section-container.text-info {
 	padding: 12px 18px;
@@ -410,8 +420,12 @@ a:hover {
 	height: auto;
 	max-height: 240px;
 }
+.section-container .interval {
+	width: 340px; 
+	height: 240px;
+}
 .section-container #interval .date {
-	width: 150px;
+	width: 130px;
 	height: 36px;
 	background-color: #336699;
 	color: #fff;
@@ -516,7 +530,8 @@ a:hover {
 	background-color: #efefef;
 }
 
-.dark-mode .select-selected, .dark-mode .select-items, .dark-mode .section-container #interval .date {
+.dark-mode .select-selected, .dark-mode .select-items, 
+.dark-mode .section-container #interval .date {
 	background-color: #282828;
 }
 .profile-wrapper {

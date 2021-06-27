@@ -178,13 +178,17 @@ xmlhttp.send();
 let measurements = new Array(),
 	objects = new Array(),
 	heatmap = null,
+	heatmaplayer = null,
 	heatLayer = null,
 	intervalChart = null,
 	timeSpeedChart = null,
-	heatmaplayer = null,
-	perChart = null,
+	/*perChart = null,*/
 	scatterChart = null,
-	objNum = {};
+	objNum = {},
+	typeheatmap = null,
+	typeheatmaplayer = null,
+	typeheatLayer = null;
+	
 $timeInterval.addEventListener("change", function() {
 	var time = $timeInterval.options[$timeInterval.selectedIndex].value;
 	var xmlheatmap = new XMLHttpRequest();
@@ -295,7 +299,7 @@ $timeInterval.addEventListener("change", function() {
 			}
 			var type = $selectObj.options[$selectObj.options.selectedIndex].text;
 			updateObjLi(type);
-			if (perChart == null) {
+			/*if (perChart == null) {
 				var ctx = document.querySelector('#perChart').getContext('2d');
 				perChart = new Chart(ctx, {
 					type: 'pie',
@@ -333,7 +337,7 @@ $timeInterval.addEventListener("change", function() {
 				perChart.data.labels = [type + " (" + objNum[type] + ")", "other objects (" + (totalObj - objNum[type]) + ")"];
 				perChart.data.datasets[0].data = [objNum[type], totalObj - objNum[type]];
 				perChart.update();
-			}
+			}*/
 			if (heatmap == null) {
 				heatmap = L.map('heatmap').setView([lat, lon], 18);
 				var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -519,17 +523,47 @@ $objList.onclick = function(e) {
 }
 
 function updateObjLi(type) {
-	var htmlStr = "";
+	var htmlStr = "",
+		coordinates = new Array(),
+	    radius = 6378137.0;
 	for (var i = 0; i < objects.length; i++) {
 		if (objects[i].objectType === type) {
 			htmlStr += '<li attr-id="' + objects[i].objectId + '">' + objects[i].objectType + ' ' + objects[i].objectId + '</li>';
+		    var dLat = parseFloat(objects[i].y) / radius,
+		    	dLon = parseFloat(objects[i].x) / (radius * Math.cos(Math.PI * parseFloat(lat) / 180)),
+		    	latO = parseFloat(lat) + dLat * 180.0 / Math.PI;
+		    	lonO = parseFloat(lon) + dLon * 180 / Math.PI;
+		    coordinates.push([latO, lonO]);
 		}
 	}
 	$objList.innerHTML = htmlStr;
-	if (perChart != null) {
+	/*if (perChart != null) {
 		perChart.data.labels = [type + " (" + objNum[type] + ")", "other objects (" + (totalObj - objNum[type]) + ")"];
 		perChart.data.datasets[0].data = [objNum[type], totalObj - objNum[type]];
 		perChart.update();
+	}*/
+	if (typeheatmap == null) {
+		typeheatmap = L.map('typeheatmap', { zoomControl: false }).setView([lat, lon], 18);
+		var mapUrl = currentTheme == "dark" ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+				: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+		typeheatmaplayer = L.tileLayer(mapUrl, {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			subdomains: 'abcd',
+			maxZoom: 28,
+		}).addTo(typeheatmap);
+		typeheatLayer = L.heatLayer(coordinates, {
+				radius: 15,
+				minOpacity: 0.2,
+				gradient: {
+					'0.0': 'blue',
+					'1': 'red'
+				}
+			}).addTo(typeheatmap);
+	} else {
+		typeheatmap.removeLayer(typeheatLayer);
+		typeheatLayer = L.heatLayer(coordinates, 0.5, {
+				radius: 25
+			}).addTo(typeheatmap);
 	}
 }
 
@@ -659,15 +693,17 @@ document.querySelector(".logo").addEventListener("click", function () {
 		if (currentTheme == "dark") {
 			maplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		    heatmaplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
+			typeheatmaplayer.setUrl("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png");
 		} else {
 			maplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 			heatmaplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
+			typeheatmaplayer.setUrl("https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw");
 		}
 		pChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
 		pChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#999", "#333", "#336699"] : ["#990066", "#ccc", "#006699"],
 		pChart.update();
-		perChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
-		perChart.update();
+		/*perChart.options.color = currentTheme == "dark" ? "#c9d1d9" : "#333";
+		perChart.update();*/
 		timeSpeedChart.data.datasets[0].borderColor = currentTheme == "dark" ? ["#999"] : ["#006699"];
 		bChart.data.datasets[0].backgroundColor = currentTheme == "dark" ? ["#333"] : ["#006699"];
 		bChart.data.datasets[1].backgroundColor = currentTheme == "dark" ? ["#336699"] : ["#990066"];
