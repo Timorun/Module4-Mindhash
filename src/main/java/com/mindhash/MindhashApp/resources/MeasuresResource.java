@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.dao.MeasureDao;
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
-import com.mindhash.MindhashApp.dao.accessDao;
+import com.mindhash.MindhashApp.dao.AccessDao;
 import com.mindhash.MindhashApp.model.User;
 
 @Path("/measurements")
@@ -33,7 +33,7 @@ public class MeasuresResource {
 					.entity("NETWORK AUTHENTICATION REQUIRED")
 					.build();
 		} else {
-			if (accessDao.getRecordingById(token, recordingId) || user.getIsadmin()) {
+			if (AccessDao.getRecordingById(token, recordingId) || user.getIsadmin()) {
 				return Response
 						.status(Response.Status.OK)
 						.entity(MeasureDao.getMeasurementByTime(recordingId, date, time))

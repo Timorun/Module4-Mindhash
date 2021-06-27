@@ -19,8 +19,6 @@ f
 6src/main/java/com/mindhash/MindhashApp/model/User.java,2\3\23b53ee4eaf0403773bdb9dc04d2e421c4bc0f56
 L
 src/main/webapp/js/upload.js,3\1\318691ba79d9d5f5ab81c014955cda178254a4c0
-v
-Fsrc/main/java/com/mindhash/MindhashApp/resources/MeasuresResource.java,3\f\3f01d4f1dd7c1fd6f0f9df0e1cb808c4457b04d5
 j
 :src/main/java/com/mindhash/MindhashApp/dao/MeasureDao.java,9\d\9d4ee044fb4ffcfdacddec1718dfe491f6d17f7c
 P
@@ -29,5 +27,3 @@ r
 Bsrc/main/java/com/mindhash/MindhashApp/resources/DataUploadDB.java,a\5\a5d13c9b5fd0bcc14644dd3280f5f47cbe69ff88
 N
 src/main/webapp/css/select.css,6\f\6fd4478c3c08155b352e570a9b8d66ba75f7db30
-g
-7src/main/java/com/mindhash/MindhashApp/dao/UserDao.java,e\c\eca462820851df76108b544c5f7cdbc8f422c3ee

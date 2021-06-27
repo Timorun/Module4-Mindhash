@@ -1,0 +1,55 @@
+import com.mindhash.MindhashApp.Security.TokenUtils;
+import com.mindhash.MindhashApp.dao.AccessDao;
+import com.mindhash.MindhashApp.dao.PasswordResetTokenDao;
+import com.mindhash.MindhashApp.dao.SessionTokenDao;
+import com.mindhash.MindhashApp.dao.UserDao;
+import com.mindhash.MindhashApp.model.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class AdminTest {
+    private UserDao userDao;
+    private UserRegJAXB user;
+    private AccessDao accessDao;
+
+    @BeforeEach
+    void setUp() throws Exception{
+        userDao = new UserDao();
+        user = new UserRegJAXB();
+        accessDao = new AccessDao();
+    }
+
+    /*
+    Admin should be able to log in
+     */
+    @Test
+    public void testAdminlogin() {
+        //Check that admin cannot login with wrong pass
+        user.setEmail("admin@mindhash.com");
+        user.setPassword("12345678A");
+        assertFalse(userDao.login(user).getRes());
+
+        //Tests if user can be registered if email has not been taken yet
+        //Tests if user cannot be logged in if he enters incorrect password
+        user.setPassword("12345678A");
+        assertFalse(userDao.login(user).getRes());
+    }
+
+    /*
+    Test that admintoken has adminrights
+     */
+    @Test
+    public void testAdminright() {
+        String newToken = UUID.randomUUID().toString();
+        SessionTokenDao.setUserToken(newToken, "admin@mindhash.com");
+        assertTrue(SessionTokenDao.getUserByToken(newToken).getIsadmin());
+    }
+
+    /*
+    Test that new account isnotadmin
+     */
+
+}
