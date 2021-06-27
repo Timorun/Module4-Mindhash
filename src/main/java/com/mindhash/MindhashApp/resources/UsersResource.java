@@ -6,37 +6,59 @@ import javax.ws.rs.core.*;
 
 import com.mindhash.MindhashApp.dao.SessionTokenDao;
 import com.mindhash.MindhashApp.dao.UserDao;
-import com.mindhash.MindhashApp.model.NewPassword;
-import com.mindhash.MindhashApp.model.ResMsg;
-import com.mindhash.MindhashApp.model.User;
+import com.mindhash.MindhashApp.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/user")
 public class UsersResource {
-	/*@Context
-	UriInfo uriInfo;
-	@Context
-	Request request;*/
-
+	
 	@GET
-	@Path("{sessionToken}")
+	@Path("/info")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Response userinfo(@PathParam("sessionToken") String sessionToken) {
-		if (SessionTokenDao.checkUserByToken(sessionToken) == null) {
+	public Response userinfo(@Context ContainerRequestContext request) {
+		String sessionToken = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		User user = SessionTokenDao.getUserByToken(sessionToken);
+		if (user.getEmail() == null) {
 			System.out.println("Token not valid");
-			return Response.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED).entity("NETWORK AUTHENTICATION REQUIRED").build();
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
 			System.out.println("Token validated sending user details");
-			User user = UserDao.getDetails(sessionToken);
-			return Response.status(Response.Status.OK).entity(user).build();
+			return Response
+					.status(Response.Status.OK)
+					.entity(user)
+					.build();
 		}
 	}
 
-	
+	@GET
+	@Path("/mails")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Object mails(@Context ContainerRequestContext request) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		// only allow admin
+		if (!SessionTokenDao.getUserByToken(token).getIsadmin()) {
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
+		} else {
+			System.out.println("Token of admin, can get mails");
+			List<String> mails = new ArrayList<>(UserDao.getMails());
+			return Response.status(Response.Status.OK).entity(mails).build();
+		}
+	}
+
+
 	@POST
 	@Path("/register")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg register(User user) {
+	public ResMsg register(UserRegJAXB user) {
 		return UserDao.register(user);
 	}
 	
@@ -44,23 +66,32 @@ public class UsersResource {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg login(User user) {
+	public ResMsg login(UserJAXB user) {
 		return UserDao.login(user);
 	}
 	
 	@POST
-	@Path("/login/auto")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Path("/isLoggedIn")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg autoLogin(@Context ContainerRequestContext request) {
+	public Response autoLogin(@Context ContainerRequestContext request) {
 		return UserDao.autologin(request);
+	}
+	
+	@POST
+	@Path("/logout")
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public Response logout(@Context ContainerRequestContext request) {
+		return Response
+				.status(Response.Status.OK)
+				.entity(UserDao.logout(request))
+				.build();
 	}
 
 	@POST
 	@Path("/password-reset")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public ResMsg resetPassword(User user) { 
+	public ResMsg resetPassword(UserJAXB user) { 
 		return new UserDao().resetPasssword(user); 
 	}
 
@@ -70,6 +101,14 @@ public class UsersResource {
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 	public ResMsg newPassword(NewPassword newPassword) { 
 		return new UserDao().confirmNewPassword(newPassword); 
+	}
+
+	@POST
+	@Path("/verify-email")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+	public ResMsg verifyEmail(EmailTokenJAXB emailToken) {
+		return new UserDao().verifyEmail(emailToken);
 	}
 
 }

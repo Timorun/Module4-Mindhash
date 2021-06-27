@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.mindhash.MindhashApp.model.ResMsg;
 
 import java.util.Date;
 
@@ -21,12 +20,11 @@ public class TokenUtils {
         return token;
     }
 
-    public static boolean isTokenExpired(String token, ResMsg res) {
+    public static boolean isTokenExpired(String token) {
         DecodedJWT jwt;
         try {
             jwt = JWT.decode(token);
         } catch (JWTDecodeException exception){
-            res.setMsg("Unable to decode token");
             return false;
         }
         Date expiresAt = jwt.getExpiresAt();

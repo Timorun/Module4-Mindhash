@@ -1,10 +1,9 @@
-let	resetBtn = document.querySelector("#reset")
+let	resetBtn = document.querySelector("#reset");
 
 resetBtn.addEventListener("click", function(e) {
-    resetPass()
+    resetPass();
     e.preventDefault();
 });
-
 
 function resetPass() {
     let xmlhttp = new XMLHttpRequest();
@@ -12,12 +11,12 @@ function resetPass() {
         if (this.readyState == 4 && this.status == 200) {
             var response = JSON.parse(this.responseText);
             if (response.res) {
-                alert("Password reset link sent")
+                alert("Password reset link sent");
             } else {
-                alert("Unable to send password reset link")
+                alert("Unable to send password reset link");
             }
         } else if(this.readyState == 4 && this.status != 200) {
-                alert("An error occured. Please try again later.");
+            alert("An error occured. Please try again later.");
         }
     }
     xmlhttp.open("POST", "/mindhash/rest/user/password-reset", true);

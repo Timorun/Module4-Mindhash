@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="img/mindhash.ico" type="image/x-icon">
+        <title>Admin Page | MindHash</title>
+        <link type="text/css" rel="stylesheet" href="css/common-style.css">
+    </head>
+    <body>
+        <header class="header box-layout center-v">
+            <div class="logo"></div>
+            <a href="recordings.html" class="home-link"></a>
+            <div class="box-col"><a href="admin.html" class="avatar"></a></div>
+        </header>
+        <script src="js/switch-mode.js"></script>
+
+        <section class="profile-wrapper">
+			<ul>
+				<li id="email"></li>
+				<li id="adminRight"></li>
+				<li id="sessionSign"></li>
+				<li id="mode"></li>
+				<li><a href="recordings.html">See Your Recordings</a></li>
+			</ul>
+        </section>
+		
+        <section class="info-wrapper admin">
+			<div id="uploadform" class="form-wrapper">
+				<div class="form-body">
+					<h4>Upload a recording</h4>
+					<div id="err-msg" class="err-msg hide"></div>
+					<form action="/mindhash/rest/upload/json" method="post" enctype="multipart/form-data" onsubmit="return validate()">
+						<label for="latitude">Latitude</label>
+						<input id="latitude" name="latitude" type="text" placeholder="e.g. 72.832..." class="form-input-field" />
+						<label for="longitude">Longitude</label>
+						<input id="longitude" name ="longitude" type="text" placeholder="e.g. 25.093..." class="form-input-field" />
+						<label for="framerate">Framerate</label>
+						<input type="text" id="framerate" name ="framerate" placeholder="e.g. 60" name="framerate" class="form-input-field">
+						<label for="resolution">Resolution</label>
+						<input type="text" id="resolution" name ="resolution" placeholder="e.g. 1280x800" name="resolution" class="form-input-field">
+						<label for="file">JSON of the recording</label>
+						<input type="file" id="file" name = "file">
+						<input type="submit" value="Upload" class="form-submit-btn">
+					</form>
+				</div>
+			</div>
+			
+			<div class="fl">
+				<div id="accessForm" class="form-wrapper">
+					<div class="form-body">
+						<h4> Grant access to a recording</h4>
+						<div id="responsemsg" class="err-msg hide"></div>
+						<div class="select-field">
+							<label for="mails">Email:</label>
+							<select name="mails" id="mails"></select>
+						</div>
+						<div class="select-field">
+							<label for="recordingids">RecordingID:  </label>
+							<select name="recordingids" id="recordingids"></select>
+						</div>
+						<button id="grant" class="form-submit-btn" onclick="grantAccess()">Grant Access</button>
+					</div>
+				</div>
+
+				<div id="deleteForm" class="form-wrapper">
+					<div class="form-body">
+						<h4> Delete a recording</h4>
+						<div id="deleteresponse" class="err-msg hide"></div>
+						<label for="recordingids2">RecordingID:  </label>
+						<select name="recordingids2" id="recordingids2"></select>
+						<p><input type="checkbox" id="deletecheck"> By clicking the <b> delete </b> button, you acknowledge that once deleted, the recording will not be retrievable from the server.</p>
+						<button id="delete" class="form-submit-btn" onclick="deleteRecording()">Delete Recording</button>
+					</div>
+				</div>
+			</div>
+        </section>
+        <script src="js/admin.js"></script>
+    </body>
+</html>

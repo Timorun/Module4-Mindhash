@@ -4,10 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 
 import com.mindhash.MindhashApp.DBConnectivity;
 import com.mindhash.MindhashApp.Integration.Sendgrid;
@@ -17,7 +19,7 @@ import com.mindhash.MindhashApp.model.*;
 
 public class UserDao {
 
-	public static User getDetails(String token)  {
+	/*public static User getDetails(String token)  {
 		Connection conn = DBConnectivity.createConnection();
 		System.out.println(token);
 
@@ -36,11 +38,34 @@ public class UserDao {
 			throwables.printStackTrace();
 			return new User();
 		}
+	}*/
+
+	public static ArrayList<String> getMails() {
+		Connection conn = DBConnectivity.createConnection();
+		try {
+			String mailquery = "SELECT email FROM users WHERE isadmin = FALSE";
+			PreparedStatement st = conn.prepareStatement(mailquery);
+			ResultSet rs = st.executeQuery();
+			ArrayList<String> mails = new ArrayList<String>();
+			while (rs.next()) {
+				String email = rs.getString(1);
+				mails.add(email);
+			}
+			return mails;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+			return new ArrayList<String>();
+		}
 	}
 
-	public static ResMsg register(User user) {
+
+	public static ResMsg register(UserRegJAXB user) {
 		ResMsg res = new ResMsg();
-		res.setRes(false);
+		if (!user.getPassword().equals(user.getConfirmPassword())) {
+			res.setRes(false);
+			res.setMsg("Confirm Password should match with Password");
+			return res;
+		}
 		
 		Connection conn = DBConnectivity.createConnection();
 		try {
@@ -63,23 +88,30 @@ public class UserDao {
                 if (i > 0) {
 					//if all data has been inserted successfully in the db, generate a unique email verification token
 					String emailToken = new TokenUtils().generateEmailVerificationToken();
+					EmailToken emailToken1 = new EmailToken();
+					emailToken1.setToken(emailToken);
+					emailToken1.setUser(user);
+					//insert token into the db
 					EmailVerificationTokenDao.setEmailToken(emailToken, user.getEmail());
 					boolean returnValue = new Sendgrid().sendEmailVerification(user.getEmail(), emailToken);
 					if (returnValue) {
 						res.setRes(true);
+						res.setMsg("Registration successul");
 					}
                 } else {
                 	res.setRes(false);
+                	res.setMsg("Registration unsuccessul");
 				}
             }
             conn.close();
         } catch (SQLException e) {
         	res.setRes(false);
+        	res.setMsg(e.getMessage());
         }
 		return res;
 	}
 	
-	public static ResMsg login(User user) {
+	public static ResMsg login(UserJAXB user) {
 		ResMsg res = new ResMsg();
 		
 		try {
@@ -112,18 +144,23 @@ public class UserDao {
 		return res;
 	}
 
-	public static ResMsg autologin(ContainerRequestContext request) {
-		ResMsg res = new ResMsg();
+	public static Response autologin(ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.checkUserByToken(token) == null) {
-			res.setRes(false);
+		User user = SessionTokenDao.checkUserByTokenAndUpdate(token);
+		if (user.getEmail() == null) {
+			return Response
+					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
+					.entity("NETWORK AUTHENTICATION REQUIRED")
+					.build();
 		} else {
-			res.setRes(true);
+			return Response
+					.status(Response.Status.OK)
+					.entity(user)
+					.build();
 		}
-		return res;
 	}
 
-	public ResMsg resetPasssword(User user) {
+	public ResMsg resetPasssword(UserJAXB user) {
 		ResMsg res = new ResMsg();
 		res.setRes(false);
 
@@ -147,7 +184,7 @@ public class UserDao {
 		return res;
 	}
 
-	private boolean requestPasswordReset(User user, ResMsg res) {
+	private boolean requestPasswordReset(UserJAXB user, ResMsg res) {
 		boolean result = false;
 		//generate password reset token
 		String token = new TokenUtils().generatePasswordResetToken();
@@ -177,7 +214,7 @@ public class UserDao {
 	private boolean requestNewPassword(String token, String password, ResMsg res) {
 		boolean result = false;
 		//check that the password token hasn't expired i.e. less than 3600s passed
-		if (TokenUtils.isTokenExpired(token, res)) {
+		if (TokenUtils.isTokenExpired(token)) {
 			res.setMsg("The password reset token has expired. Please try again.");
 			return result;
 		}
@@ -227,6 +264,34 @@ public class UserDao {
 		//delete token after it has been used
 		PasswordResetTokenDao.deletePassToken(token);
 		return result;
+	}
+
+    public ResMsg verifyEmail(EmailTokenJAXB emailToken) {
+		ResMsg res = new ResMsg();
+		res.setRes(false);
+		boolean isVerified = verifyEmailToken(emailToken.geToken());
+		if (isVerified) {
+			res.setRes(true);
+		}
+		return res;
+    }
+
+	private boolean verifyEmailToken(String emailToken) {
+		boolean result = false;
+		String email = EmailVerificationTokenDao.getUserByEmailToken(emailToken);
+		if (email != null) {
+			if (!TokenUtils.isTokenExpired(emailToken)) {
+				EmailVerificationTokenDao.deleteEmailToken(emailToken);
+				EmailVerificationTokenDao.setEmailVerifiedStatus(email);
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	public static String logout(ContainerRequestContext request) {
+		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
+		return SessionTokenDao.setTokenExpired(token);
 	}
 
 }

@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -23,13 +23,12 @@ import com.mindhash.MindhashApp.model.Velocity;
 public class VelocityResourse {
 	
 	@GET
-	@Path("{recordingId}/{date}")
 	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-	public Response getRecordingResource(@PathParam("recordingId") int recordingId,
-										 @PathParam("date") String date,
+	public Response getRecordingResource(@QueryParam("rid") int recordingId,
+										 @QueryParam("date") String date,
 										 @Context ContainerRequestContext request) {
 		String token = request.getHeaderString(HttpHeaders.AUTHORIZATION);
-		if (SessionTokenDao.checkUserByToken(token) == null) {
+		if (SessionTokenDao.getUserByToken(token).getEmail() == null) {
 			return Response
 					.status(Response.Status.NETWORK_AUTHENTICATION_REQUIRED)
 					.entity("NETWORK AUTHENTICATION REQUIRED")
@@ -51,7 +50,8 @@ public class VelocityResourse {
             /*String velocity = "select max(measurement.velocity) as max_vel, min(measurement.velocity) as min_vel, avg(measurement.velocity) as avg_vel from measurement, object " + 
             		          "where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date " + 
             				  "and object.object_type = ? and object.recording_id = ? and measurement.date = ?";*/
-        	String velocity = "with measure as (select distinct object.recording_id, object.object_type, measurement.date, measurement.velocity from measurement, object where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date) " +
+        	String velocity = "with measure as (select distinct object.recording_id, object.object_type, measurement.date, measurement.velocity from measurement, object " + 
+            				  "where measurement.velocity > 0 and measurement.object_id = object.object_id and measurement.recording_id = object.recording_id and measurement.date = object.date) " +
             				  "select max(measure.velocity) as max_vel, min(measure.velocity) as min_vel, avg(measure.velocity) as avg_vel from measure " + 
   				              "where measure.object_type = ? and measure.recording_id = ? and measure.date = ?";
             st = conn.prepareStatement(velocity);
@@ -105,6 +105,9 @@ public class VelocityResourse {
                 throwables.printStackTrace();
             }
         }
-        return Response.status(Response.Status.OK).entity(vel).build();
+        return Response
+        		.status(Response.Status.OK)
+        		.entity(vel)
+        		.build();
 	}
 }

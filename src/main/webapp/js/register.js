@@ -139,6 +139,6 @@ function register() {
 	xmlhttp.open("POST", "/mindhash/rest/user/register", true);
 	xmlhttp.setRequestHeader("Content-type", "application/json");
 	xmlhttp.setRequestHeader("Accept", "application/json");
-	let json = {email, password}
+	let json = {email, password, confirmPassword}
 	xmlhttp.send(JSON.stringify(json));
 }
