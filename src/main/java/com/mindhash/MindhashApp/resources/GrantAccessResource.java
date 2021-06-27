@@ -14,7 +14,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 @Path("/access")
-public class grantAccessResource {
+public class GrantAccessResource {
 
     @POST
     @Path("/{email}/{recordingid}")
