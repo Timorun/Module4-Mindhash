@@ -351,6 +351,7 @@ a:hover {
 	width: 400px;
 	height: 240px;
 }
+
 .info-wrapper .section-container .objectsLi {
 	width: 275px;
 	height: 220px;
@@ -375,13 +376,15 @@ a:hover {
 }
 .info-wrapper .section-container .timeSpeedChart {
 	padding-left: 15px; 
-	width: 435px!important;
-	height: 256px!important;
+	width: 435px;
+	height: 256px;
 	overflow: hidden;
 	box-sizing: border-box;
 }
 .info-wrapper .section-container .timeSpeedChart canvas {
 	width: 420px!important;
+	height: 256px!important;
+	margin: auto;
 }
 .info-wrapper .section-container .typeheatmap {
 	width: 275px; 
@@ -393,24 +396,6 @@ a:hover {
 	margin-left: 15px;
 }
 
-
-/*.info-wrapper .section-container.text-info {
-	padding: 12px 18px;
-}
-.info-wrapper .section-container .general {
-	width: 236px;
-	height: 240px;
-	line-height: 22px;
-	font-size: 14px;
-}
-
-.info-wrapper .section-container .general .title {
-	padding-bottom: 8px;
-	border-bottom: 1px solid #e8e8e8;
-	margin-bottom: 10px;
-	font-weight: 500;
-}*/
-
 .section-container .select-items {
 	height: 220px;
 	overflow: auto;
@@ -419,10 +404,6 @@ a:hover {
 .section-container #objects .select-items {
 	height: auto;
 	max-height: 240px;
-}
-.section-container .interval {
-	width: 340px; 
-	height: 240px;
 }
 .section-container #interval .date {
 	width: 130px;
@@ -433,17 +414,22 @@ a:hover {
 	box-sizing: border-box;
 	border-right: 1px solid hsla(0, 0%, 100%, .1);
 }
-.section-container #interval .select-wrapper {
-	width: 100%;
-}
-.section-container #interval .select-selected {
+.section-container .select-selected {
 	width: 210px;
-	border-radius: 0;
+	height: 36px;
 	box-sizing: border-box;
+	border-radius: 0;
 	border-right: 1px solid hsla(0, 0%, 100%, .1);
 }
+.section-container #interval .select-wrapper {
+	width: 340px;
+}
 .section-container #objects .select-selected {
-	border-radius: 0;
+	width: 275px;
+}
+.section-container .intervalChart {
+	width: 340px; 
+	height: 240px;
 }
 
 /*for dark mode*/
@@ -455,9 +441,6 @@ a:hover {
 .dark-mode .header {
 	background-color: var(--header-bg-color);
 }
-/*.dark-mode .header .logo {
-	background-image: url(../img/mindhash-logo-animated-dark-mode.svg);
-}*/
 
 .dark-mode .wrapper .recordings-list li {
 	color: var(--text-color);
@@ -520,9 +503,6 @@ a:hover {
 .dark-mode .info-wrapper .section-container .objectsLi li:hover {
 	background-color: #282828;
 }
-/*.dark-mode .info-wrapper .section-container .general .title {
-	border-bottom: 1px solid hsla(0, 0%, 100%, .1);
-}*/
 .dark-mode .leaflet-bar a {
 	background-color: #ddd;
 }
@@ -644,43 +624,6 @@ a:hover {
 .info-wrapper.admin .form-wrapper .select-field {
 	min-height: 24px;
 }
-
-/*.profile-wrapper.admin {
-	width: 1000px;
-	margin: 88px auto 0;
-}
-.profile-wrapper.admin ul, .profile-wrapper.admin .form-wrapper {
-	margin: 0;
-}
-.profile-wrapper.admin .profile-left {
-	float: left;
-	margin-right: 20px;
-}
-.profile-wrapper.admin .profile-left .form-wrapper {
-	width: 480px;
-}
-.profile-wrapper.admin .profile-left .form-wrapper .form-body {
-	margin-top: 20px;
-	height: 206px;
-	box-sizing: border-box;
-}
-.profile-wrapper.admin .profile-left .form-wrapper .select-field {
-	height: 26px;
-}
-.profile-wrapper.admin .form-wrapper.upload {
-	float: left;
-	width: 480px;
-}
-.profile-wrapper.admin .form-wrapper.upload .form-body {
-	margin-top: 0;
-	height: 402px;
-}
-.profile-wrapper.admin .form-wrapper.upload .form-body .form-input-field {
-	margin: 6px 0 8px
-}
-.profile-wrapper.admin .form-wrapper.upload .form-body #file {
-	margin-top: 5px;
-}*/
 
 @media only screen and (max-width: 768px) {
 	.form-wrapper {
