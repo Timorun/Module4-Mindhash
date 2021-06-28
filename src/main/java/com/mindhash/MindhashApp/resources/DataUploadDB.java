@@ -67,7 +67,7 @@ public class DataUploadDB {
             inserted in (test)mindhash table */
             int recording_id = 0;
             //Get current maximum recording_id in (test)mindhash table, if null, set max recording_id to 0
-            String sql = "select coalesce(max(mindhash.recording_id), 0) as recording_id " + "from mindhash";
+            String sql = "select coalesce(max(recording.recording_id), 0) as recording_id " + "from recording";
             preparedStatement = conn.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -192,6 +192,12 @@ public class DataUploadDB {
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
+            preparedStatement.close();
+
+            //delete data from mindhash table
+            preparedStatement = conn.prepareStatement("DELETE FROM mindhash WHERE recording_id = ?");
+            preparedStatement.setInt(1, recording_id);
+            preparedStatement.executeUpdate();
             preparedStatement.close();
 
             conn.commit();
